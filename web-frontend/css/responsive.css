@@ -1,0 +1,189 @@
+/* Tablet Devices */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    background-color: white;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .nav-menu li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .hero {
+    padding: 2rem 1rem;
+    margin: 0 1rem;
+  }
+
+  .hero h2 {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .songs-grid,
+  .playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .player-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0 1rem;
+  }
+
+  .now-playing {
+    grid-column: 1 / -1;
+  }
+
+  .player-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  .progress-section {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .hero h2 {
+    font-size: 1.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .songs-grid,
+  .playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .search-bar {
+    gap: 0.25rem;
+  }
+
+  .search-bar input {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .player {
+    padding: 0.75rem;
+  }
+
+  .player-container {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0 1rem;
+  }
+
+  .now-playing {
+    grid-column: 1;
+  }
+
+  .player-controls {
+    gap: 0.5rem;
+  }
+
+  .control-btn {
+    font-size: 1.2rem;
+  }
+
+  .player-actions {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    font-size: 1rem;
+  }
+
+  .volume-slider {
+    width: 60px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    margin: 20% auto;
+  }
+}
+
+/* Large Screens */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+
+  .songs-grid,
+  .playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --secondary-color: #111827;
+    --accent-color: #1f2937;
+    --border-color: #374151;
+  }
+
+  body {
+    background-color: #111827;
+    color: var(--text-primary);
+  }
+
+  .navbar {
+    background-color: var(--secondary-color);
+    border-bottom-color: var(--border-color);
+  }
+
+  .song-card,
+  .playlist-card,
+  .modal-content {
+    background-color: var(--secondary-color);
+    color: var(--text-primary);
+  }
+}

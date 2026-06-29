@@ -1,0 +1,39 @@
+{
+  "name": "soundwave-musicstream-app",
+  "version": "0.1.0",
+  "description": "A free music streaming platform with web and mobile support",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:backend\" \"npm run dev:mobile\"",
+    "dev:web": "cd web-frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:mobile": "cd mobile-app && npm run start",
+    "build": "npm run build:web && npm run build:backend && npm run build:mobile",
+    "build:web": "cd web-frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:mobile": "cd mobile-app && npm run build",
+    "test": "npm run test:web && npm run test:backend && npm run test:mobile",
+    "test:web": "cd web-frontend && npm test",
+    "test:backend": "cd backend && npm test",
+    "test:mobile": "cd mobile-app && npm test",
+    "lint": "npm run lint:web && npm run lint:backend",
+    "lint:web": "cd web-frontend && npm run lint",
+    "lint:backend": "cd backend && npm run lint",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "music",
+    "streaming",
+    "free",
+    "social",
+    "web",
+    "mobile"
+  ],
+  "author": "Ujwal8156v",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SoundWave - Free Music Streaming App">
+    <meta name="theme-color" content="#1f2937">
+    <title>SoundWave - Free Music Streaming</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <span class="logo">🎵</span>
+                    <h1>SoundWave</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#discover" class="nav-link">Discover</a></li>
+                    <li><a href="#playlists" class="nav-link">Playlists</a></li>
+                    <li><a href="#profile" class="nav-link" id="profileLink">Profile</a></li>
+                    <li><a href="#" class="nav-link" id="logoutLink" style="display:none;">Logout</a></li>
+                </ul>
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="home" class="section">
+                <div class="hero">
+                    <h2>Welcome to SoundWave</h2>
+                    <p>Stream millions of songs for free</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" id="exploreBtn">Explore Now</button>
+                        <button class="btn btn-secondary" id="loginBtn">Login</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Discover Section -->
+            <section id="discover" class="section">
+                <div class="container">
+                    <h2>Discover</h2>
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search songs, artists...">
+                        <button id="searchBtn" class="btn-search">🔍</button>
+                    </div>
+                    <div class="songs-grid" id="songsGrid">
+                        <!-- Songs will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Playlists Section -->
+            <section id="playlists" class="section">
+                <div class="container">
+                    <h2>My Playlists</h2>
+                    <button class="btn btn-primary" id="createPlaylistBtn">+ Create Playlist</button>
+                    <div class="playlists-grid" id="playlistsGrid">
+                        <!-- Playlists will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="section">
+                <div class="container">
+                    <h2>Profile</h2>
+                    <div class="profile-content" id="profileContent">
+                        <!-- Profile will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Audio Player -->
+        <footer class="player">
+            <div class="player-container">
+                <div class="now-playing">
+                    <div class="cover-art">
+                        <img id="coverArt" src="assets/default-cover.png" alt="Cover Art">
+                    </div>
+                    <div class="song-info">
+                        <h3 id="songTitle">No song playing</h3>
+                        <p id="artistName">-</p>
+                    </div>
+                </div>
+
+                <div class="player-controls">
+                    <button class="control-btn" id="prevBtn" title="Previous">⏮</button>
+                    <button class="control-btn play-btn" id="playBtn" title="Play">▶</button>
+                    <button class="control-btn" id="nextBtn" title="Next">⏭</button>
+                </div>
+
+                <div class="progress-section">
+                    <span id="currentTime">0:00</span>
+                    <input type="range" id="progressBar" class="progress-bar" min="0" max="100" value="0">
+                    <span id="duration">0:00</span>
+                </div>
+
+                <div class="player-actions">
+                    <button class="action-btn" id="downloadBtn" title="Download">⬇</button>
+                    <button class="action-btn" id="shareBtn" title="Share">📤</button>
+                    <button class="action-btn" id="likeBtn" title="Like">♡</button>
+                    <button class="action-btn" id="volumeBtn" title="Volume">🔊</button>
+                    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="70">
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal for Login/Register -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="auth-form">
+                <h2>Login / Register</h2>
+                <form id="authForm">
+                    <div id="loginFields">
+                        <input type="email" id="email" placeholder="Email" required>
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+                    <div id="registerFields" style="display:none;">
+                        <input type="text" id="username" placeholder="Username">
+                        <input type="text" id="firstName" placeholder="First Name">
+                        <input type="text" id="lastName" placeholder="Last Name">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <p id="toggleAuth">Don't have an account? <a href="#">Register</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>
