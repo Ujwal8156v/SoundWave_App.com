@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "SoundWave",
+    "slug": "soundwave-musicstream-app",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#101820"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.soundwave.music",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
+    },
+    "android": {
+      "package": "com.soundwave.music",
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "WAKE_LOCK",
+        "FOREGROUND_SERVICE"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#101820"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "extra": {
+      "apiBaseUrl": "http://localhost:5000/api/v1"
+    }
+  }
+}

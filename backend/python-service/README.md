@@ -38,6 +38,8 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 ## API Endpoints
 
+## API Endpoints
+
 ### Authentication
 - `POST /api/v1/auth/register` - Register user
 - `POST /api/v1/auth/login` - Login user

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth');
+const { findSongById } = require('../data/store');
 const { logger } = require('../middleware/logger');
 
 // Mock social data
@@ -20,9 +21,17 @@ router.post('/comments', verifyToken, (req, res) => {
       });
     }
 
+    const song = findSongById(songId);
+    if (!song) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Song not found' }
+      });
+    }
+
     const newComment = {
       id: commentId++,
-      songId,
+      songId: song.id,
       userId: req.user.id,
       text,
       likes: 0,
@@ -50,11 +59,19 @@ router.post('/comments', verifyToken, (req, res) => {
 // Like song
 router.post('/like/:songId', verifyToken, (req, res) => {
   try {
-    const likeKey = `${req.user.id}_${req.params.songId}`;
+    const song = findSongById(req.params.songId);
+    if (!song) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Song not found' }
+      });
+    }
+
+    const likeKey = `${req.user.id}_${song.id}`;
 
     if (likes.has(likeKey)) {
       likes.delete(likeKey);
-      logger.info(`Song ${req.params.songId} unliked by user ${req.user.id}`);
+      logger.info(`Song ${song.id} unliked by user ${req.user.id}`);
 
       return res.json({
         success: true,
@@ -64,7 +81,7 @@ router.post('/like/:songId', verifyToken, (req, res) => {
     }
 
     likes.add(likeKey);
-    logger.info(`Song ${req.params.songId} liked by user ${req.user.id}`);
+    logger.info(`Song ${song.id} liked by user ${req.user.id}`);
 
     res.json({
       success: true,
@@ -92,13 +109,21 @@ router.post('/share', verifyToken, (req, res) => {
       });
     }
 
-    logger.info(`Song ${songId} shared on ${platform}`);
+    const song = findSongById(songId);
+    if (!song) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Song not found' }
+      });
+    }
+
+    logger.info(`Song ${song.id} shared on ${platform}`);
 
     res.json({
       success: true,
       message: 'Song shared successfully',
       data: {
-        shareUrl: `https://soundwave.app/share/${songId}`,
+        shareUrl: `https://soundwave.app/share/${song.id}`,
         platform
       }
     });

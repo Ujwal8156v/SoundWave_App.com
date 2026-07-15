@@ -108,4 +108,76 @@ router.post('/:playlistId/songs', verifyToken, (req, res) => {
   }
 });
 
+// Delete playlist
+router.delete('/:playlistId', verifyToken, (req, res) => {
+  try {
+    const playlist = playlists.get(parseInt(req.params.playlistId));
+
+    if (!playlist) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Playlist not found' }
+      });
+    }
+
+    if (playlist.owner !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'You do not own this playlist' }
+      });
+    }
+
+    playlists.delete(playlist.id);
+    logger.info(`Playlist deleted: ${req.params.playlistId}`);
+
+    res.json({
+      success: true,
+      message: 'Playlist deleted successfully'
+    });
+  } catch (error) {
+    logger.error('Error deleting playlist:', error);
+    res.status(500).json({
+      success: false,
+      error: { code: 'DELETE_ERROR', message: 'Failed to delete playlist' }
+    });
+  }
+});
+
+// Remove song from playlist
+router.delete('/:playlistId/songs/:songId', verifyToken, (req, res) => {
+  try {
+    const playlist = playlists.get(parseInt(req.params.playlistId));
+    const songId = parseInt(req.params.songId);
+
+    if (!playlist) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Playlist not found' }
+      });
+    }
+
+    if (playlist.owner !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'You do not own this playlist' }
+      });
+    }
+
+    playlist.songs = playlist.songs.filter(id => id !== songId);
+    logger.info(`Song ${songId} removed from playlist ${req.params.playlistId}`);
+
+    res.json({
+      success: true,
+      message: 'Song removed from playlist',
+      data: playlist
+    });
+  } catch (error) {
+    logger.error('Error removing song from playlist:', error);
+    res.status(500).json({
+      success: false,
+      error: { code: 'REMOVE_ERROR', message: 'Failed to remove song from playlist' }
+    });
+  }
+});
+
 module.exports = router;

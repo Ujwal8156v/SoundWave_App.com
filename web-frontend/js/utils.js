@@ -48,3 +48,5 @@ const Utils = {
     navigator.clipboard.writeText(text);
   }
 };
+
+window.Utils = Utils;

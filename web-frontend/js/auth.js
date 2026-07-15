@@ -4,6 +4,7 @@ class AuthHandler {
   constructor() {
     this.isLogin = true;
     this.setupEventListeners();
+    this.updateForm();
   }
 
   setupEventListeners() {
@@ -31,21 +32,23 @@ class AuthHandler {
   }
 
   updateForm() {
-    const loginFields = document.getElementById('loginFields');
     const registerFields = document.getElementById('registerFields');
     const toggleText = document.getElementById('toggleAuth');
     const formTitle = document.querySelector('.auth-form h2');
     const submitBtn = document.querySelector('.auth-form button[type="submit"]');
+    const usernameInput = document.getElementById('username');
 
     if (this.isLogin) {
-      loginFields.style.display = 'block';
       registerFields.style.display = 'none';
+      if (usernameInput) usernameInput.removeAttribute('required');
       formTitle.textContent = 'Login';
       submitBtn.textContent = 'Login';
       toggleText.innerHTML = "Don't have an account? <a href='#'>Register</a>";
     } else {
-      loginFields.style.display = 'none';
-      registerFields.style.display = 'block';
+      registerFields.style.display = 'flex';
+      registerFields.style.flexDirection = 'column';
+      registerFields.style.gap = '0.75rem';
+      if (usernameInput) usernameInput.setAttribute('required', '');
       formTitle.textContent = 'Register';
       submitBtn.textContent = 'Register';
       toggleText.innerHTML = 'Already have an account? <a href="#">Login</a>';
@@ -64,7 +67,7 @@ class AuthHandler {
       this.closeModal();
     } catch (error) {
       console.error('Auth error:', error);
-      app.showNotification('Authentication failed', 'error');
+      app.showNotification(error.message || 'Authentication failed', 'error');
     }
   }
 
@@ -108,4 +111,4 @@ class AuthHandler {
   }
 }
 
-const auth = new AuthHandler();
+window.auth = new AuthHandler();

@@ -49,3 +49,7 @@ Thumbs.db
 .cache/
 .venv/
 venv/
+
+# SoundWave Cache & Expo Cache
+backend/node-service/cache/
+mobile-app/.expo/

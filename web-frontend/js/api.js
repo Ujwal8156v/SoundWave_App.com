@@ -1,7 +1,8 @@
 // API Service
 
-const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
-
+const API_BASE_URL = (window.ENV && window.ENV.API_BASE_URL && !window.ENV.API_BASE_URL.startsWith('%'))
+  ? window.ENV.API_BASE_URL
+  : 'http://10.46.71.106:5000/api/v1';
 class APIService {
   constructor() {
     this.baseURL = API_BASE_URL;
@@ -74,8 +75,14 @@ class APIService {
     return this.request(`/songs/${id}`);
   }
 
-  async streamSong(id) {
-    return `${this.baseURL}/songs/${id}/stream?token=${localStorage.getItem('token')}`;
+  async streamSong(id, title = '', artist = '') {
+    const params = new URLSearchParams({
+      token: localStorage.getItem('token') || '',
+      _cb: Date.now(),
+      ...(title && { title }),
+      ...(artist && { artist })
+    });
+    return `${this.baseURL}/songs/${id}/stream?${params.toString()}`;
   }
 
   async downloadSong(id, quality = '320') {
@@ -129,4 +136,4 @@ class APIService {
   }
 }
 
-const API = new APIService();
+window.API = new APIService();

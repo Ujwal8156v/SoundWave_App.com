@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -23,9 +23,12 @@ const { requestLogger } = require('./middleware/logger');
 const app = express();
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: false
+}));
 app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || 'http://localhost:3000',
+  origin: true,
   credentials: true
 }));
 
@@ -70,13 +73,15 @@ app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;
-const HOST = process.env.HOST || 'localhost';
-
-app.listen(PORT, HOST, () => {
-  console.log(`\n🎵 SoundWave API Server`);
-  console.log(`🚀 Running on http://${HOST}:${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV}`);
-  console.log(`\n✅ Server is ready to accept requests!\n`);
-});
+const HOST = process.env.HOST || '0.0.0.0';
 
 module.exports = app;
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n🎵 SoundWave API Server`);
+    console.log(`🚀 Running on port ${PORT}`);
+    console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`\n✅ Server is ready to accept requests!\n`);
+  });
+}
+// trigger restart 3

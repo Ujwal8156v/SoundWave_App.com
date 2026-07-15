@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: soundwave-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-soundwave}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-soundwave_secure_pass_2024}
+      POSTGRES_DB: ${DB_NAME:-soundwave_db}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-soundwave}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - soundwave-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: soundwave-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_secure_pass_2024}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - soundwave-network
+
+  soundwave:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: soundwave-app
+    ports:
+      - "${PYTHON_PORT:-8000}:8000"
+      - "${NODE_PORT:-3000}:3000"
+    environment:
+      # Python Service Environment
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      DATABASE_URL: postgresql://${DB_USER:-soundwave}:${DB_PASSWORD:-soundwave_secure_pass_2024}@postgres:5432/${DB_NAME:-soundwave_db}
+      DATABASE_ECHO: "false"
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_secure_pass_2024}@redis:6379/0
+      REDIS_DB: 0
+      REDIS_TTL: 86400
+      
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_key_min_32_characters_long_here_change_this}
+      JWT_ALGORITHM: HS256
+      
+      # CORS Configuration
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:8000}
+      
+      # API Keys (add your own)
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
+      LAST_FM_API_KEY: ${LAST_FM_API_KEY:-}
+      GENIUS_API_KEY: ${GENIUS_API_KEY:-}
+      
+      # Service URLs
+      NODE_SERVICE_URL: http://soundwave:3000
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      
+      # Node Service Environment
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      PYTHON_SERVICE_URL: http://soundwave:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - soundwave-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  soundwave-network:
+    driver: bridge

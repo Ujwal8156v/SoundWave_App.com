@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SoundWave - Free Music Streaming App">
-    <meta name="theme-color" content="#1f2937">
-    <title>SoundWave - Free Music Streaming</title>
+    <meta name="description" content="Sound Wave - Vibe the moment with Waves">
+    <meta name="theme-color" content="#FF0000">
+    <title>Sound Wave - Free Music Streaming</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -15,22 +15,30 @@
         <!-- Navigation -->
         <nav class="navbar">
             <div class="navbar-container">
-                <div class="navbar-brand">
-                    <span class="logo">🎵</span>
-                    <h1>SoundWave</h1>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="#home" class="nav-link">Home</a></li>
-                    <li><a href="#discover" class="nav-link">Discover</a></li>
-                    <li><a href="#playlists" class="nav-link">Playlists</a></li>
-                    <li><a href="#profile" class="nav-link" id="profileLink">Profile</a></li>
-                    <li><a href="#" class="nav-link" id="logoutLink" style="display:none;">Logout</a></li>
-                </ul>
-                <button class="menu-toggle" id="menuToggle">
+                <a href="#home" class="navbar-brand">
+                    <span class="logo-text-accent">SW</span>
+                </a>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#features" class="nav-link">Features</a></li>
+                    <li><a href="#discover" class="nav-link">Discover</a></li>
+                    <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                    <li id="navPlaylists" style="display:none;"><a href="#playlists" class="nav-link">Playlists</a></li>
+                    <li class="dropdown" id="settingsDropdown" style="display:none;">
+                        <a href="#" class="nav-link dropdown-toggle" id="settingsLink" title="Menu">☰</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#profile" class="dropdown-link">Profile</a></li>
+                            <li><a href="#settings" class="dropdown-link">Settings</a></li>
+                            <li><a href="#" class="dropdown-link" id="logoutLink">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </nav>
 
@@ -38,13 +46,159 @@
         <main class="main-content">
             <!-- Home Section -->
             <section id="home" class="section">
+                <!-- Hero -->
                 <div class="hero">
-                    <h2>Welcome to SoundWave</h2>
-                    <p>Stream millions of songs for free</p>
-                    <div class="hero-buttons">
-                        <button class="btn btn-primary" id="exploreBtn">Explore Now</button>
-                        <button class="btn btn-secondary" id="loginBtn">Login</button>
+                    <div class="hero-content">
+                        <h2>Vibe the Moment with Waves</h2>
+                        <p>Stream your favorite tracks in high-fidelity 320kbps. Zero-latency caching, offline downloads, and smart equalizer controls.</p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary" id="exploreBtn">Start Listening</button>
+                            <a href="#pricing" class="btn btn-secondary">Get Premium</a>
+                        </div>
                     </div>
+                    <!-- Stats Grid -->
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <span class="stat-num">10M+</span>
+                            <span class="stat-label">Hi-Fi Tracks</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num">500K+</span>
+                            <span class="stat-label">Active Listeners</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num">150+</span>
+                            <span class="stat-label">Countries Support</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div id="features" class="landing-features">
+                    <div class="section-header">
+                        <h2>Why Choose SoundWave?</h2>
+                        <p>Discover the next-generation music streaming experience</p>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🎧</div>
+                            <h3>Studio Sound Quality</h3>
+                            <p>Stream pristine audio formats up to 320kbps with full dynamic range curve support.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <h3>Zero-Latency Caching</h3>
+                            <p>Our intelligent background engine pre-buffers subsequent tracks for seamless gapless playback.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💾</div>
+                            <h3>Offline Downloads</h3>
+                            <p>Save playlists directly to local storage to enjoy music without cell data or internet access.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚙️</div>
+                            <h3>Smart Dynamic Controls</h3>
+                            <p>Customize sleep timers, playback speeds, and smart frequency equalizer curves.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Plans -->
+                <div id="pricing" class="landing-pricing">
+                    <div class="section-header">
+                        <h2>Choose Your Plan</h2>
+                        <p>Flexible subscriptions tailored to your listening preferences</p>
+                    </div>
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h3>Free Tier</h3>
+                            <div class="price">₹0<span>/month</span></div>
+                            <ul class="price-features">
+                                <li>✓ Stream standard quality (192kbps)</li>
+                                <li>✓ Supported by minor sponsor ads</li>
+                                <li>✓ Standard background playback</li>
+                                <li>✗ No offline downloads</li>
+                                <li>✗ No smart dynamic preloading</li>
+                            </ul>
+                            <a href="#discover" class="btn btn-secondary-accent">Start Free</a>
+                        </div>
+                        <div class="pricing-card recommended">
+                            <span class="badge">Most Popular</span>
+                            <h3>SoundWave Plus</h3>
+                            <div class="price">₹59<span>/month</span></div>
+                            <ul class="price-features">
+                                <li>✓ Stream studio quality (320kbps)</li>
+                                <li>✓ 100% Ads-free experience</li>
+                                <li>✓ Zero-latency background preloading</li>
+                                <li>✓ Unlimited offline song downloads</li>
+                                <li>✓ Custom Equalizer curve controls</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="alert('Thank you! Redirecting to Plus subscription checkout (₹59/month)...');">Go Plus</button>
+                        </div>
+                        <div class="pricing-card">
+                            <h3>Family Premium</h3>
+                            <div class="price">₹179<span>/month</span></div>
+                            <ul class="price-features">
+                                <li>✓ Everything in SoundWave Plus</li>
+                                <li>✓ Up to 6 independent member profiles</li>
+                                <li>✓ Parental restricted mode controls</li>
+                                <li>✓ Shared family-wide playlist vaults</li>
+                                <li>✓ Smart multi-device control sync</li>
+                            </ul>
+                            <button class="btn btn-secondary-accent" onclick="alert('Redirecting to Family billing setup (₹179/month)...');">Get Family</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Accordion -->
+                <div id="faq" class="landing-faq">
+                    <div class="section-header">
+                        <h2>Frequently Asked Questions</h2>
+                        <p>Got questions? We have answers to help you get started</p>
+                    </div>
+                    <div class="faq-accordion">
+                        <div class="faq-item">
+                            <button class="faq-question">What makes SoundWave stream faster? <span class="faq-icon">+</span></button>
+                            <div class="faq-answer">
+                                <p>SoundWave utilizes our custom dual-layer background stream verification engine. As a song plays, the application automatically pre-resolves and pre-buffers the next song in your queue, resulting in instantaneous, gapless track transitions.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Can I listen to my songs offline? <span class="faq-icon">+</span></button>
+                            <div class="faq-answer">
+                                <p>Yes! With our download options, you can cache tracks directly to your web browser or device storage. Simply click the download icon to save it for cellular-data-free playback.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How does restricted mode work? <span class="faq-icon">+</span></button>
+                            <div class="faq-answer">
+                                <p>Restricted mode hides explicit content and limits background networking processes, making it perfect for child accounts or shared home network devices.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How do I customize the audio quality? <span class="faq-icon">+</span></button>
+                            <div class="faq-answer">
+                                <p>You can adjust the audio quality in the Settings menu (☰ -> Settings). SoundWave supports High (320kbps), Medium (192kbps), and Low (96kbps) bitrates to fit any data budget.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Support -->
+                <div id="contact" class="landing-contact">
+                    <div class="section-header">
+                        <h2>Get In Touch</h2>
+                        <p>Have comments, suggestions, or feature requests? Contact our staff</p>
+                    </div>
+                    <form id="contactForm" class="contact-form">
+                        <div class="form-row">
+                            <input type="text" id="contactName" placeholder="Your Name" required>
+                            <input type="email" id="contactEmail" placeholder="Your Email" required>
+                        </div>
+                        <input type="text" id="contactSubject" placeholder="Subject" required>
+                        <textarea id="contactMessage" placeholder="Your Message" rows="5" required></textarea>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
                 </div>
             </section>
 
@@ -52,10 +206,23 @@
             <section id="discover" class="section">
                 <div class="container">
                     <h2>Discover</h2>
+                    
+                    <!-- Sponsored Premium Ad -->
+                    <div class="sponsored-ad" id="sponsoredAd">
+                        <span class="ad-badge">SPONSORED</span>
+                        <div class="ad-content">
+                            <h3>Tired of Ads? Upgrade to SoundWave Plus</h3>
+                            <p>Unlock 320kbps High-Fi streams, gapless preloading, and unlimited offline downloads for just ₹59/month!</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="location.hash='#pricing';">Get Plus</button>
+                        <button class="ad-close-btn" onclick="document.getElementById('sponsoredAd').style.display='none';" title="Dismiss Ad">&times;</button>
+                    </div>
+
                     <div class="search-bar">
                         <input type="text" id="searchInput" placeholder="Search songs, artists...">
                         <button id="searchBtn" class="btn-search">🔍</button>
                     </div>
+                    <div id="searchSuggestions" class="suggestions-container" style="display:none;"></div>
                     <div class="songs-grid" id="songsGrid">
                         <!-- Songs will be loaded here -->
                     </div>
@@ -82,6 +249,204 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="section" style="display:none;">
+                <div class="container">
+                    <h2>Settings</h2>
+                    <div class="settings-content" style="max-width: 600px; margin: 2rem auto;">
+                        <form id="settingsForm" class="auth-form" style="max-width: 100%; padding: 2rem;">
+                            <!-- General Group -->
+                            <div class="settings-group">
+                                <h3>General</h3>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Restricted Mode</span>
+                                        <span class="setting-desc">Restricted mode for multiple devices use</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="restrictedMode">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Playback Group -->
+                            <div class="settings-group">
+                                <h3>Playback</h3>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Equaliser</span>
+                                        <span class="setting-desc">Adjust audio frequency curves</span>
+                                    </div>
+                                    <button type="button" class="btn-small" id="equaliserBtn">Adjust</button>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">External Device Control</span>
+                                        <span class="setting-desc">Allow external devices to start playback</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="allowExternalPlayback">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Double-Tap to Seek</span>
+                                        <span class="setting-desc">Double-tap side of player to seek 10s</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="doubleTapSeek">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Dynamic Queue</span>
+                                        <span class="setting-desc">Enable smart recommendations queue</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="dynamicQueue">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Download and Storage Group -->
+                            <div class="settings-group">
+                                <h3>Download & Storage</h3>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Storage Space</span>
+                                        <span class="setting-desc" id="storageStatusText">Used: 142 MB / Available: 4.8 GB</span>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Show Device Files</span>
+                                        <span class="setting-desc">Show device files in library list</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="showDeviceFiles">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Download over Wi-Fi only</span>
+                                        <span class="setting-desc">Will only use Wi-Fi networks for downloads</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="downloadWifiOnly">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Audio Quality</span>
+                                        <span class="setting-desc">Configure target audio stream bitrate</span>
+                                    </div>
+                                    <select id="audioQualitySelect" class="settings-select">
+                                        <option value="high">High (320kbps)</option>
+                                        <option value="medium" selected>Medium (192kbps)</option>
+                                        <option value="low">Low (96kbps)</option>
+                                    </select>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Smart Download</span>
+                                        <span class="setting-desc">Only download songs added to loved library</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="smartDownload">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Recently Played Songs</span>
+                                        <span class="setting-desc">Save history of recently played tracks</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="saveRecentSongs">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Clear Downloads</span>
+                                        <span class="setting-desc">Delete all downloaded files from storage</span>
+                                    </div>
+                                    <button type="button" class="btn-small btn-danger" id="clearDownloadsBtn">Clear</button>
+                                </div>
+                            </div>
+
+                            <!-- Notifications Group -->
+                            <div class="settings-group">
+                                <h3>Notifications</h3>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Music Recommendation Notifications</span>
+                                        <span class="setting-desc">Receive updates about similar releases</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="musicRecommendations">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <span class="setting-title">Playlist Update Notifications</span>
+                                        <span class="setting-desc">Notify when shared playlists update</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="playlistUpdates">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <!-- Site Footer -->
+            <footer class="site-footer">
+                <div class="footer-container">
+                    <div class="footer-brand">
+                        <span class="logo">🔊</span>
+                        <h2>Sound Wave</h2>
+                        <p>Vibe the moment with Waves.</p>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-col">
+                            <h4>Product</h4>
+                            <a href="#features">Features</a>
+                            <a href="#discover">Listen Now</a>
+                            <a href="#pricing">Pricing Plans</a>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Company</h4>
+                            <a href="#home">About Us</a>
+                            <a href="#home">Careers</a>
+                            <a href="#contact">Contact Support</a>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Legal</h4>
+                            <a href="#home">Terms of Service</a>
+                            <a href="#home">Privacy Policy</a>
+                            <a href="#home">Cookie Settings</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 SoundWave Music Inc. All rights reserved.</p>
+                    <div class="social-badges">
+                        <a href="https://twitter.com" target="_blank" class="social-badge">𝕏</a>
+                        <a href="https://github.com" target="_blank" class="social-badge">🐙</a>
+                        <a href="https://instagram.com" target="_blank" class="social-badge">📸</a>
+                    </div>
+                </div>
+            </footer>
         </main>
 
         <!-- Audio Player -->
@@ -110,11 +475,19 @@
                 </div>
 
                 <div class="player-actions">
+                    <button class="action-btn" id="sleepTimerBtn" title="Sleep Timer">⏱️</button>
                     <button class="action-btn" id="downloadBtn" title="Download">⬇</button>
                     <button class="action-btn" id="shareBtn" title="Share">📤</button>
                     <button class="action-btn" id="likeBtn" title="Like">♡</button>
                     <button class="action-btn" id="volumeBtn" title="Volume">🔊</button>
                     <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="70">
+                    <select id="speedSelect" class="speed-select" title="Playback Speed">
+                        <option value="0.5">0.5x</option>
+                        <option value="1.0" selected>1.0x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2.0">2.0x</option>
+                    </select>
                 </div>
             </div>
         </footer>
@@ -127,7 +500,7 @@
             <div class="auth-form">
                 <h2>Login / Register</h2>
                 <form id="authForm">
-                    <div id="loginFields">
+                    <div id="commonFields">
                         <input type="email" id="email" placeholder="Email" required>
                         <input type="password" id="password" placeholder="Password" required>
                     </div>
@@ -143,11 +516,83 @@
         </div>
     </div>
 
+    <!-- Expandable Web Player Modal -->
+    <div id="playerModal" class="modal player-modal">
+        <div class="modal-content player-modal-content">
+            <button class="modal-close" id="closePlayerModalBtn">&times;</button>
+            <div class="modal-header-text">Now Playing</div>
+            
+            <div class="player-modal-artwork">
+                <img id="modalCoverArt" src="assets/default-cover.png" alt="Cover Art">
+            </div>
+            
+            <div class="player-modal-visualizer-container" style="margin: 0.5rem 0;">
+                <canvas id="modalVisualizer" width="350" height="60" style="width: 100%; border-radius: 6px; background-color: rgba(0,0,0,0.2);"></canvas>
+            </div>
+            
+            <div class="player-modal-meta">
+                <div class="meta-details">
+                    <h2 id="modalSongTitle">No song playing</h2>
+                    <p id="modalArtistName">-</p>
+                </div>
+                <button class="modal-like-btn" id="modalLikeBtn">♡</button>
+            </div>
+            
+            <div class="player-modal-progress">
+                <input type="range" id="modalProgressBar" class="progress-bar" min="0" max="100" value="0">
+                <div class="modal-time-row">
+                    <span id="modalCurrentTime">0:00</span>
+                    <span id="modalDuration">0:00</span>
+                </div>
+            </div>
+            
+            <div class="player-modal-controls">
+                <button class="control-btn" id="modalSleepTimerBtn" title="Sleep Timer">⏱️</button>
+                <button class="control-btn" id="modalShuffleBtn" title="Shuffle">🔀</button>
+                <button class="control-btn" id="modalPrevBtn" title="Previous">⏮</button>
+                <button class="control-btn play-btn" id="modalPlayBtn" title="Play">▶</button>
+                <button class="control-btn" id="modalNextBtn" title="Next">⏭</button>
+                <button class="control-btn" id="modalRepeatBtn" title="Repeat">🔁</button>
+            </div>
+            
+            <div class="player-modal-tabs">
+                <button class="modal-tab active" id="modalTabUpNext">UP NEXT</button>
+                <button class="modal-tab" id="modalTabLyrics">LYRICS</button>
+                <button class="modal-tab" id="modalTabRelated">RELATED</button>
+            </div>
+            <div class="player-modal-tab-content">
+                <!-- Up Next Tab -->
+                <div class="tab-pane active" id="paneUpNext">
+                    <ul id="upNextList" class="modal-song-list">
+                        <!-- Loaded dynamically -->
+                    </ul>
+                </div>
+                <!-- Lyrics Tab -->
+                <div class="tab-pane" id="paneLyrics" style="display: none;">
+                    <div id="lyricsContainer" class="lyrics-container">
+                        <!-- Loaded dynamically based on playtime -->
+                    </div>
+                </div>
+                <!-- Related Tab -->
+                <div class="tab-pane" id="paneRelated" style="display: none;">
+                    <ul id="relatedList" class="modal-song-list">
+                        <!-- Loaded dynamically -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="js/app.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/player.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/utils.js"></script>
+    <script>
+        window.ENV = {
+            API_BASE_URL: "%VITE_API_BASE_URL%"
+        };
+    </script>
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/player.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/utils.js"></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>

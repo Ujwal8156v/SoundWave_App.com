@@ -4,10 +4,11 @@
   "description": "A free music streaming platform with web and mobile support",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:web\" \"npm run dev:backend\" \"npm run dev:mobile\"",
-    "dev:web": "cd web-frontend && npm run dev",
+    "dev": "node scripts/update-env-ip.js && node node_modules/concurrently/bin/concurrently.js \"npm run dev:web\" \"npm run dev:backend\" \"npm run dev:mobile\"",
+    "dev:web": "node scripts/update-env-ip.js && cd web-frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
-    "dev:mobile": "cd mobile-app && npm run start",
+    "dev:python": "cd backend && npm run dev:python",
+    "dev:mobile": "node scripts/update-env-ip.js && cd mobile-app && npm run start",
     "build": "npm run build:web && npm run build:backend && npm run build:mobile",
     "build:web": "cd web-frontend && npm run build",
     "build:backend": "cd backend && npm run build",
@@ -34,6 +35,6 @@
   "author": "Ujwal8156v",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^8.0.0"
+    "concurrently": "^8.2.2"
   }
 }

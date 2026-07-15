@@ -1,0 +1,15 @@
+{
+  "name": "soundwave-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SoundWave backend services",
+  "scripts": {
+  "start": "npm --prefix node-service start",
+  "dev": "npm --prefix node-service run dev",
+  "dev:node": "npm --prefix node-service run dev",
+  "dev:python": "cd python-service && python main.py",
+  "build": "npm --prefix node-service run build",
+  "test": "npm --prefix node-service test",
+  "lint": "npm --prefix node-service run lint"
+}
+}
