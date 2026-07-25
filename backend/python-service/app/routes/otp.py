@@ -25,7 +25,7 @@ class OTPVerifyRequest(BaseModel):
     otp: str
 
 def send_email_otp(receiver_email: str, otp_code: str) -> bool:
-    sender_email = os.getenv("SENDER_EMAIL", "soundwavemusicapp@gmail.com")
+    sender_email = os.getenv("SENDER_EMAIL", "wsound283@gmail.com")
     sender_password = os.getenv("SENDER_PASSWORD", "")  # Gmail App Password
     
     if not sender_password:

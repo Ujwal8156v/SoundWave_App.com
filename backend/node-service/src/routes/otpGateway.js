@@ -91,7 +91,7 @@ router.post('/send', async (req, res) => {
     // Send email via Nodemailer if SMTP transporter is available
     if (transporter && type === 'email') {
       const mailOptions = {
-        from: '"SoundWave Security" <noreply@soundwave.com>',
+        from: '"SoundWave Security" <wsound283@gmail.com>',
         to: cleanRecipient,
         subject: '🔒 Your SoundWave 6-Digit Email OTP Verification Code',
         html: `
