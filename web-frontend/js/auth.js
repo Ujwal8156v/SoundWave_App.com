@@ -157,29 +157,31 @@ class AuthHandler {
     }
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+    
+    // 0ms Optimistic Immediate Close & Login State
     this.closeModal();
+    const optimisticUser = {
+      id: Date.now(),
+      email,
+      username: email.split('@')[0],
+      firstName: 'Music',
+      lastName: 'User'
+    };
+    localStorage.setItem('token', 'token-' + Date.now());
+    if (targetApp) {
+      targetApp.setCurrentUser(optimisticUser);
+      targetApp.showNotification('Logined 🚀', 'success', 'top-right');
+    }
 
-    try {
-      const response = await window.API.login(email, password);
-      const user = response.data || response.user || { id: 1, email, username: email.split('@')[0] };
-      if (targetApp) {
-        targetApp.setCurrentUser(user);
-        targetApp.showNotification('Logined 🚀', 'success', 'top-right');
-      }
-    } catch (apiErr) {
-      // Fallback for local session login
-      const fallbackUser = {
-        id: Date.now(),
-        email,
-        username: email.split('@')[0],
-        firstName: 'Music',
-        lastName: 'User'
-      };
-      localStorage.setItem('token', 'local-token-' + Date.now());
-      if (targetApp) {
-        targetApp.setCurrentUser(fallbackUser);
-        targetApp.showNotification('Logined 🚀', 'success', 'top-right');
-      }
+    // Async background API sync
+    if (window.API) {
+      window.API.login(email, password)
+        .then(response => {
+          if (response && response.data && targetApp) {
+            targetApp.setCurrentUser(response.data);
+          }
+        })
+        .catch(() => null);
     }
   }
 
@@ -196,35 +198,31 @@ class AuthHandler {
     }
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
-    this.closeModal();
 
-    try {
-      const response = await window.API.register({
-        email,
-        password,
-        username,
-        firstName,
-        lastName
-      });
-      const user = response.data || response.user || { id: Date.now(), email, username, firstName, lastName };
-      if (targetApp) {
-        targetApp.setCurrentUser(user);
-        targetApp.showNotification('Registered ✨', 'success', 'top-right');
-      }
-    } catch (apiErr) {
-      // Fallback for local session registration
-      const fallbackUser = {
-        id: Date.now(),
-        email,
-        username,
-        firstName,
-        lastName
-      };
-      localStorage.setItem('token', 'local-token-' + Date.now());
-      if (targetApp) {
-        targetApp.setCurrentUser(fallbackUser);
-        targetApp.showNotification('Registered ✨', 'success', 'top-right');
-      }
+    // 0ms Optimistic Immediate Close & Register State
+    this.closeModal();
+    const optimisticUser = {
+      id: Date.now(),
+      email,
+      username,
+      firstName,
+      lastName
+    };
+    localStorage.setItem('token', 'token-' + Date.now());
+    if (targetApp) {
+      targetApp.setCurrentUser(optimisticUser);
+      targetApp.showNotification('Registered ✨', 'success', 'top-right');
+    }
+
+    // Async background API sync
+    if (window.API) {
+      window.API.register({ email, password, username, firstName, lastName })
+        .then(response => {
+          if (response && response.data && targetApp) {
+            targetApp.setCurrentUser(response.data);
+          }
+        })
+        .catch(() => null);
     }
   }
 
