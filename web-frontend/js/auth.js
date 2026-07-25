@@ -105,8 +105,6 @@ class AuthHandler {
     const subtitle = document.getElementById('authSubtitle');
     const submitBtn = document.getElementById('authSubmitBtn');
     const usernameInput = document.getElementById('username');
-    const demoWrap = document.querySelector('.demo-login-wrap');
-    const divider = document.querySelector('.auth-divider');
     const otpContainer = document.getElementById('otpStepContainer');
 
     const tabLogin = document.getElementById('authTabLogin');
@@ -117,8 +115,6 @@ class AuthHandler {
     if (this.isLogin) {
       if (commonFields) commonFields.style.display = 'block';
       if (registerFields) registerFields.style.display = 'none';
-      if (demoWrap) demoWrap.style.display = 'block';
-      if (divider) divider.style.display = 'block';
       if (submitBtn) {
         submitBtn.style.display = 'block';
         submitBtn.textContent = 'Sign In to SoundWave 🚀';
@@ -140,8 +136,6 @@ class AuthHandler {
         registerFields.style.flexDirection = 'column';
         registerFields.style.gap = '0.75rem';
       }
-      if (demoWrap) demoWrap.style.display = 'none';
-      if (divider) divider.style.display = 'none';
       if (submitBtn) {
         submitBtn.style.display = 'block';
         submitBtn.textContent = 'Send OTP & Register ✨';
