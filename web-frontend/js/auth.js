@@ -30,33 +30,16 @@ class AuthHandler {
       if (this.isLogin) this.toggleMode();
     });
 
-    // 1-Click Quick Demo Login
-    document.getElementById('demoLoginBtn')?.addEventListener('click', () => {
-      document.getElementById('email').value = 'demo@soundwave.com';
-      document.getElementById('password').value = 'soundwave123';
-      
-      const demoUser = {
-        id: 1,
-        username: 'demo_user',
-        email: 'demo@soundwave.com',
-        firstName: 'Demo',
-        lastName: 'User'
-      };
-      localStorage.setItem('token', 'demo-token-12345');
+    // Auto-Fill Demo Credentials Button Handler
+    document.getElementById('fillDemoCredsBtn')?.addEventListener('click', () => {
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      if (emailInput) emailInput.value = 'MusicDemo';
+      if (passInput) passInput.value = 'SoundWave1234';
+
       const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
       if (targetApp) {
-        targetApp.setCurrentUser(demoUser);
-        targetApp.showNotification('Logined 🚀', 'success', 'top-right');
-      }
-
-      // Stay on login page until popup is shown, then close after 1.2s
-      setTimeout(() => {
-        this.closeModal();
-      }, 1200);
-
-      // Background async sync with API
-      if (window.API) {
-        window.API.login('demo@soundwave.com', 'soundwave123').catch(() => null);
+        targetApp.showNotification('Demo Credentials Filled: MusicDemo / SoundWave1234 ⚡', 'info', 'top-right');
       }
     });
 
@@ -218,14 +201,22 @@ class AuthHandler {
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     
-    // Set user session and show top-right popup notification FIRST
-    const optimisticUser = {
+    // Check MusicDemo credentials
+    const isMusicDemo = email.toLowerCase() === 'musicdemo' || email.toLowerCase() === 'musicdemo@soundwave.com';
+    const optimisticUser = isMusicDemo ? {
+      id: 100,
+      username: 'MusicDemo',
+      email: 'MusicDemo@soundwave.com',
+      firstName: 'Music',
+      lastName: 'Demo'
+    } : {
       id: Date.now(),
       email,
-      username: email.split('@')[0],
+      username: email.includes('@') ? email.split('@')[0] : email,
       firstName: 'Music',
       lastName: 'User'
     };
+
     localStorage.setItem('token', 'token-' + Date.now());
     if (targetApp) {
       targetApp.setCurrentUser(optimisticUser);

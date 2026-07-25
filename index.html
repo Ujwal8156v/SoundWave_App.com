@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
-  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-v40spz4f.js"></script>
+  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-D7gscUZa.js"></script>
   <link rel="stylesheet" crossorigin href="/soundwave-musicstream-app/assets/index-DgGGzWcS.css">
 </head>
 <body>
@@ -630,15 +630,17 @@
                 <button type="button" class="auth-tab" id="authTabRegister">✍️ Register Account</button>
             </div>
 
-            <!-- 1-Click Quick Demo Login Button -->
-            <div class="demo-login-wrap">
-                <button type="button" class="btn btn-secondary demo-login-btn" id="demoLoginBtn">
-                    ⚡ 1-Click Quick Demo Login (Instant Access)
+            <!-- Demo Credentials Helper Badge -->
+            <div class="demo-login-wrap" id="demoBadgeWrap" style="background: rgba(255, 0, 30, 0.12); border: 1px dashed rgba(255, 0, 30, 0.4); padding: 0.75rem 1rem; border-radius: 14px; margin-bottom: 1.25rem; text-align: center; backdrop-filter: blur(10px);">
+                <div style="font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-bottom: 0.25rem;">
+                    🔑 Demo Access Credentials
+                </div>
+                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.85);">
+                    Email: <strong style="color: var(--primary-color);">MusicDemo</strong> · Password: <strong style="color: var(--primary-color);">SoundWave1234</strong>
+                </div>
+                <button type="button" id="fillDemoCredsBtn" style="margin-top: 0.4rem; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 20px; padding: 0.25rem 0.75rem; font-size: 0.75rem; cursor: pointer; font-weight: 600;">
+                    ⚡ Auto-Fill Demo Credentials
                 </button>
-            </div>
-
-            <div class="auth-divider">
-                <span>OR CONTINUE WITH EMAIL</span>
             </div>
 
             <div class="auth-form">
