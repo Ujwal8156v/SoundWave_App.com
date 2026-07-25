@@ -453,7 +453,10 @@ export default function App() {
   async function logout() {
     try {
       await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('soundwave_user');
       setUser(null);
+      setPassword('');
+      setEmail('');
       setIsViewingSettings(false);
       Alert.alert('Signed out', 'You have been logged out.');
     } catch (error) {

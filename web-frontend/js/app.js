@@ -386,6 +386,26 @@ class SoundWaveApp {
     this.currentUser = null;
     this.isEditingProfile = false;
     
+    // Clear password and auth input fields
+    const passwordInput = document.getElementById('password');
+    const emailInput = document.getElementById('email');
+    const usernameInput = document.getElementById('username');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+
+    if (passwordInput) passwordInput.value = '';
+    if (emailInput) emailInput.value = '';
+    if (usernameInput) usernameInput.value = '';
+    if (firstNameInput) firstNameInput.value = '';
+    if (lastNameInput) lastNameInput.value = '';
+
+    if (window.auth) {
+      window.auth.pendingUser = null;
+      window.auth.currentOtp = null;
+      window.auth.isOtpStep = false;
+      if (window.auth.updateForm) window.auth.updateForm();
+    }
+
     const settingsDropdown = document.getElementById('settingsDropdown');
     if (settingsDropdown) settingsDropdown.style.display = 'none';
 
