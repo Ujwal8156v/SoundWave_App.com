@@ -26,7 +26,7 @@ class AuthHandler {
       if (this.isLogin) this.toggleMode();
     });
 
-    // 1-Click Quick Demo Login (Instant 0ms)
+    // 1-Click Quick Demo Login
     document.getElementById('demoLoginBtn')?.addEventListener('click', () => {
       document.getElementById('email').value = 'demo@soundwave.com';
       document.getElementById('password').value = 'soundwave123';
@@ -39,12 +39,16 @@ class AuthHandler {
         lastName: 'User'
       };
       localStorage.setItem('token', 'demo-token-12345');
-      this.closeModal();
       const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
       if (targetApp) {
         targetApp.setCurrentUser(demoUser);
         targetApp.showNotification('Logined 🚀', 'success', 'top-right');
       }
+
+      // Keep user on login page until popup is shown, then close after 1.2s
+      setTimeout(() => {
+        this.closeModal();
+      }, 1200);
 
       // Background async sync with API
       if (window.API) {
@@ -136,7 +140,6 @@ class AuthHandler {
       } else {
         await this.register();
       }
-      this.closeModal();
     } catch (error) {
       console.error('Auth error:', error);
       const msg = error.message || 'Authentication failed. Please check your credentials.';
@@ -158,8 +161,7 @@ class AuthHandler {
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     
-    // 0ms Optimistic Immediate Close & Login State
-    this.closeModal();
+    // Set user session and show top-right popup notification FIRST
     const optimisticUser = {
       id: Date.now(),
       email,
@@ -172,6 +174,11 @@ class AuthHandler {
       targetApp.setCurrentUser(optimisticUser);
       targetApp.showNotification('Logined 🚀', 'success', 'top-right');
     }
+
+    // Stay on login modal page until popup is shown, then close after 1.2s
+    setTimeout(() => {
+      this.closeModal();
+    }, 1200);
 
     // Async background API sync
     if (window.API) {
@@ -199,8 +206,7 @@ class AuthHandler {
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
 
-    // 0ms Optimistic Immediate Close & Register State
-    this.closeModal();
+    // Set user session and show top-right popup notification FIRST
     const optimisticUser = {
       id: Date.now(),
       email,
@@ -213,6 +219,11 @@ class AuthHandler {
       targetApp.setCurrentUser(optimisticUser);
       targetApp.showNotification('Registered ✨', 'success', 'top-right');
     }
+
+    // Stay on registration modal page until popup is shown, then close after 1.2s
+    setTimeout(() => {
+      this.closeModal();
+    }, 1200);
 
     // Async background API sync
     if (window.API) {
