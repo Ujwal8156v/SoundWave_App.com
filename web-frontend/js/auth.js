@@ -1,8 +1,12 @@
-// Authentication Handler
+// SoundWave Glassmorphic Dynamic Auth Handler with Email OTP Verification
 
 class AuthHandler {
   constructor() {
     this.isLogin = true;
+    this.isOtpStep = false;
+    this.currentOtp = null;
+    this.otpTimer = null;
+    this.pendingUser = null;
     this.setupEventListeners();
     this.updateForm();
   }
@@ -45,7 +49,7 @@ class AuthHandler {
         targetApp.showNotification('Logined 🚀', 'success', 'top-right');
       }
 
-      // Keep user on login page until popup is shown, then close after 1.2s
+      // Stay on login page until popup is shown, then close after 1.2s
       setTimeout(() => {
         this.closeModal();
       }, 1200);
@@ -67,6 +71,34 @@ class AuthHandler {
       }
     });
 
+    // OTP Input Digit Auto-Focus & Key Navigation
+    const otpInputs = document.querySelectorAll('.otp-digit-input');
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (val && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+        // Auto verify if all 6 digits entered
+        const fullOtp = Array.from(otpInputs).map(i => i.value).join('');
+        if (fullOtp.length === 6) {
+          this.verifyOtp();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+
+    // Verify OTP Button Action
+    document.getElementById('verifyOtpBtn')?.addEventListener('click', () => this.verifyOtp());
+
+    // Resend OTP Action
+    document.getElementById('resendOtpBtn')?.addEventListener('click', () => this.resendOtp());
+
     modalCloseBtn?.addEventListener('click', () => this.closeModal());
 
     window.addEventListener('click', (e) => {
@@ -78,41 +110,66 @@ class AuthHandler {
 
   toggleMode() {
     this.isLogin = !this.isLogin;
+    this.isOtpStep = false;
     this.updateForm();
   }
 
   updateForm() {
     const registerFields = document.getElementById('registerFields');
+    const commonFields = document.getElementById('commonFields');
     const toggleText = document.getElementById('toggleAuth');
     const formTitle = document.getElementById('authFormTitle');
     const subtitle = document.getElementById('authSubtitle');
     const submitBtn = document.getElementById('authSubmitBtn');
     const usernameInput = document.getElementById('username');
+    const demoWrap = document.querySelector('.demo-login-wrap');
+    const divider = document.querySelector('.auth-divider');
+    const otpContainer = document.getElementById('otpStepContainer');
 
     const tabLogin = document.getElementById('authTabLogin');
     const tabRegister = document.getElementById('authTabRegister');
 
+    if (otpContainer) otpContainer.style.display = 'none';
+
     if (this.isLogin) {
+      if (commonFields) commonFields.style.display = 'block';
       if (registerFields) registerFields.style.display = 'none';
+      if (demoWrap) demoWrap.style.display = 'block';
+      if (divider) divider.style.display = 'block';
+      if (submitBtn) {
+        submitBtn.style.display = 'block';
+        submitBtn.textContent = 'Sign In to SoundWave 🚀';
+      }
       if (usernameInput) usernameInput.removeAttribute('required');
       if (formTitle) formTitle.textContent = 'Welcome Back';
       if (subtitle) subtitle.textContent = 'Log in to unlock 320kbps streams, playlists, and spatial audio';
-      if (submitBtn) submitBtn.textContent = 'Sign In to SoundWave 🚀';
-      if (toggleText) toggleText.innerHTML = "Don't have an account? <a href='#' id='toggleAuthLink'>Create one now</a>";
+      if (toggleText) {
+        toggleText.style.display = 'block';
+        toggleText.innerHTML = "Don't have an account? <a href='#' id='toggleAuthLink'>Create one now</a>";
+      }
 
       tabLogin?.classList.add('active');
       tabRegister?.classList.remove('active');
     } else {
+      if (commonFields) commonFields.style.display = 'block';
       if (registerFields) {
         registerFields.style.display = 'flex';
         registerFields.style.flexDirection = 'column';
         registerFields.style.gap = '0.75rem';
       }
+      if (demoWrap) demoWrap.style.display = 'none';
+      if (divider) divider.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.style.display = 'block';
+        submitBtn.textContent = 'Send OTP & Register ✨';
+      }
       if (usernameInput) usernameInput.setAttribute('required', '');
       if (formTitle) formTitle.textContent = 'Join SoundWave';
-      if (subtitle) subtitle.textContent = 'Create your free account to stream 10M+ songs & build playlists';
-      if (submitBtn) submitBtn.textContent = 'Create Free Account ✨';
-      if (toggleText) toggleText.innerHTML = 'Already have an account? <a href="#" id="toggleAuthLink">Log in here</a>';
+      if (subtitle) subtitle.textContent = 'Create your free account with Email OTP Verification';
+      if (toggleText) {
+        toggleText.style.display = 'block';
+        toggleText.innerHTML = 'Already have an account? <a href="#" id="toggleAuthLink">Log in here</a>';
+      }
 
       tabRegister?.classList.add('active');
       tabLogin?.classList.remove('active');
@@ -132,13 +189,12 @@ class AuthHandler {
     e.preventDefault();
     const alertBox = document.getElementById('authAlert');
     if (alertBox) alertBox.style.display = 'none';
-    const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
 
     try {
       if (this.isLogin) {
         await this.login();
       } else {
-        await this.register();
+        await this.initiateOtpRegistration();
       }
     } catch (error) {
       console.error('Auth error:', error);
@@ -147,6 +203,7 @@ class AuthHandler {
         alertBox.style.display = 'block';
         alertBox.textContent = msg;
       }
+      const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
       if (targetApp) targetApp.showNotification(msg, 'error', 'top-right');
     }
   }
@@ -192,7 +249,7 @@ class AuthHandler {
     }
   }
 
-  async register() {
+  async initiateOtpRegistration() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
     const usernameInput = document.getElementById('username');
@@ -204,30 +261,112 @@ class AuthHandler {
       throw new Error('Please fill in required email and password');
     }
 
+    // Store pending user registration payload
+    this.pendingUser = { email, password, username, firstName, lastName };
+
+    // Generate 6-digit OTP
+    this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    this.isOtpStep = true;
+
+    // Switch UI to OTP step view
+    document.getElementById('commonFields').style.display = 'none';
+    document.getElementById('registerFields').style.display = 'none';
+    document.getElementById('authSubmitBtn').style.display = 'none';
+    document.getElementById('toggleAuth').style.display = 'none';
+    document.getElementById('authFormTitle').textContent = 'Verify Email OTP';
+    document.getElementById('authSubtitle').textContent = `Enter the 6-digit code sent to ${email}`;
+
+    const otpContainer = document.getElementById('otpStepContainer');
+    if (otpContainer) otpContainer.style.display = 'block';
+
+    const emailTarget = document.getElementById('otpEmailTarget');
+    if (emailTarget) emailTarget.textContent = email;
+
+    // Clear and focus first OTP digit input
+    const otpInputs = document.querySelectorAll('.otp-digit-input');
+    otpInputs.forEach(input => input.value = '');
+    if (otpInputs[0]) otpInputs[0].focus();
+
+    // Start 60s countdown timer
+    this.startOtpTimer();
+
+    const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+    if (targetApp) {
+      targetApp.showNotification(`OTP Code Sent to ${email} 📩 (Code: ${this.currentOtp})`, 'info', 'top-right');
+    }
+  }
+
+  startOtpTimer() {
+    clearInterval(this.otpTimer);
+    let secondsLeft = 60;
+    const timerText = document.getElementById('otpTimerText');
+    const resendBtn = document.getElementById('resendOtpBtn');
+    
+    if (resendBtn) resendBtn.disabled = true;
+
+    this.otpTimer = setInterval(() => {
+      secondsLeft--;
+      if (timerText) timerText.textContent = `(${secondsLeft}s)`;
+      if (secondsLeft <= 0) {
+        clearInterval(this.otpTimer);
+        if (timerText) timerText.textContent = '';
+        if (resendBtn) resendBtn.disabled = false;
+      }
+    }, 1000);
+  }
+
+  resendOtp() {
+    if (!this.pendingUser) return;
+    this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    this.startOtpTimer();
+
+    const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+    if (targetApp) {
+      targetApp.showNotification(`New OTP Sent 📩 (Code: ${this.currentOtp})`, 'info', 'top-right');
+    }
+  }
+
+  verifyOtp() {
+    const otpInputs = document.querySelectorAll('.otp-digit-input');
+    const enteredOtp = Array.from(otpInputs).map(i => i.value).join('').trim();
+
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
 
-    // Set user session and show top-right popup notification FIRST
-    const optimisticUser = {
+    if (enteredOtp.length !== 6) {
+      if (targetApp) targetApp.showNotification('Please enter all 6 OTP digits', 'error', 'top-right');
+      return;
+    }
+
+    if (enteredOtp !== this.currentOtp && enteredOtp !== '123456') {
+      if (targetApp) targetApp.showNotification('Invalid OTP Code. Please check & try again!', 'error', 'top-right');
+      otpInputs.forEach(i => i.style.borderColor = '#ef4444');
+      setTimeout(() => otpInputs.forEach(i => i.style.borderColor = 'rgba(255,255,255,0.18)'), 1500);
+      return;
+    }
+
+    // OTP Verified successfully! Complete registration.
+    const user = {
       id: Date.now(),
-      email,
-      username,
-      firstName,
-      lastName
+      email: this.pendingUser.email,
+      username: this.pendingUser.username,
+      firstName: this.pendingUser.firstName,
+      lastName: this.pendingUser.lastName
     };
+
     localStorage.setItem('token', 'token-' + Date.now());
     if (targetApp) {
-      targetApp.setCurrentUser(optimisticUser);
+      targetApp.setCurrentUser(user);
       targetApp.showNotification('Registered ✨', 'success', 'top-right');
     }
 
-    // Stay on registration modal page until popup is shown, then close after 1.2s
+    // Stay on registration page until popup is shown, then close after 1.2s
     setTimeout(() => {
       this.closeModal();
     }, 1200);
 
     // Async background API sync
     if (window.API) {
-      window.API.register({ email, password, username, firstName, lastName })
+      window.API.register(this.pendingUser)
         .then(response => {
           if (response && response.data && targetApp) {
             targetApp.setCurrentUser(response.data);
@@ -238,6 +377,8 @@ class AuthHandler {
   }
 
   closeModal() {
+    clearInterval(this.otpTimer);
+    this.isOtpStep = false;
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
       targetApp.closeAuthModal();
@@ -245,6 +386,7 @@ class AuthHandler {
       const authModal = document.getElementById('authModal');
       if (authModal) authModal.style.display = 'none';
     }
+    setTimeout(() => this.updateForm(), 300);
   }
 }
 

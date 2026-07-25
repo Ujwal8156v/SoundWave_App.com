@@ -689,14 +689,66 @@ a:hover {
    SoundWave Glassmorphic Auth Hub Styling (#authModal)
    ========================================================================== */
 
+.auth-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(6, 6, 12, 0.45) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  align-items: center;
+  justify-content: center;
+}
+
 .auth-modal-content {
-  max-width: 460px;
+  position: relative;
+  max-width: 480px;
+  width: 90%;
   padding: 2.25rem;
-  background: rgba(18, 18, 26, 0.92) !important;
-  border: 1.5px solid rgba(255, 0, 85, 0.3) !important;
-  backdrop-filter: blur(24px) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--primary-glow) !important;
-  border-radius: 24px !important;
+  background: rgba(18, 18, 30, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(35px) !important;
+  -webkit-backdrop-filter: blur(35px) !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), 0 0 40px var(--primary-glow) !important;
+  border-radius: 28px !important;
+  animation: dynamicPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes dynamicPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 6-Digit OTP Input Row Styling */
+.otp-digit-input {
+  width: 46px;
+  height: 54px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.otp-digit-input:focus {
+  border-color: var(--primary-color) !important;
+  background: rgba(255, 0, 30, 0.15) !important;
+  box-shadow: 0 0 18px var(--primary-glow) !important;
+  transform: translateY(-3px) scale(1.05);
 }
 
 .auth-header {

@@ -282,7 +282,7 @@ class SoundWaveApp {
 
   openAuthModal() {
     const modal = document.getElementById('authModal');
-    if (modal) modal.style.display = 'block';
+    if (modal) modal.style.display = 'flex';
   }
 
   closeAuthModal() {

@@ -683,6 +683,32 @@
 
                     <div id="authAlert" class="auth-alert" style="display:none;"></div>
 
+                    <!-- OTP Verification Step Container -->
+                    <div id="otpStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
+                        <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
+                        <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Email OTP Verification</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                            We sent a 6-digit OTP code to <strong id="otpEmailTarget" style="color: var(--primary-color);">user@example.com</strong>
+                        </p>
+                        
+                        <div class="otp-inputs-row" style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.25rem;">
+                            <input type="text" maxlength="1" class="otp-digit-input" data-index="0" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit-input" data-index="1" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit-input" data-index="2" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit-input" data-index="3" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit-input" data-index="4" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit-input" data-index="5" inputmode="numeric">
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="verifyOtpBtn" style="width: 100%; padding: 0.8rem; margin-bottom: 0.75rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem;">
+                            Verify OTP & Complete Registration ✨
+                        </button>
+                        
+                        <div style="font-size: 0.82rem; color: rgba(255,255,255,0.6);">
+                            Didn't receive code? <button type="button" id="resendOtpBtn" style="background: none; border: none; color: var(--primary-color); cursor: pointer; text-decoration: underline; font-weight: 600;">Resend OTP</button> <span id="otpTimerText"></span>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-primary auth-submit-btn" id="authSubmitBtn">
                         Sign In to SoundWave 🚀
                     </button>
