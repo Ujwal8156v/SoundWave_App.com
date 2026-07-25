@@ -18,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Import routers
-from app.routes import auth, songs, recommendations, analytics, playlists
+from app.routes import auth, songs, recommendations, analytics, playlists, otp
 from app.core.config import settings
 from app.core.database import init_db
 
@@ -72,6 +72,7 @@ async def root():
 
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
+app.include_router(otp.router, prefix="/api/v1/otp", tags=["OTP Email Gateway"])
 app.include_router(songs.router, prefix="/api/v1/songs", tags=["Songs"])
 app.include_router(recommendations.router, prefix="/api/v1/recommendations", tags=["Recommendations"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
