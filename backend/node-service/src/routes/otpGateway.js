@@ -7,35 +7,17 @@ const nodemailer = require('nodemailer');
 const otpStore = new Map();
 const cooldownStore = new Map();
 
-// Setup Nodemailer SMTP Transporter
-let transporter = null;
-if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-  transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
-  console.log('[OTP GATEWAY] Production SMTP Transporter Ready:', process.env.SMTP_HOST);
-} else {
-  // Test Ethereal Account for SMTP email testing
-  nodemailer.createTestAccount().then(account => {
-    transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: {
-        user: account.user,
-        pass: account.pass
-      }
-    });
-    console.log('[OTP GATEWAY] Test SMTP Transporter Initialized:', account.user);
-  }).catch(() => null);
-}
-
+// Setup Nodemailer SMTP Transporter (Gmail SMTP)
+let transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: false, // TLS via STARTTLS
+  auth: {
+    user: process.env.SMTP_USER || 'wsound283@gmail.com',
+    pass: process.env.SMTP_PASS || 'soundwave123'
+  }
+});
+console.log('[OTP GATEWAY] Production Gmail SMTP Transporter Ready: wsound283@gmail.com');
 /**
  * Generate 6-Digit Cryptographic Numeric OTP
  */
