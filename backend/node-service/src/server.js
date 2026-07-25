@@ -16,6 +16,7 @@ const playlistRoutes = require('./routes/playlists');
 const userRoutes = require('./routes/users');
 const searchRoutes = require('./routes/search');
 const socialRoutes = require('./routes/social');
+const otpGatewayRoutes = require('./routes/otpGateway');
 
 // Import middleware & SoundWave WAF Shield
 const { errorHandler } = require('./middleware/errorHandler');
@@ -67,7 +68,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'API is running',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
@@ -81,6 +82,7 @@ app.get('/api/v1/security/status', (req, res) => {
 
 // API Routes with Endpoint-Specific Protection
 app.use('/api/v1/auth', authRateLimiter, authRoutes);
+app.use('/api/v1/otp', authRateLimiter, otpGatewayRoutes);
 app.use('/api/v1/songs', songsRoutes);
 app.use('/api/v1/playlists', playlistRoutes);
 app.use('/api/v1/users', userRoutes);

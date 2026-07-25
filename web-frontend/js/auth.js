@@ -305,6 +305,21 @@ class AuthHandler {
     this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
     this.isOtpStep = true;
 
+    // Dispatch via Backend OTP Gateway API
+    if (window.API) {
+      window.API.sendOtp(email, 'email')
+        .then(res => {
+          if (res && res.demoOtpCode) {
+            this.currentOtp = res.demoOtpCode;
+            const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+            if (targetApp) {
+              targetApp.showNotification(`OTP Code Sent to ${email} 📩 (Code: ${this.currentOtp})`, 'info', 'top-right');
+            }
+          }
+        })
+        .catch(() => null);
+    }
+
     // Switch UI to OTP step view
     document.getElementById('commonFields').style.display = 'none';
     document.getElementById('registerFields').style.display = 'none';

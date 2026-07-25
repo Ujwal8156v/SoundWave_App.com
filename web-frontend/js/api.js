@@ -39,6 +39,21 @@ class APIService {
     }
   }
 
+  // OTP Gateway
+  async sendOtp(recipient, type = 'email') {
+    return await this.request('/otp/send', {
+      method: 'POST',
+      body: JSON.stringify({ recipient, type })
+    });
+  }
+
+  async verifyOtp(recipient, otpCode) {
+    return await this.request('/otp/verify', {
+      method: 'POST',
+      body: JSON.stringify({ recipient, otpCode })
+    });
+  }
+
   // Authentication
   async register(data) {
     const response = await this.request('/auth/register', {
