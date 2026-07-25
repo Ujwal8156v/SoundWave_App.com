@@ -118,4 +118,4 @@ For issues and feature requests, please create an issue on GitHub.
 
 ---
 
-**Made with ❤️ by the SoundWave team**
+**Made with ❤️ by the Ujwal Kumar Behera**
