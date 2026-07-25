@@ -70,11 +70,25 @@ export default function App() {
       .then((body) => setSongs(body.data || demoSongs))
       .catch(() => setSongs(demoSongs));
 
-    // Restore login session on launch
+    // 0ms Instant Session Restoration on App Launch
+    AsyncStorage.getItem('soundwave_user').then((savedUser) => {
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch (e) {}
+      }
+    }).catch(() => null);
+
     AsyncStorage.getItem('token').then((token) => {
       if (token) {
         api.getCurrentUser()
-          .then((userRes) => setUser(userRes.data || userRes))
+          .then((userRes) => {
+            const userObj = userRes.data || userRes;
+            if (userObj) {
+              setUser(userObj);
+              AsyncStorage.setItem('soundwave_user', JSON.stringify(userObj)).catch(() => null);
+            }
+          })
           .catch(() => null);
       }
     });

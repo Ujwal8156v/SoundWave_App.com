@@ -292,21 +292,37 @@ class SoundWaveApp {
 
   async restoreSession() {
     const token = localStorage.getItem('token');
-    if (token) {
+    const savedUser = localStorage.getItem('soundwave_user');
+
+    // 0ms Instant Local Cache Restoration on Page Refresh
+    if (savedUser) {
+      try {
+        const parsed = JSON.parse(savedUser);
+        this.setCurrentUser(parsed);
+      } catch (e) {}
+    }
+
+    // Async background API sync
+    if (token && window.API) {
       try {
         const user = await API.getCurrentUser();
-        this.setCurrentUser(user.data || user);
+        const userObj = user.data || user;
+        if (userObj) {
+          this.setCurrentUser(userObj);
+        }
       } catch (error) {
-        console.error('Session restore failed:', error);
-        localStorage.removeItem('token');
+        console.log('Session API sync fallback to local cache:', error);
       }
     }
   }
 
   setCurrentUser(user) {
     this.currentUser = user;
-    if (user.email) {
-      localStorage.setItem('userEmail', user.email);
+    if (user) {
+      localStorage.setItem('soundwave_user', JSON.stringify(user));
+      if (user.email) {
+        localStorage.setItem('userEmail', user.email);
+      }
     }
     
     // Toggle navigation visibilities
@@ -350,6 +366,8 @@ class SoundWaveApp {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('soundwave_user');
+    localStorage.removeItem('userEmail');
     this.currentUser = null;
     this.isEditingProfile = false;
     
