@@ -1,8 +1,12 @@
-// API Service
+const getApiBaseUrl = () => {
+  if (window.ENV && window.ENV.API_BASE_URL && !window.ENV.API_BASE_URL.startsWith('%')) {
+    return window.ENV.API_BASE_URL;
+  }
+  const host = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : 'localhost';
+  return `http://${host}:5000/api/v1`;
+};
 
-const API_BASE_URL = (window.ENV && window.ENV.API_BASE_URL && !window.ENV.API_BASE_URL.startsWith('%'))
-  ? window.ENV.API_BASE_URL
-  : 'http://10.46.71.106:5000/api/v1';
+const API_BASE_URL = getApiBaseUrl();
 class APIService {
   constructor() {
     this.baseURL = API_BASE_URL;

@@ -6,7 +6,11 @@ import { compactNumber, formatDuration } from '../utils/format';
 
 export default function SongCard({ song, active, liked, onPress, onLike, onAddToPlaylist }) {
   return (
-    <Pressable style={[styles.card, active && styles.active]} onPress={() => onPress(song)}>
+    <Pressable 
+      style={[styles.card, active && styles.active]} 
+      onPress={() => onPress(song)}
+      android_ripple={{ color: 'rgba(255, 0, 60, 0.15)', borderless: false }}
+    >
       <View style={styles.cover}>
         <Image 
           source={{ uri: song.coverArt || 'https://via.placeholder.com/150' }} 

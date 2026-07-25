@@ -74,36 +74,85 @@ export default function ProfileScreen({
     );
   }
 
+  const [authMode, setAuthMode] = useState('login');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleQuickDemoLogin = () => {
+    setEmail('demo@soundwave.com');
+    setPassword('soundwave123');
+    onLogin();
+  };
+
   // Logged-out Login/Register View
   if (!user) {
     return (
       <View style={styles.screen}>
-        <Text style={styles.title}>Profile</Text>
-        <Text style={styles.copy}>Sign in to sync likes, playlists, and settings with the SoundWave backend.</Text>
+        <View style={styles.header}>
+          <Text style={styles.title}>Welcome to SoundWave</Text>
+        </View>
+        <Text style={styles.copy}>Sign in to sync likes, playlists, 320kbps streams, and spatial audio.</Text>
+
+        {/* Segmented Auth Tabs */}
+        <View style={styles.tabSwitcher}>
+          <Pressable 
+            style={[styles.tabSegment, authMode === 'login' && styles.tabSegmentActive]}
+            onPress={() => setAuthMode('login')}
+          >
+            <Text style={[styles.tabSegmentText, authMode === 'login' && styles.tabSegmentTextActive]}>🔑 Login</Text>
+          </Pressable>
+          <Pressable 
+            style={[styles.tabSegment, authMode === 'register' && styles.tabSegmentActive]}
+            onPress={() => setAuthMode('register')}
+          >
+            <Text style={[styles.tabSegmentText, authMode === 'register' && styles.tabSegmentTextActive]}>✍️ Register</Text>
+          </Pressable>
+        </View>
+
+        {/* 1-Click Quick Demo Login */}
+        <Pressable style={styles.demoBtn} onPress={handleQuickDemoLogin}>
+          <Text style={styles.demoBtnText}>⚡ 1-Click Quick Demo Login (Instant Access)</Text>
+        </Pressable>
+
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>OR WITH EMAIL</Text>
+          <View style={styles.dividerLine} />
+        </View>
+
         <TextInput
           autoCapitalize="none"
           keyboardType="email-address"
-          placeholder="Email"
+          placeholder="Email address"
           placeholderTextColor={colors.muted}
           value={email}
           onChangeText={setEmail}
           style={styles.input}
         />
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor={colors.muted}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
-        />
+        
+        <View style={styles.passwordWrap}>
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor={colors.muted}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            style={[styles.input, { flex: 1, marginBottom: 0 }]}
+          />
+          <Pressable style={styles.eyeBtn} onPress={() => setShowPassword(!showPassword)}>
+            <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color={colors.textSecondary} />
+          </Pressable>
+        </View>
+
         <View style={styles.actions}>
-          <Pressable style={styles.primary} onPress={onLogin}>
-            <Text style={styles.primaryText}>Login</Text>
-          </Pressable>
-          <Pressable style={styles.secondary} onPress={onRegister}>
-            <Text style={styles.secondaryText}>Register</Text>
-          </Pressable>
+          {authMode === 'login' ? (
+            <Pressable style={styles.primary} onPress={onLogin}>
+              <Text style={styles.primaryText}>Sign In 🚀</Text>
+            </Pressable>
+          ) : (
+            <Pressable style={styles.primary} onPress={onRegister}>
+              <Text style={styles.primaryText}>Create Free Account ✨</Text>
+            </Pressable>
+          )}
         </View>
       </View>
     );
@@ -376,7 +425,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     marginBottom: 6,
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
+    marginTop: spacing.xs
   },
   input: {
     backgroundColor: colors.background,
@@ -388,6 +438,73 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     minHeight: 48,
     paddingHorizontal: spacing.md
+  },
+  tabSwitcher: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderRadius: 25,
+    padding: 3,
+    marginBottom: spacing.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)'
+  },
+  tabSegment: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+    borderRadius: 22
+  },
+  tabSegmentActive: {
+    backgroundColor: colors.primary
+  },
+  tabSegmentText: {
+    color: colors.muted,
+    fontWeight: '600',
+    fontSize: 13
+  },
+  tabSegmentTextActive: {
+    color: colors.text,
+    fontWeight: '700'
+  },
+  demoBtn: {
+    padding: spacing.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: spacing.md
+  },
+  demoBtnText: {
+    color: colors.text,
+    fontWeight: '700',
+    fontSize: 13
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: spacing.sm
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)'
+  },
+  dividerText: {
+    paddingHorizontal: spacing.sm,
+    fontSize: 10,
+    fontWeight: '700',
+    color: colors.muted,
+    letterSpacing: 1
+  },
+  passwordWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.md
+  },
+  eyeBtn: {
+    paddingHorizontal: spacing.sm
   },
   actions: {
     flexDirection: 'row',

@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sound Wave - Vibe the moment with Waves">
-    <meta name="theme-color" content="#FF0000">
+    <meta name="theme-color" content="#0D0D12">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -16,20 +20,24 @@
         <nav class="navbar">
             <div class="navbar-container">
                 <a href="#home" class="navbar-brand">
-                    <span class="logo-text-accent">SW</span>
+                    <span class="logo-icon">🎧</span>
+                    <span class="brand-text">MusicVibe</span>
                 </a>
+
                 <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
                 <ul class="nav-menu">
-                    <li><a href="#home" class="nav-link">Home</a></li>
-                    <li><a href="#features" class="nav-link">Features</a></li>
-                    <li><a href="#discover" class="nav-link">Discover</a></li>
-                    <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#artists" class="nav-link">Artists</a></li>
+                    <li><a href="#events" class="nav-link">Events</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
+                    <li><a href="#discover" class="nav-link">Discover</a></li>
                     <li id="navPlaylists" style="display:none;"><a href="#playlists" class="nav-link">Playlists</a></li>
+                    <li id="loginNavItem"><button id="loginBtn" class="btn btn-primary" style="padding:0.45rem 1.1rem; font-size:0.85rem; border-radius:20px; font-weight:700; margin-left:0.5rem;">Login 🔑</button></li>
                     <li class="dropdown" id="settingsDropdown" style="display:none;">
                         <a href="#" class="nav-link dropdown-toggle" id="settingsLink" title="Menu">☰</a>
                         <ul class="dropdown-menu">
@@ -46,59 +54,173 @@
         <main class="main-content">
             <!-- Home Section -->
             <section id="home" class="section">
-                <!-- Hero -->
-                <div class="hero">
-                    <div class="hero-content">
-                        <h2>Vibe the Moment with Waves</h2>
-                        <p>Stream your favorite tracks in high-fidelity 320kbps. Zero-latency caching, offline downloads, and smart equalizer controls.</p>
-                        <div class="hero-buttons">
-                            <button class="btn btn-primary" id="exploreBtn">Start Listening</button>
-                            <a href="#pricing" class="btn btn-secondary">Get Premium</a>
+                <!-- Concert Hero Section -->
+                <div class="hero-vibe">
+                    <div class="hero-vibe-overlay"></div>
+                    <div class="hero-vibe-content">
+                        <div class="hero-tag-pills">
+                            <span class="hero-badge-pill">🔥 #1 MUSIC PLATFORM</span>
+                            <span class="hero-badge-pill spark">🎧 320KBPS LOSSLESS AUDIO</span>
                         </div>
-                    </div>
-                    <!-- Stats Grid -->
-                    <div class="hero-stats">
-                        <div class="stat-card">
-                            <span class="stat-num">10M+</span>
-                            <span class="stat-label">Hi-Fi Tracks</span>
+                        <h1 class="hero-vibe-title">Experience the Sound of Music</h1>
+                        <p class="hero-vibe-subtitle">Discover new artists, tracks, and live events with zero-latency streaming &amp; 3D spatial audio</p>
+                        <div class="hero-btn-group">
+                            <button class="btn btn-hero-cta" id="exploreBtn">▶ Start Listening Free</button>
+                            <button class="btn btn-hero-secondary" onclick="location.hash='#pricing';">💎 Explore Plus</button>
                         </div>
-                        <div class="stat-card">
-                            <span class="stat-num">500K+</span>
-                            <span class="stat-label">Active Listeners</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-num">150+</span>
-                            <span class="stat-label">Countries Support</span>
+
+                        <!-- Live Stats Bar -->
+                        <div class="hero-live-stats-bar">
+                            <div class="live-stat-item">
+                                <span class="stat-num">10M+</span>
+                                <span class="stat-desc">Hi-Fi Tracks</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="live-stat-item">
+                                <span class="stat-num">500K+</span>
+                                <span class="stat-desc">Active Listeners</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="live-stat-item">
+                                <span class="stat-num">4.9★</span>
+                                <span class="stat-desc">User Rating</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Features -->
-                <div id="features" class="landing-features">
+                <!-- About Us Section -->
+                <div id="about" class="about-vibe-section">
+                    <div class="container">
+                        <h2 class="vibe-section-title align-left">About Us</h2>
+                        <div class="about-vibe-grid">
+                            <div class="about-vibe-media">
+                                <img src="assets/about_headphones.jpg" alt="Woman listening to music with headphones" class="about-vibe-img" loading="eager">
+                                <div class="about-img-badge">
+                                    <span class="badge-icon">🎵</span>
+                                    <span>Lossless 320kbps Audio</span>
+                                </div>
+                            </div>
+                            <div class="about-vibe-content">
+                                <span class="vibe-kicker">WELCOME TO MUSICVIBE</span>
+                                <h3>Your Gateway to the Music World</h3>
+                                <p>We bring you the latest music, hottest artists, and unforgettable live performances, all in one place with zero-latency background caching and custom equalizer studio controls.</p>
+                                
+                                <div class="about-feature-bullets">
+                                    <div class="bullet-item"><span class="bullet-check">✓</span> Studio Master Quality (320kbps)</div>
+                                    <div class="bullet-item"><span class="bullet-check">✓</span> Instant Offline Downloads</div>
+                                    <div class="bullet-item"><span class="bullet-check">✓</span> 3D Spatial Audio &amp; FX Studio</div>
+                                </div>
+
+                                <button class="btn btn-gradient-orange" id="aboutExploreBtn" onclick="location.hash='#discover';">Explore More</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Our Features Section -->
+                <div id="features" class="features-vibe-section">
+                    <div class="container">
+                        <h2 class="vibe-section-title">Our Features</h2>
+                        <div class="features-vibe-grid">
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">🎵</div>
+                                <h3>New Releases</h3>
+                                <p>Listen to the Latest Hits from top global charts with zero buffering.</p>
+                                <span class="feature-action-tag">Listen Now →</span>
+                            </div>
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">🎤</div>
+                                <h3>Live Events</h3>
+                                <p>Find Concerts &amp; Festivals streaming live with high-fidelity sound.</p>
+                                <span class="feature-action-tag">Explore Events →</span>
+                            </div>
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">⭐️</div>
+                                <h3>Top Artists</h3>
+                                <p>Discover Trending Musicians &amp; exclusive studio master recordings.</p>
+                                <span class="feature-action-tag">View Artists →</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What Our Users Say Section -->
+                <div id="testimonials" class="testimonials-vibe-section">
+                    <div class="container">
+                        <div class="testimonial-header">
+                            <span class="header-divider-line"></span>
+                            <h2 class="vibe-section-title inline-title">What Our Users Say</h2>
+                            <span class="header-divider-line"></span>
+                        </div>
+                        <div class="testimonials-vibe-grid">
+                            <div class="testimonial-vibe-card card-bg-concert1">
+                                <div class="testimonial-top">
+                                    <div class="star-rating">★★★★★</div>
+                                    <span class="verified-tag">✓ Verified Listener</span>
+                                </div>
+                                <blockquote class="testimonial-quote">“Amazing platform for music lovers! I found my new favorite artist here with crystal clear studio quality.”</blockquote>
+                                <div class="testimonial-author-row">
+                                    <div class="author-avatar">SM</div>
+                                    <div>
+                                        <div class="testimonial-author">Sarah M.</div>
+                                        <div class="author-sub">Music Enthusiast</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="testimonial-vibe-card card-bg-concert2">
+                                <div class="testimonial-top">
+                                    <div class="star-rating">★★★★★</div>
+                                    <span class="verified-tag">✓ Verified Subscriber</span>
+                                </div>
+                                <blockquote class="testimonial-quote">“Incredible live event experiences! Highly recommended for offline listening and 3D spatial audio.”</blockquote>
+                                <div class="testimonial-author-row">
+                                    <div class="author-avatar">JT</div>
+                                    <div>
+                                        <div class="testimonial-author">James T.</div>
+                                        <div class="author-sub">Audiophile &amp; DJ</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Join the Music Community CTA Banner -->
+                <div class="community-vibe-section">
+                    <div class="community-vibe-content">
+                        <h2>Join the Music Community</h2>
+                        <p>Connect with fellow music fans and stay updated!</p>
+                        <button class="btn btn-community-signup" id="communitySignUpBtn">Sign Up Now</button>
+                    </div>
+                </div>
+
+                <!-- Artists Section -->
+                <div id="artists" class="landing-features" style="padding-top: 3rem;">
                     <div class="section-header">
-                        <h2>Why Choose SoundWave?</h2>
-                        <p>Discover the next-generation music streaming experience</p>
+                        <h2>Trending Artists</h2>
+                        <p>Explore world-class performers streaming live on MusicVibe</p>
                     </div>
                     <div class="features-grid">
                         <div class="feature-card">
+                            <div class="feature-icon">🎙️</div>
+                            <h3>Yo Yo Honey Singh</h3>
+                            <p>Urban Desi Hip-Hop &amp; Party Anthems</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎻</div>
+                            <h3>Arijit Singh</h3>
+                            <p>Soulful Acoustic Melodies &amp; Romantics</p>
+                        </div>
+                        <div class="feature-card">
                             <div class="feature-icon">🎧</div>
-                            <h3>Studio Sound Quality</h3>
-                            <p>Stream pristine audio formats up to 320kbps with full dynamic range curve support.</p>
+                            <h3>Taylor Swift</h3>
+                            <p>Global Pop Hits &amp; Eras Experience</p>
                         </div>
                         <div class="feature-card">
-                            <div class="feature-icon">⚡</div>
-                            <h3>Zero-Latency Caching</h3>
-                            <p>Our intelligent background engine pre-buffers subsequent tracks for seamless gapless playback.</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">💾</div>
-                            <h3>Offline Downloads</h3>
-                            <p>Save playlists directly to local storage to enjoy music without cell data or internet access.</p>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">⚙️</div>
-                            <h3>Smart Dynamic Controls</h3>
-                            <p>Customize sleep timers, playback speeds, and smart frequency equalizer curves.</p>
+                            <div class="feature-icon">🔥</div>
+                            <h3>Badshah &amp; Diljit</h3>
+                            <p>Bhangra Beats &amp; Club Chart-Toppers</p>
                         </div>
                     </div>
                 </div>
@@ -120,11 +242,11 @@
                                 <li>✗ No offline downloads</li>
                                 <li>✗ No smart dynamic preloading</li>
                             </ul>
-                            <a href="#discover" class="btn btn-secondary-accent">Start Free</a>
+                            <button class="btn btn-secondary-accent" id="planFreeBtn">Start Free</button>
                         </div>
                         <div class="pricing-card recommended">
                             <span class="badge">Most Popular</span>
-                            <h3>SoundWave Plus</h3>
+                            <h3>MusicVibe Plus</h3>
                             <div class="price">₹59<span>/month</span></div>
                             <ul class="price-features">
                                 <li>✓ Stream studio quality (320kbps)</li>
@@ -133,19 +255,19 @@
                                 <li>✓ Unlimited offline song downloads</li>
                                 <li>✓ Custom Equalizer curve controls</li>
                             </ul>
-                            <button class="btn btn-primary" onclick="alert('Thank you! Redirecting to Plus subscription checkout (₹59/month)...');">Go Plus</button>
+                            <button class="btn btn-primary" id="planPlusBtn">Go Plus</button>
                         </div>
                         <div class="pricing-card">
                             <h3>Family Premium</h3>
                             <div class="price">₹179<span>/month</span></div>
                             <ul class="price-features">
-                                <li>✓ Everything in SoundWave Plus</li>
+                                <li>✓ Everything in MusicVibe Plus</li>
                                 <li>✓ Up to 6 independent member profiles</li>
                                 <li>✓ Parental restricted mode controls</li>
                                 <li>✓ Shared family-wide playlist vaults</li>
                                 <li>✓ Smart multi-device control sync</li>
                             </ul>
-                            <button class="btn btn-secondary-accent" onclick="alert('Redirecting to Family billing setup (₹179/month)...');">Get Family</button>
+                            <button class="btn btn-secondary-accent" id="planFamilyBtn">Get Family</button>
                         </div>
                     </div>
                 </div>
@@ -158,9 +280,9 @@
                     </div>
                     <div class="faq-accordion">
                         <div class="faq-item">
-                            <button class="faq-question">What makes SoundWave stream faster? <span class="faq-icon">+</span></button>
+                            <button class="faq-question">What makes MusicVibe stream faster? <span class="faq-icon">+</span></button>
                             <div class="faq-answer">
-                                <p>SoundWave utilizes our custom dual-layer background stream verification engine. As a song plays, the application automatically pre-resolves and pre-buffers the next song in your queue, resulting in instantaneous, gapless track transitions.</p>
+                                <p>MusicVibe utilizes our custom dual-layer background stream verification engine. As a song plays, the application automatically pre-resolves and pre-buffers the next song in your queue, resulting in instantaneous, gapless track transitions.</p>
                             </div>
                         </div>
                         <div class="faq-item">
@@ -175,19 +297,20 @@
                                 <p>Restricted mode hides explicit content and limits background networking processes, making it perfect for child accounts or shared home network devices.</p>
                             </div>
                         </div>
-                        <div class="faq-item">
-                            <button class="faq-question">How do I customize the audio quality? <span class="faq-icon">+</span></button>
-                            <div class="faq-answer">
-                                <p>You can adjust the audio quality in the Settings menu (☰ -> Settings). SoundWave supports High (320kbps), Medium (192kbps), and Low (96kbps) bitrates to fit any data budget.</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Contact Support -->
+                <div id="events" class="landing-contact" style="padding-bottom: 2rem;">
+                    <div class="section-header">
+                        <h2>Upcoming Events &amp; Festivals</h2>
+                        <p>Stay tuned for live concerts, fan meetups, and festival streams</p>
+                    </div>
+                </div>
+
                 <div id="contact" class="landing-contact">
                     <div class="section-header">
-                        <h2>Get In Touch</h2>
+                        <h2>Contact Us</h2>
                         <p>Have comments, suggestions, or feature requests? Contact our staff</p>
                     </div>
                     <form id="contactForm" class="contact-form">
@@ -274,13 +397,6 @@
                             <!-- Playback Group -->
                             <div class="settings-group">
                                 <h3>Playback</h3>
-                                <div class="setting-row">
-                                    <div class="setting-info">
-                                        <span class="setting-title">Equaliser</span>
-                                        <span class="setting-desc">Adjust audio frequency curves</span>
-                                    </div>
-                                    <button type="button" class="btn-small" id="equaliserBtn">Adjust</button>
-                                </div>
                                 <div class="setting-row">
                                     <div class="setting-info">
                                         <span class="setting-title">External Device Control</span>
@@ -411,40 +527,41 @@
                 </div>
             <!-- Site Footer -->
             <footer class="site-footer">
-                <div class="footer-container">
-                    <div class="footer-brand">
-                        <span class="logo">🔊</span>
-                        <h2>Sound Wave</h2>
-                        <p>Vibe the moment with Waves.</p>
+                <div class="footer-vibe-container">
+                    <div class="footer-vibe-col">
+                        <h4>Quick Links</h4>
+                        <div class="footer-col-underline"></div>
+                        <a href="#about">About</a>
+                        <a href="#events">Events</a>
+                        <a href="#contact">Contact</a>
+                        <a href="#artists">Artists</a>
                     </div>
-                    <div class="footer-links">
-                        <div class="footer-col">
-                            <h4>Product</h4>
-                            <a href="#features">Features</a>
-                            <a href="#discover">Listen Now</a>
-                            <a href="#pricing">Pricing Plans</a>
-                        </div>
-                        <div class="footer-col">
-                            <h4>Company</h4>
-                            <a href="#home">About Us</a>
-                            <a href="#home">Careers</a>
-                            <a href="#contact">Contact Support</a>
-                        </div>
-                        <div class="footer-col">
-                            <h4>Legal</h4>
-                            <a href="#home">Terms of Service</a>
-                            <a href="#home">Privacy Policy</a>
-                            <a href="#home">Cookie Settings</a>
+                    <div class="footer-vibe-col">
+                        <h4>Support</h4>
+                        <div class="footer-col-underline"></div>
+                        <a href="#faq">FAQ</a>
+                        <a href="#home">Privacy Policy</a>
+                        <a href="#home">Terms &amp; Conditions</a>
+                    </div>
+                    <div class="footer-vibe-col">
+                        <h4>Contact Us</h4>
+                        <div class="footer-col-underline"></div>
+                        <p class="footer-contact-info">info@musicvibe.com</p>
+                        <p class="footer-contact-info">+1123-456-7890</p>
+                    </div>
+                    <div class="footer-vibe-col">
+                        <h4>Social Media</h4>
+                        <div class="footer-col-underline"></div>
+                        <div class="social-icon-row">
+                            <a href="https://facebook.com" target="_blank" class="social-circle-btn" title="Facebook">f</a>
+                            <a href="https://twitter.com" target="_blank" class="social-circle-btn" title="Twitter">𝕏</a>
+                            <a href="https://instagram.com" target="_blank" class="social-circle-btn" title="Instagram">📸</a>
+                            <a href="https://youtube.com" target="_blank" class="social-circle-btn" title="YouTube">▶</a>
                         </div>
                     </div>
                 </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2026 SoundWave Music Inc. All rights reserved.</p>
-                    <div class="social-badges">
-                        <a href="https://twitter.com" target="_blank" class="social-badge">𝕏</a>
-                        <a href="https://github.com" target="_blank" class="social-badge">🐙</a>
-                        <a href="https://instagram.com" target="_blank" class="social-badge">📸</a>
-                    </div>
+                <div class="footer-vibe-bottom">
+                    <p>&copy; 2026 MusicVibe Streaming Inc. All rights reserved.</p>
                 </div>
             </footer>
         </main>
@@ -475,6 +592,7 @@
                 </div>
 
                 <div class="player-actions">
+                    <button class="action-btn fx-trigger-btn" id="fxModalBtn" title="SoundWave FX Studio">🎛️ FX</button>
                     <button class="action-btn" id="sleepTimerBtn" title="Sleep Timer">⏱️</button>
                     <button class="action-btn" id="downloadBtn" title="Download">⬇</button>
                     <button class="action-btn" id="shareBtn" title="Share">📤</button>
@@ -494,25 +612,409 @@
     </div>
 
     <!-- Modal for Login/Register -->
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close">&times;</button>
+    <div id="authModal" class="modal auth-modal">
+        <div class="modal-content auth-modal-content">
+            <button class="modal-close" id="closeAuthModalBtn">&times;</button>
+            
+            <div class="auth-header">
+                <div class="auth-brand-logo">
+                    <span class="logo-text-accent">SW</span>
+                </div>
+                <h2 id="authFormTitle">Welcome to SoundWave</h2>
+                <p id="authSubtitle">Log in to unlock 320kbps streams, playlists, and spatial audio</p>
+            </div>
+
+            <!-- Segmented Auth Mode Switcher -->
+            <div class="auth-mode-tabs">
+                <button type="button" class="auth-tab active" id="authTabLogin">🔑 Login</button>
+                <button type="button" class="auth-tab" id="authTabRegister">✍️ Register Account</button>
+            </div>
+
+            <!-- 1-Click Quick Demo Login Button -->
+            <div class="demo-login-wrap">
+                <button type="button" class="btn btn-secondary demo-login-btn" id="demoLoginBtn">
+                    ⚡ 1-Click Quick Demo Login (Instant Access)
+                </button>
+            </div>
+
+            <div class="auth-divider">
+                <span>OR CONTINUE WITH EMAIL</span>
+            </div>
+
             <div class="auth-form">
-                <h2>Login / Register</h2>
                 <form id="authForm">
                     <div id="commonFields">
-                        <input type="email" id="email" placeholder="Email" required>
-                        <input type="password" id="password" placeholder="Password" required>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">✉️</span>
+                                <input type="email" id="email" placeholder="name@example.com" required autocomplete="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                                <button type="button" class="toggle-password-btn" id="togglePasswordBtn" title="Show/Hide Password">👁️</button>
+                            </div>
+                        </div>
                     </div>
+
                     <div id="registerFields" style="display:none;">
-                        <input type="text" id="username" placeholder="Username">
-                        <input type="text" id="firstName" placeholder="First Name">
-                        <input type="text" id="lastName" placeholder="Last Name">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="username" placeholder="Choose a unique username" autocomplete="username">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" placeholder="First Name" autocomplete="given-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" placeholder="Last Name" autocomplete="family-name">
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <p id="toggleAuth">Don't have an account? <a href="#">Register</a></p>
+
+                    <div id="authAlert" class="auth-alert" style="display:none;"></div>
+
+                    <button type="submit" class="btn btn-primary auth-submit-btn" id="authSubmitBtn">
+                        Sign In to SoundWave 🚀
+                    </button>
+
+                    <p id="toggleAuth" class="toggle-auth-text">
+                        Don't have an account? <a href="#" id="toggleAuthLink">Create one now</a>
+                    </p>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- SoundWave FX Studio Modal -->
+    <div id="fxModal" class="modal fx-modal">
+        <div class="modal-content fx-modal-content">
+            <button class="modal-close" id="closeFxModalBtn">&times;</button>
+            <div class="fx-header">
+                <h2>🎛️ SoundWave FX Studio</h2>
+                <p>Precision 5-band frequency equalizer, acoustic presets, 3D spatial audio & vocal FX</p>
+            </div>
+
+            <!-- 5-Band Graphic Equalizer & Acoustic Presets (Top Section) -->
+            <div class="fx-section">
+                <div class="section-title-row">
+                    <h3>🎛️ 5-Band Graphic Equalizer</h3>
+                    <div class="preset-select-wrapper">
+                        <label>EQ Preset:</label>
+                        <select id="eqPresetSelect" class="speed-select">
+                            <option value="flat">Flat / Custom</option>
+                            <option value="bassBoost">Bass Boost 🔊</option>
+                            <option value="vocalEnhancer">Vocal Enhancer 🎤</option>
+                            <option value="electronicHype">Electronic Hype ⚡</option>
+                            <option value="acousticWarmth">Acoustic Warmth 🎸</option>
+                            <option value="cyberpunk">Cyberpunk 🚀</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="eq-sliders-container">
+                    <div class="eq-band">
+                        <span class="eq-val" id="eqVal0">0 dB</span>
+                        <input type="range" class="eq-slider" id="eqSlider0" min="-12" max="12" value="0" step="0.5">
+                        <span class="eq-freq">60Hz</span>
+                        <span class="eq-label">Sub-Bass</span>
+                    </div>
+                    <div class="eq-band">
+                        <span class="eq-val" id="eqVal1">0 dB</span>
+                        <input type="range" class="eq-slider" id="eqSlider1" min="-12" max="12" value="0" step="0.5">
+                        <span class="eq-freq">230Hz</span>
+                        <span class="eq-label">Bass</span>
+                    </div>
+                    <div class="eq-band">
+                        <span class="eq-val" id="eqVal2">0 dB</span>
+                        <input type="range" class="eq-slider" id="eqSlider2" min="-12" max="12" value="0" step="0.5">
+                        <span class="eq-freq">910Hz</span>
+                        <span class="eq-label">Midrange</span>
+                    </div>
+                    <div class="eq-band">
+                        <span class="eq-val" id="eqVal3">0 dB</span>
+                        <input type="range" class="eq-slider" id="eqSlider3" min="-12" max="12" value="0" step="0.5">
+                        <span class="eq-freq">3.6kHz</span>
+                        <span class="eq-label">High-Mid</span>
+                    </div>
+                    <div class="eq-band">
+                        <span class="eq-val" id="eqVal4">0 dB</span>
+                        <input type="range" class="eq-slider" id="eqSlider4" min="-12" max="12" value="0" step="0.5">
+                        <span class="eq-freq">14kHz</span>
+                        <span class="eq-label">Treble</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D Spatial Audio & Acoustic Environment -->
+            <div class="fx-section">
+                <h3>🌐 3D Spatial Audio & Acoustic Environment</h3>
+                <div class="mode-pill-group">
+                    <button class="pill-btn active" data-spatial="off">Off (Stereo)</button>
+                    <button class="pill-btn" data-spatial="studio">Studio Room</button>
+                    <button class="pill-btn" data-spatial="concert">Concert Arena</button>
+                    <button class="pill-btn" data-spatial="cyberspace">Cyber Space 3D</button>
+                </div>
+            </div>
+
+            <!-- Karaoke Sing Along & Vocal FX -->
+            <div class="karaoke-banner">
+                <div class="karaoke-info">
+                    <span class="karaoke-icon">🎤</span>
+                    <div>
+                        <h4>Sing-Along Karaoke Mode</h4>
+                        <p>Attenuates center vocal frequencies for live singing</p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary karaoke-toggle-btn" id="karaokeToggleBtn">Enable Karaoke</button>
+            </div>
+
+            <!-- Visualizer & Theme Aura FX -->
+            <div class="fx-section">
+                <h3>🌌 Visualizer & Theme Aura</h3>
+                <div class="fx-control-group">
+                    <label>Visual Mode:</label>
+                    <div class="mode-pill-group">
+                        <button class="pill-btn active" data-vis-mode="neonBars">Neon Bars</button>
+                        <button class="pill-btn" data-vis-mode="cosmicParticles">Cosmic Orbit</button>
+                        <button class="pill-btn" data-vis-mode="fluidMesh">Fluid Mesh</button>
+                        <button class="pill-btn" data-vis-mode="matrixRain">⚡ Cyber Matrix</button>
+                    </div>
+                </div>
+                <div class="fx-control-group" style="margin-top:0.75rem;">
+                    <label>Theme Aura:</label>
+                    <div class="mode-pill-group">
+                        <button class="pill-btn active" data-aura="crimson">Cyber Crimson</button>
+                        <button class="pill-btn" data-aura="purple">Cosmic Violet</button>
+                        <button class="pill-btn" data-aura="emerald">Neon Emerald</button>
+                        <button class="pill-btn" data-aura="gold">Sunset Amber</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI BeatVibe Live Audio Drum Synth & DJ Layer -->
+            <div class="fx-section beat-vibe-section">
+                <div class="section-title-row">
+                    <h3>⚡ AI BeatVibe Live Synth &amp; DJ Layer</h3>
+                    <button class="btn btn-secondary" id="toggleAiDjLoopBtn" style="padding:0.4rem 1rem; font-size:0.8rem; font-weight:700; border-radius:20px;">🤖 Toggle AI DJ Loop</button>
+                </div>
+                <div class="beat-pads-grid">
+                    <button type="button" class="beat-pad" id="padKick">
+                        <span class="pad-icon">🥁</span>
+                        <span class="pad-label">Deep Kick</span>
+                    </button>
+                    <button type="button" class="beat-pad" id="padSnare">
+                        <span class="pad-icon">💥</span>
+                        <span class="pad-label">Snare Snap</span>
+                    </button>
+                    <button type="button" class="beat-pad" id="padHiHat">
+                        <span class="pad-icon">✨</span>
+                        <span class="pad-label">Hi-Hat Crisp</span>
+                    </button>
+                    <button type="button" class="beat-pad" id="padCyber">
+                        <span class="pad-icon">⚡</span>
+                        <span class="pad-label">Cyber Sub</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SoundWave Checkout & Payment Modal -->
+    <div id="paymentModal" class="modal payment-modal">
+        <div class="modal-content payment-modal-content">
+            <button class="modal-close" id="closePaymentModalBtn">&times;</button>
+            
+            <div class="payment-header">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+                    <span class="payment-badge">SAFE & SECURE CHECKOUT</span>
+                    <div id="checkoutUserStatus" style="font-size:0.85rem; color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.08); padding:0.35rem 0.85rem; border-radius:20px; border:1px solid rgba(255,0,85,0.3); display:flex; align-items:center; gap:0.6rem;">
+                        <span>👤 Account: <strong id="checkoutUserEmail" style="color:#00FF88;">user@example.com</strong></span>
+                        <button id="checkoutSwitchAccountBtn" style="background:rgba(255,255,255,0.12); border:none; color:#fff; cursor:pointer; padding:0.2rem 0.6rem; border-radius:12px; font-size:0.75rem; font-weight:600; transition:background 0.2s;">Switch</button>
+                    </div>
+                </div>
+                <h2>Choose Your Plan</h2>
+                <p>Flexible subscriptions tailored to your listening preferences</p>
+            </div>
+
+            <!-- Interactive Plan Selector Tabs -->
+            <div class="plan-tabs-row">
+                <div class="plan-tab" id="payTabFree" data-plan="free">
+                    <div class="plan-tab-title">Free Tier</div>
+                    <div class="plan-tab-price">₹0</div>
+                    <div class="plan-tab-sub">Standard Streams</div>
+                </div>
+                <div class="plan-tab active" id="payTabPlus" data-plan="plus">
+                    <span class="tab-recommended">POPULAR</span>
+                    <div class="plan-tab-title">SoundWave Plus</div>
+                    <div class="plan-tab-price">₹59<span>/mo</span></div>
+                    <div class="plan-tab-sub">320kbps Hi-Fi & Ads-Free</div>
+                </div>
+                <div class="plan-tab" id="payTabFamily" data-plan="family">
+                    <div class="plan-tab-title">Family Premium</div>
+                    <div class="plan-tab-price">₹179<span>/mo</span></div>
+                    <div class="plan-tab-sub">Up to 6 Accounts</div>
+                </div>
+            </div>
+
+            <div class="payment-body-grid">
+                <!-- Left: Payment Methods & Input Forms -->
+                <div class="payment-left">
+                    <h3>Select Payment Method</h3>
+                    <div class="method-tabs">
+                        <button class="method-btn active" id="methodUpi" data-method="upi">📱 UPI / QR Code</button>
+                        <button class="method-btn" id="methodCard" data-method="card">💳 Credit / Debit Card</button>
+                        <button class="method-btn" id="methodNetbanking" data-method="netbanking">🏦 Net Banking</button>
+                    </div>
+
+                    <!-- UPI View -->
+                    <div class="method-pane active" id="paneUpi">
+                        <div class="upi-box">
+                            <div class="wc-upi-header">
+                                <span class="wc-badge">🛒 WooCommerce UPI QR Gateway v3.5</span>
+                                <span class="wc-status-dot">● Instant Auto-Verify</span>
+                            </div>
+
+                            <div class="qr-code-wrapper">
+                                <img id="upiQrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&amp;data=upi%3A%2F%2Fpay%3Fpa%3D6371012496%40slc%26pn%3DMusicVibe%2520SoundWave%26am%3D59%26cu%3DINR%26tn%3DMusicVibe%2520Plus%2520Subscription" alt="WooCommerce UPI QR Code" class="upi-qr-image" loading="eager">
+                                <div class="qr-overlay-text">
+                                    <span>Scan with any UPI App</span>
+                                </div>
+                            </div>
+
+                            <div class="upi-apps-row">
+                                <a href="upi://pay?pa=6371012496@slc&amp;pn=SoundWave&amp;am=59&amp;cu=INR" class="upi-app-btn gpay">📱 GPay</a>
+                                <a href="upi://pay?pa=6371012496@slc&amp;pn=SoundWave&amp;am=59&amp;cu=INR" class="upi-app-btn phonepe">🟣 PhonePe</a>
+                                <a href="upi://pay?pa=6371012496@slc&amp;pn=SoundWave&amp;am=59&amp;cu=INR" class="upi-app-btn paytm">🔵 Paytm</a>
+                                <a href="upi://pay?pa=6371012496@slc&amp;pn=SoundWave&amp;am=59&amp;cu=INR" class="upi-app-btn bhim">🟠 BHIM</a>
+                            </div>
+
+                            <div class="upi-id-group" style="margin-top:1rem;">
+                                <label>Or Enter VPA / UPI ID:</label>
+                                <div class="input-with-btn">
+                                    <input type="text" id="upiIdInput" placeholder="username@upi / mobile@gpay" value="6371012496@slc">
+                                    <button class="btn btn-secondary" id="verifyUpiBtn">Verify &amp; Pay</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card View -->
+                    <div class="method-pane" id="paneCard" style="display:none;">
+                        <div class="card-form">
+                            <div class="form-group">
+                                <label>Cardholder Name</label>
+                                <input type="text" id="cardName" placeholder="Full Name on Card" value="SoundWave User">
+                            </div>
+                            <div class="form-group">
+                                <label>Card Number</label>
+                                <input type="text" id="cardNumber" placeholder="4532 •••• •••• 8890" maxlength="19">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Expiry (MM/YY)</label>
+                                    <input type="text" id="cardExpiry" placeholder="12/28" maxlength="5">
+                                </div>
+                                <div class="form-group">
+                                    <label>CVV</label>
+                                    <input type="password" id="cardCvv" placeholder="•••" maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Net Banking View -->
+                    <div class="method-pane" id="paneNetbanking" style="display:none;">
+                        <div class="netbanking-grid">
+                            <button class="bank-btn active">State Bank of India (SBI)</button>
+                            <button class="bank-btn">HDFC Bank</button>
+                            <button class="bank-btn">ICICI Bank</button>
+                            <button class="bank-btn">Axis Bank</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Order Summary & Coupon -->
+                <div class="payment-right">
+                    <div class="summary-card">
+                        <h3>Order Summary</h3>
+                        <div class="summary-row">
+                            <span>Selected Tier</span>
+                            <strong id="summaryPlanName">SoundWave Plus (Monthly)</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="summarySubtotal">₹59.00</span>
+                        </div>
+                        <div class="summary-row promo-row" id="discountRow" style="display:none;">
+                            <span>Promo Coupon (SOUNDWAVE20)</span>
+                            <span class="discount-val" id="summaryDiscount">-₹20.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>GST / Processing Fee</span>
+                            <span style="color: #00FF88;">FREE (₹0)</span>
+                        </div>
+
+                        <!-- Coupon Code -->
+                        <div class="coupon-group">
+                            <div class="coupon-input-wrap">
+                                <input type="text" id="couponInput" placeholder="Promo Code (e.g. SOUNDWAVE20)">
+                                <button class="btn btn-secondary" id="applyCouponBtn">Apply</button>
+                            </div>
+                            <span class="coupon-msg" id="couponMsg">Try promo code <strong>SOUNDWAVE20</strong> for ₹20 off!</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-total-row">
+                            <span>Total Payable Amount</span>
+                            <span class="total-amount" id="summaryTotal">₹59.00</span>
+                        </div>
+
+                        <button class="btn btn-primary checkout-action-btn" id="completePaymentBtn">
+                            <span id="payBtnText">Complete Payment & Unlock Plus</span>
+                        </button>
+                        <p class="security-note">🔒 Encrypted by 256-Bit SSL SoundWave WAF Shield</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration Success Receipt Modal -->
+    <div id="paymentSuccessModal" class="modal payment-success-modal">
+        <div class="modal-content success-modal-content">
+            <div class="success-icon-wrap">
+                <span class="success-icon">🎉</span>
+            </div>
+            <h2>Payment Successful!</h2>
+            <p>Welcome to <strong id="receiptPlanTitle">SoundWave Plus</strong>. Your subscription has been unlocked!</p>
+
+            <div class="receipt-box">
+                <div class="receipt-row">
+                    <span>Transaction ID:</span>
+                    <strong id="receiptTxnId">SW-982187391</strong>
+                </div>
+                <div class="receipt-row">
+                    <span>Amount Paid:</span>
+                    <strong id="receiptAmount">₹59.00</strong>
+                </div>
+                <div class="receipt-row">
+                    <span>Billing Status:</span>
+                    <span class="status-active">ACTIVE / UNLOCKED</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="startListeningRedirectBtn">Start Listening Now 🎧</button>
         </div>
     </div>
 
@@ -526,8 +1028,8 @@
                 <img id="modalCoverArt" src="assets/default-cover.png" alt="Cover Art">
             </div>
             
-            <div class="player-modal-visualizer-container" style="margin: 0.5rem 0;">
-                <canvas id="modalVisualizer" width="350" height="60" style="width: 100%; border-radius: 6px; background-color: rgba(0,0,0,0.2);"></canvas>
+            <div class="player-modal-visualizer-container" style="margin: 0.5rem 0; position: relative;">
+                <canvas id="modalVisualizer" width="350" height="75" style="width: 100%; border-radius: 8px; background-color: rgba(10,10,14,0.6); border: 1px solid rgba(255,255,255,0.08);"></canvas>
             </div>
             
             <div class="player-modal-meta">
@@ -589,6 +1091,9 @@
             API_BASE_URL: "%VITE_API_BASE_URL%"
         };
     </script>
+    <script src="js/beatSynth.js"></script>
+    <script src="js/audioFx.js"></script>
+    <script src="js/visualizer.js"></script>
     <script type="module" src="js/api.js"></script>
     <script type="module" src="js/player.js"></script>
     <script type="module" src="js/auth.js"></script>

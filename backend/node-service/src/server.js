@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const compression = require('compression');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -16,25 +17,46 @@ const userRoutes = require('./routes/users');
 const searchRoutes = require('./routes/search');
 const socialRoutes = require('./routes/social');
 
-// Import middleware
+// Import middleware & SoundWave WAF Shield
 const { errorHandler } = require('./middleware/errorHandler');
 const { requestLogger } = require('./middleware/logger');
+const {
+  checkBannedIP,
+  wafInspector,
+  globalRateLimiter,
+  authRateLimiter,
+  searchRateLimiter,
+  getSecurityStatus
+} = require('./middleware/firewall');
 
 const app = express();
 
-// Security middleware
+// Enable Gzip/Deflate HTTP Response Compression
+app.use(compression());
+
+// Hardened HTTP Security Headers via Helmet
 app.use(helmet({
   contentSecurityPolicy: false,
-  crossOriginResourcePolicy: false
+  crossOriginResourcePolicy: false,
+  frameguard: { action: 'deny' },
+  noSniff: true,
+  xssFilter: true,
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
 }));
+
 app.use(cors({
   origin: true,
   credentials: true
 }));
 
-// Body parser middleware
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+// Body parser middleware (Reduced to 2mb for payload protection)
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ limit: '2mb', extended: true }));
+
+// SoundWave Web Application Firewall (WAF) & Rate Limiting Stack
+app.use(checkBannedIP);
+app.use(wafInspector);
+app.use(globalRateLimiter);
 
 // Logging middleware
 app.use(morgan('combined'));
@@ -49,12 +71,20 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
-app.use('/api/v1/auth', authRoutes);
+// WAF Security Shield Status & Metrics Endpoint
+app.get('/api/v1/security/status', (req, res) => {
+  res.json({
+    success: true,
+    data: getSecurityStatus()
+  });
+});
+
+// API Routes with Endpoint-Specific Protection
+app.use('/api/v1/auth', authRateLimiter, authRoutes);
 app.use('/api/v1/songs', songsRoutes);
 app.use('/api/v1/playlists', playlistRoutes);
 app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/search', searchRoutes);
+app.use('/api/v1/search', searchRateLimiter, searchRoutes);
 app.use('/api/v1/social', socialRoutes);
 
 // 404 handler
@@ -78,10 +108,10 @@ const HOST = process.env.HOST || '0.0.0.0';
 module.exports = app;
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`\n🎵 SoundWave API Server`);
+    console.log(`\n🎵 SoundWave API Server & WAF Shield`);
     console.log(`🚀 Running on port ${PORT}`);
+    console.log(`🛡️ Web Application Firewall (WAF): ACTIVE`);
     console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`\n✅ Server is ready to accept requests!\n`);
+    console.log(`\n✅ Server is ready to accept secure requests!\n`);
   });
 }
-// trigger restart 3

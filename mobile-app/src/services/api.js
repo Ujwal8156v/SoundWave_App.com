@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://10.46.70.127:5000/api/v1';
 
 async function headers() {
   const token = await AsyncStorage.getItem('token');
@@ -11,20 +11,40 @@ async function headers() {
 }
 
 async function request(endpoint, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      ...(await headers()),
-      ...(options.headers || {})
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers: {
+        ...(await headers()),
+        ...(options.headers || {})
+      }
+    });
+
+    const body = await response.json();
+    if (!response.ok) {
+      throw new Error(body?.error?.message || body?.detail || 'Request failed');
     }
-  });
-
-  const body = await response.json();
-  if (!response.ok) {
-    throw new Error(body?.error?.message || body?.detail || 'Request failed');
+    return body;
+  } catch (err) {
+    // Retry with localhost if LAN IP fetch encounters a network error
+    if (API_BASE_URL.includes('10.46.70.127')) {
+      try {
+        const altUrl = `http://localhost:5000/api/v1${endpoint}`;
+        const response = await fetch(altUrl, {
+          ...options,
+          headers: {
+            ...(await headers()),
+            ...(options.headers || {})
+          }
+        });
+        const body = await response.json();
+        if (response.ok) return body;
+      } catch (altErr) {
+        // Fallback to original error
+      }
+    }
+    throw err;
   }
-
-  return body;
 }
 
 export const api = {

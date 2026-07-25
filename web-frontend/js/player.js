@@ -132,6 +132,101 @@ class AudioPlayer {
       });
     });
 
+    // SoundWave FX Modal Triggers
+    const fxModal = document.getElementById('fxModal');
+    document.getElementById('fxModalBtn')?.addEventListener('click', () => {
+      if (fxModal) fxModal.style.display = 'flex';
+    });
+    document.getElementById('closeFxModalBtn')?.addEventListener('click', () => {
+      if (fxModal) fxModal.style.display = 'none';
+    });
+
+    // Karaoke Sing-Along Toggle
+    const karaokeBtn = document.getElementById('karaokeToggleBtn');
+    karaokeBtn?.addEventListener('click', () => {
+      if (window.AudioFX) {
+        const isActive = window.AudioFX.toggleKaraoke();
+        karaokeBtn.classList.toggle('active', isActive);
+        karaokeBtn.textContent = isActive ? 'Disable Karaoke' : 'Enable Karaoke';
+        app.showNotification(isActive ? '🎤 Sing-Along Karaoke Mode ENABLED' : 'Karaoke Mode Disabled');
+      }
+    });
+
+    // EQ Sliders
+    for (let i = 0; i < 5; i++) {
+      const slider = document.getElementById(`eqSlider${i}`);
+      const valLabel = document.getElementById(`eqVal${i}`);
+      slider?.addEventListener('input', (e) => {
+        const db = parseFloat(e.target.value);
+        if (valLabel) valLabel.textContent = `${db > 0 ? '+' : ''}${db} dB`;
+        if (window.AudioFX) window.AudioFX.setBandGain(i, db);
+      });
+    }
+
+    // EQ Presets
+    document.getElementById('eqPresetSelect')?.addEventListener('change', (e) => {
+      const preset = e.target.value;
+      if (window.AudioFX) {
+        window.AudioFX.applyPreset(preset);
+        const gains = window.AudioFX.presets[preset];
+        if (gains) {
+          gains.forEach((db, i) => {
+            const slider = document.getElementById(`eqSlider${i}`);
+            const valLabel = document.getElementById(`eqVal${i}`);
+            if (slider) slider.value = db;
+            if (valLabel) valLabel.textContent = `${db > 0 ? '+' : ''}${db} dB`;
+          });
+        }
+        app.showNotification(`EQ Preset set to: ${preset}`);
+      }
+    });
+
+    // 3D Spatial Audio Buttons
+    document.querySelectorAll('[data-spatial]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const mode = e.currentTarget.getAttribute('data-spatial');
+        document.querySelectorAll('[data-spatial]').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        if (window.AudioFX) window.AudioFX.setSpatialMode(mode);
+        app.showNotification(`Spatial Audio: ${mode.toUpperCase()}`);
+      });
+    });
+
+    // Visualizer Mode Buttons
+    document.querySelectorAll('[data-vis-mode]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const mode = e.currentTarget.getAttribute('data-vis-mode');
+        document.querySelectorAll('[data-vis-mode]').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        if (window.Visualizer) window.Visualizer.setMode(mode);
+        app.showNotification(`Visualizer Mode: ${mode}`);
+      });
+    });
+
+    // SoundWave Aura Themes
+    const auraHues = {
+      crimson: 350,
+      purple: 270,
+      emerald: 155,
+      gold: 40
+    };
+    document.querySelectorAll('[data-aura]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const aura = e.currentTarget.getAttribute('data-aura');
+        document.querySelectorAll('[data-aura]').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        
+        const hue = auraHues[aura] || 350;
+        document.documentElement.style.setProperty('--primary-hue', hue);
+        document.documentElement.style.setProperty('--primary-color', `hsl(${hue}, 100%, 50%)`);
+        document.documentElement.style.setProperty('--primary-hover', `hsl(${hue}, 100%, 40%)`);
+        document.documentElement.style.setProperty('--primary-glow', `hsla(${hue}, 100%, 50%, 0.4)`);
+
+        if (window.Visualizer) window.Visualizer.setHue(hue);
+        app.showNotification(`SoundWave Aura Theme: ${aura.toUpperCase()}`);
+      });
+    });
+
     // Audio events
     this.audio.addEventListener('timeupdate', () => this.updateProgress());
     this.audio.addEventListener('ended', () => this.next());
@@ -207,6 +302,21 @@ class AudioPlayer {
   }
 
   play() {
+    // Resume audio context & initialize FX engine
+    if (window.AudioFX) {
+      if (!window.AudioFX.isInitialized) {
+        window.AudioFX.init(this.audio);
+      }
+      window.AudioFX.resumeContext();
+    }
+
+    // Attach Visualizer canvas & start animation
+    const canvas = document.getElementById('modalVisualizer');
+    if (canvas && window.Visualizer) {
+      window.Visualizer.attach(canvas);
+      window.Visualizer.start();
+    }
+
     this.audio.play().catch(() => null);
     this.isPlaying = true;
     const playBtn = document.getElementById('playBtn');
@@ -559,11 +669,43 @@ class AudioPlayer {
   async downloadSong() {
     if (!this.currentSong) return;
     try {
-      const result = await API.downloadSong(this.currentSong.id);
-      window.open(result.data.downloadUrl, '_blank');
-      app.showNotification('Download started');
+      app.showNotification(`📥 Buffering "${this.currentSong.title}" for offline playback...`, 'info');
+      const streamUrl = await API.streamSong(this.currentSong.id, this.currentSong.title, this.currentSong.artist);
+      
+      // Save offline metadata & blob in Web CacheStorage + localStorage
+      const response = await fetch(streamUrl);
+      if (response.ok) {
+        if ('caches' in window) {
+          const cache = await caches.open('soundwave-offline-v1');
+          await cache.put(streamUrl, response.clone());
+        }
+
+        const offlineList = JSON.parse(localStorage.getItem('soundwave_offline_songs') || '[]');
+        if (!offlineList.some(s => s.id == this.currentSong.id)) {
+          offlineList.push({
+            ...this.currentSong,
+            offlineUrl: streamUrl,
+            downloadedAt: Date.now()
+          });
+          localStorage.setItem('soundwave_offline_songs', JSON.stringify(offlineList));
+        }
+
+        // Trigger browser file download for local offline storage
+        const blob = await response.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${this.currentSong.artist} - ${this.currentSong.title}.mp3`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        app.showNotification(`✅ "${this.currentSong.title}" downloaded & ready for offline play!`, 'success');
+      } else {
+        throw new Error('Stream request returned non-OK status');
+      }
     } catch (error) {
-      app.showNotification('Download failed', 'error');
+      console.error('Offline download failed:', error);
+      app.showNotification('Download failed. Please check connection.', 'error');
     }
   }
 

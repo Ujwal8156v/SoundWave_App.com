@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing } from '../theme';
+import AudioFxModal from './AudioFxModal';
 
 const { width } = Dimensions.get('window');
 
@@ -59,6 +60,7 @@ export default function PlayerModal({
   onTriggerSleepTimer,
   onSeek
 }) {
+  const [isFxModalVisible, setIsFxModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('upnext');
   const lyricsScrollRef = useRef(null);
   
@@ -176,13 +178,18 @@ export default function PlayerModal({
           <Text style={styles.headerTitle}>
             NOW PLAYING {sleepTimerRemaining > 0 ? `(${formatTime(sleepTimerRemaining)})` : ''}
           </Text>
-          <Pressable style={styles.iconButton} onPress={onTriggerSleepTimer}>
-            <Ionicons 
-              name="alarm-outline" 
-              size={24} 
-              color={sleepTimerRemaining > 0 ? colors.primary : colors.text} 
-            />
-          </Pressable>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Pressable style={styles.iconButton} onPress={() => setIsFxModalVisible(true)}>
+              <Ionicons name="options-outline" size={24} color={colors.primary} />
+            </Pressable>
+            <Pressable style={styles.iconButton} onPress={onTriggerSleepTimer}>
+              <Ionicons 
+                name="alarm-outline" 
+                size={24} 
+                color={sleepTimerRemaining > 0 ? colors.primary : colors.text} 
+              />
+            </Pressable>
+          </View>
         </View>
 
         {/* Dynamic Display (Album Artwork OR scrolling lyrics OR queue lists) */}
@@ -351,6 +358,11 @@ export default function PlayerModal({
             <Text style={activeTab === 'related' ? styles.footerTabTextActive : styles.footerTabText}>RELATED</Text>
           </Pressable>
         </View>
+
+        <AudioFxModal
+          visible={isFxModalVisible}
+          onClose={() => setIsFxModalVisible(false)}
+        />
       </SafeAreaView>
     </Modal>
   );

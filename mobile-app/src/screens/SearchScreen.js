@@ -74,6 +74,7 @@ export default function SearchScreen({ onSearch, results, currentSong, liked, on
         initialNumToRender={8}
         maxToRenderPerBatch={10}
         windowSize={5}
+        removeClippedSubviews={true}
         renderItem={({ item }) => (
           <SongCard
             song={item}

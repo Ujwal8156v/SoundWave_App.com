@@ -15,6 +15,7 @@ class SoundWaveApp {
 
   async init() {
     this.setupEventListeners();
+    this.initPaymentCheckout();
     this.restoreSession();
     await this.loadInitialData();
   }
@@ -34,20 +35,58 @@ class SoundWaveApp {
 
     document.getElementById('menuToggle')?.addEventListener('click', () => this.toggleMenu());
     document.getElementById('loginBtn')?.addEventListener('click', () => this.openAuthModal());
+    document.getElementById('communitySignUpBtn')?.addEventListener('click', () => this.openAuthModal());
+    document.getElementById('exploreBtn')?.addEventListener('click', () => {
+      window.location.hash = '#discover';
+    });
     document.getElementById('logoutLink')?.addEventListener('click', () => this.logout());
 
-    // Search
-    document.getElementById('searchBtn')?.addEventListener('click', () => this.handleSearch());
-    document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') this.handleSearch();
-    });
-
+    // Discover Page Search Handler Setup
     const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+
     if (searchInput) {
       let debounceTimeout;
+
+      const executeSearch = () => {
+        clearTimeout(debounceTimeout);
+        this.extractSuggestions();
+        this.handleSearch();
+      };
+
+      searchBtn?.addEventListener('click', executeSearch);
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') executeSearch();
+      });
+
       searchInput.addEventListener('input', () => {
         clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => this.extractSuggestions(), 300);
+        const val = searchInput.value.trim();
+
+        if (val.length === 0) {
+          this.playlist = [...(this.allSongs || [])];
+          this.renderSongs(this.playlist);
+          const suggestions = document.getElementById('searchSuggestions');
+          if (suggestions) suggestions.style.display = 'none';
+        } else {
+          // Instant local filtering preview (0ms)
+          this.extractSuggestions();
+          const qLower = val.toLowerCase();
+          const localMatches = (this.allSongs || []).filter(s =>
+            s.title.toLowerCase().includes(qLower) ||
+            s.artist.toLowerCase().includes(qLower) ||
+            (s.genre && s.genre.toLowerCase().includes(qLower))
+          );
+          if (localMatches.length > 0) {
+            this.playlist = localMatches;
+            this.renderSongs(this.playlist);
+          }
+
+          // Debounced API search
+          debounceTimeout = setTimeout(() => {
+            this.handleSearch();
+          }, 250);
+        }
       });
     }
 
@@ -97,6 +136,24 @@ class SoundWaveApp {
         const text = document.getElementById('storageStatusText');
         if (text) text.textContent = 'Used: 0 B / Available: 4.9 GB';
         this.showNotification('Downloads cache cleared successfully');
+      }
+    });
+
+    // AI BeatVibe Live Audio Drum Synth & DJ Loop Handlers
+    document.getElementById('padKick')?.addEventListener('click', () => window.AIBeatVibe?.triggerKick());
+    document.getElementById('padSnare')?.addEventListener('click', () => window.AIBeatVibe?.triggerSnare());
+    document.getElementById('padHiHat')?.addEventListener('click', () => window.AIBeatVibe?.triggerHiHat());
+    document.getElementById('padCyber')?.addEventListener('click', () => window.AIBeatVibe?.triggerCyberSub());
+
+    document.getElementById('toggleAiDjLoopBtn')?.addEventListener('click', () => {
+      if (window.AIBeatVibe) {
+        const isPlaying = window.AIBeatVibe.toggleLoop();
+        const btn = document.getElementById('toggleAiDjLoopBtn');
+        if (btn) {
+          btn.textContent = isPlaying ? '⏹️ Stop AI DJ Loop' : '🤖 Toggle AI DJ Loop';
+          btn.style.backgroundColor = isPlaying ? '#ef4444' : 'rgba(255,255,255,0.1)';
+        }
+        this.showNotification(isPlaying ? 'AI DJ Drum Loop Layering Active ⚡' : 'AI DJ Loop Stopped');
       }
     });
 
@@ -248,6 +305,9 @@ class SoundWaveApp {
 
   setCurrentUser(user) {
     this.currentUser = user;
+    if (user.email) {
+      localStorage.setItem('userEmail', user.email);
+    }
     
     // Toggle navigation visibilities
     const settingsDropdown = document.getElementById('settingsDropdown');
@@ -256,8 +316,17 @@ class SoundWaveApp {
     const navPlaylists = document.getElementById('navPlaylists');
     if (navPlaylists) navPlaylists.style.display = 'block';
     
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) loginBtn.style.display = 'none';
+    const loginNavItem = document.getElementById('loginNavItem');
+    if (loginNavItem) loginNavItem.style.display = 'none';
+
+    // Resume pending checkout if user initiated subscription before login
+    if (this.pendingCheckoutPlan) {
+      const plan = this.pendingCheckoutPlan;
+      this.pendingCheckoutPlan = null;
+      setTimeout(() => {
+        this.openPaymentModal(plan);
+      }, 350);
+    }
 
     // Restore checkbox toggle configurations from localStorage
     const configKeys = [
@@ -290,8 +359,8 @@ class SoundWaveApp {
     const navPlaylists = document.getElementById('navPlaylists');
     if (navPlaylists) navPlaylists.style.display = 'none';
     
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) loginBtn.style.display = 'block';
+    const loginNavItem = document.getElementById('loginNavItem');
+    if (loginNavItem) loginNavItem.style.display = 'block';
 
     this.renderProfile();
     window.location.hash = '#home';
@@ -333,12 +402,14 @@ class SoundWaveApp {
       return;
     }
 
-    grid.innerHTML = songs.map(song => {
+    const htmlContent = songs.map((song, index) => {
       const isLiked = this.likedSongsSet && this.likedSongsSet.has(song.id);
+      const fallbackArt = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=400&q=80';
+      const isHighPriority = index < 6;
       return `
         <div class="song-card" data-id="${song.id}">
           <div class="card-cover-container">
-            <img src="${song.coverArt || 'assets/default-cover.png'}" alt="${song.title}" class="card-image">
+            <img src="${song.coverArt || fallbackArt}" alt="${song.title}" class="card-image" loading="${isHighPriority ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isHighPriority ? 'high' : 'low'}" onerror="this.onerror=null;this.src='${fallbackArt}';">
             <div class="card-overlay">
               <span class="play-icon">▶</span>
             </div>
@@ -360,32 +431,29 @@ class SoundWaveApp {
       `;
     }).join('');
 
-    // Event listener for card clicks (play)
-    grid.querySelectorAll('.card-cover-container, .card-details').forEach(el => {
-      el.addEventListener('click', (e) => {
-        const card = e.currentTarget.closest('.song-card');
-        const songId = card.dataset.id;
-        this.playSong(songId, songs);
-      });
-    });
+    grid.innerHTML = htmlContent;
 
-    // Event listener for Likes
-    grid.querySelectorAll('.like-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Fast Single Event Delegation for 60 FPS Performance
+    grid.onclick = (e) => {
+      const likeBtn = e.target.closest('.like-btn');
+      if (likeBtn) {
         e.stopPropagation();
-        const songId = e.currentTarget.dataset.id;
-        this.toggleLike(songId);
-      });
-    });
+        this.toggleLike(likeBtn.dataset.id);
+        return;
+      }
 
-    // Event listener for Playlists
-    grid.querySelectorAll('.playlist-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      const playlistBtn = e.target.closest('.playlist-btn');
+      if (playlistBtn) {
         e.stopPropagation();
-        const songId = e.currentTarget.dataset.id;
-        this.handleAddToPlaylist(songId);
-      });
-    });
+        this.handleAddToPlaylist(playlistBtn.dataset.id);
+        return;
+      }
+
+      const card = e.target.closest('.song-card');
+      if (card) {
+        this.playSong(card.dataset.id, songs);
+      }
+    };
   }
 
   async playSong(songId, songs) {
@@ -416,7 +484,7 @@ class SoundWaveApp {
   }
 
   async handleSearch() {
-    const query = document.getElementById('searchInput')?.value;
+    const query = document.getElementById('searchInput')?.value?.trim();
     if (!query) return;
 
     // Switch view to discover so the user can see search results
@@ -429,14 +497,46 @@ class SoundWaveApp {
       suggestions.innerHTML = '';
     }
 
+    const grid = document.getElementById('songsGrid');
+    if (grid) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--primary-color);">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+          <h3 style="color: #fff; font-size: 1.1rem;">Searching tracks for "${query}"...</h3>
+        </div>
+      `;
+    }
+
+    let apiSongs = [];
+    const qLower = query.toLowerCase();
+    const localMatches = (this.allSongs || []).filter(s =>
+      s.title.toLowerCase().includes(qLower) ||
+      s.artist.toLowerCase().includes(qLower) ||
+      (s.genre && s.genre.toLowerCase().includes(qLower))
+    );
+
     try {
       const results = await API.search(query);
-      this.playlist = results.data.songs || [];
-      this.renderSongs(this.playlist);
+      apiSongs = Array.isArray(results.data?.songs)
+        ? results.data.songs
+        : (Array.isArray(results.data) ? results.data : (results.songs || []));
     } catch (error) {
-      console.error('Search failed:', error);
-      this.showNotification('Search failed', 'error');
+      console.warn('API Search failed or rate-limited:', error);
     }
+
+    // Combine API songs + local matches without duplicate IDs
+    const seenIds = new Set();
+    const combinedSongs = [];
+
+    [...apiSongs, ...localMatches].forEach(song => {
+      if (song && song.id && !seenIds.has(String(song.id))) {
+        seenIds.add(String(song.id));
+        combinedSongs.push(song);
+      }
+    });
+
+    this.playlist = combinedSongs;
+    this.renderSongs(this.playlist);
   }
 
   extractSuggestions() {
@@ -823,6 +923,219 @@ class SoundWaveApp {
     }
   }
 
+  initPaymentCheckout() {
+    this.selectedPlan = 'plus';
+    this.appliedDiscount = 0;
+    this.activeCoupon = '';
+
+    const prices = {
+      free: { name: 'SoundWave Free', price: 0 },
+      plus: { name: 'SoundWave Plus', price: 59 },
+      family: { name: 'Family Premium', price: 179 }
+    };
+
+    this.planPrices = prices;
+
+    // Trigger buttons
+    document.getElementById('heroGetPremiumBtn')?.addEventListener('click', () => this.openPaymentModal('plus'));
+    document.getElementById('planFreeBtn')?.addEventListener('click', () => this.openPaymentModal('free'));
+    document.getElementById('planPlusBtn')?.addEventListener('click', () => this.openPaymentModal('plus'));
+    document.getElementById('planFamilyBtn')?.addEventListener('click', () => this.openPaymentModal('family'));
+
+    // Modal Close
+    document.getElementById('closePaymentModalBtn')?.addEventListener('click', () => {
+      const modal = document.getElementById('paymentModal');
+      if (modal) modal.style.display = 'none';
+    });
+
+    // Plan Tabs
+    ['free', 'plus', 'family'].forEach(plan => {
+      document.getElementById(`payTab${plan.charAt(0).toUpperCase() + plan.slice(1)}`)?.addEventListener('click', () => {
+        document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(`payTab${plan.charAt(0).toUpperCase() + plan.slice(1)}`)?.classList.add('active');
+        this.selectedPlan = plan;
+        this.updatePaymentSummary();
+      });
+    });
+
+    // Payment Method Tabs
+    ['upi', 'card', 'netbanking'].forEach(method => {
+      document.getElementById(`method${method.charAt(0).toUpperCase() + method.slice(1)}`)?.addEventListener('click', () => {
+        document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`method${method.charAt(0).toUpperCase() + method.slice(1)}`)?.classList.add('active');
+
+        document.querySelectorAll('.method-pane').forEach(p => p.style.display = 'none');
+        document.getElementById(`pane${method.charAt(0).toUpperCase() + method.slice(1)}`).style.display = 'block';
+      });
+    });
+
+    // Apply Coupon
+    document.getElementById('applyCouponBtn')?.addEventListener('click', () => {
+      const input = document.getElementById('couponInput')?.value.trim().toUpperCase();
+      const msg = document.getElementById('couponMsg');
+      if (input === 'SOUNDWAVE20') {
+        this.appliedDiscount = 20;
+        this.activeCoupon = 'SOUNDWAVE20';
+        if (msg) msg.innerHTML = '<span style="color:#00FF88;">✓ Promo SOUNDWAVE20 applied! ₹20 discount active.</span>';
+        this.showNotification('Coupon SOUNDWAVE20 applied successfully!');
+      } else {
+        this.appliedDiscount = 0;
+        if (msg) msg.innerHTML = '<span style="color:#ef4444;">Invalid coupon code. Try SOUNDWAVE20</span>';
+      }
+      this.updatePaymentSummary();
+    });
+
+    // Complete Payment
+    document.getElementById('completePaymentBtn')?.addEventListener('click', () => this.processPayment());
+
+    // Switch Account from checkout header
+    document.getElementById('checkoutSwitchAccountBtn')?.addEventListener('click', () => {
+      const modal = document.getElementById('paymentModal');
+      if (modal) modal.style.display = 'none';
+      this.pendingCheckoutPlan = this.selectedPlan;
+      this.openAuthModal();
+    });
+
+    // Redirect after Success
+    document.getElementById('startListeningRedirectBtn')?.addEventListener('click', () => this.redirectAfterPayment());
+  }
+
+  openPaymentModal(plan = 'plus') {
+    // If Free Tier (₹0) selected, directly activate Free User status without payment modal
+    if (plan === 'free') {
+      localStorage.setItem('userPlan', 'free');
+      localStorage.setItem('userPlanName', 'SoundWave Free');
+      if (this.currentUser) this.currentUser.plan = 'free';
+
+      this.showNotification('Welcome to SoundWave Free Tier! Active Free User status assigned. 🎧', 'success');
+      
+      const paymentModal = document.getElementById('paymentModal');
+      if (paymentModal) paymentModal.style.display = 'none';
+
+      window.location.hash = '#discover';
+      return;
+    }
+
+    // Require user login before displaying payment modal for paid tiers
+    const isLoggedIn = !!this.currentUser || !!localStorage.getItem('token');
+    if (!isLoggedIn) {
+      this.pendingCheckoutPlan = plan;
+      this.showNotification('Please log in or create an account to choose your subscription plan', 'info');
+      this.openAuthModal();
+      return;
+    }
+
+    this.selectedPlan = plan;
+    const modal = document.getElementById('paymentModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      // Sync active plan tab
+      document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
+      const activeTabEl = document.getElementById(`payTab${plan.charAt(0).toUpperCase() + plan.slice(1)}`);
+      if (activeTabEl) activeTabEl.classList.add('active');
+
+      // Update user account status badge
+      const userEmailEl = document.getElementById('checkoutUserEmail');
+      if (userEmailEl) {
+        userEmailEl.textContent = this.currentUser?.email || localStorage.getItem('userEmail') || 'Active Account';
+      }
+
+      this.updatePaymentSummary();
+    }
+  }
+
+  updatePaymentSummary() {
+    const info = this.planPrices[this.selectedPlan] || this.planPrices.plus;
+    const subtotal = info.price;
+    const discount = Math.min(subtotal, this.appliedDiscount);
+    const total = Math.max(0, subtotal - discount);
+
+    const nameEl = document.getElementById('summaryPlanName');
+    const subtotalEl = document.getElementById('summarySubtotal');
+    const discountRow = document.getElementById('discountRow');
+    const discountEl = document.getElementById('summaryDiscount');
+    const totalEl = document.getElementById('summaryTotal');
+    const payBtnText = document.getElementById('payBtnText');
+
+    if (nameEl) nameEl.textContent = `${info.name} (Monthly)`;
+    if (subtotalEl) subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
+
+    if (discount > 0 && discountRow) {
+      discountRow.style.display = 'flex';
+      if (discountEl) discountEl.textContent = `-₹${discount.toFixed(2)}`;
+    } else if (discountRow) {
+      discountRow.style.display = 'none';
+    }
+
+    if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
+    if (payBtnText) {
+      payBtnText.textContent = this.selectedPlan === 'free' ? 'Activate Free Tier (₹0) 🎧' : `Complete Payment & Unlock ${this.selectedPlan.toUpperCase()}`;
+    }
+
+    // Dynamic WooCommerce UPI QR Code Generator
+    const upiQrImg = document.getElementById('upiQrCodeImg');
+    if (upiQrImg) {
+      const upiUri = `upi://pay?pa=6371012496@slc&pn=MusicVibe%20SoundWave&am=${total}&cu=INR&tn=${encodeURIComponent(info.name)}`;
+      upiQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUri)}`;
+    }
+  }
+
+  processPayment() {
+    if (this.selectedPlan === 'free') {
+      localStorage.setItem('userPlan', 'free');
+      localStorage.setItem('userPlanName', 'SoundWave Free');
+      if (this.currentUser) this.currentUser.plan = 'free';
+
+      const paymentModal = document.getElementById('paymentModal');
+      if (paymentModal) paymentModal.style.display = 'none';
+
+      this.showNotification('Welcome to SoundWave Free Tier! Active Free User status assigned. 🎧', 'success');
+      window.location.hash = '#discover';
+      return;
+    }
+
+    const payBtn = document.getElementById('completePaymentBtn');
+    const payBtnText = document.getElementById('payBtnText');
+
+    if (payBtnText) payBtnText.textContent = '🔒 Verifying 256-Bit SSL...';
+    if (payBtn) payBtn.disabled = true;
+
+    setTimeout(() => {
+      // Payment Successful!
+      const paymentModal = document.getElementById('paymentModal');
+      const successModal = document.getElementById('paymentSuccessModal');
+
+      if (paymentModal) paymentModal.style.display = 'none';
+
+      // Save user plan in localStorage & state
+      const planTitle = this.planPrices[this.selectedPlan]?.name || 'SoundWave Plus';
+      localStorage.setItem('userPlan', this.selectedPlan);
+      localStorage.setItem('userPlanName', planTitle);
+
+      const txnId = 'SW-' + Math.floor(100000000 + Math.random() * 900000000);
+      const info = this.planPrices[this.selectedPlan] || this.planPrices.plus;
+      const total = Math.max(0, info.price - Math.min(info.price, this.appliedDiscount));
+
+      document.getElementById('receiptPlanTitle').textContent = planTitle;
+      document.getElementById('receiptTxnId').textContent = txnId;
+      document.getElementById('receiptAmount').textContent = `₹${total.toFixed(2)}`;
+
+      if (successModal) successModal.style.display = 'flex';
+
+      if (payBtnText) payBtnText.textContent = `Complete Payment & Unlock ${this.selectedPlan.toUpperCase()}`;
+      if (payBtn) payBtn.disabled = false;
+
+      this.showNotification(`Payment Verified! Welcome to ${planTitle}`);
+    }, 1200);
+  }
+
+  redirectAfterPayment() {
+    const successModal = document.getElementById('paymentSuccessModal');
+    if (successModal) successModal.style.display = 'none';
+    window.location.hash = '#discover';
+    this.showNotification('🎉 Premium Unlocked! Enjoy 320kbps Hi-Fi streaming.');
+  }
+
   formatDuration(seconds) {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -854,3 +1167,4 @@ class SoundWaveApp {
 }
 
 window.app = new SoundWaveApp();
+

@@ -18,6 +18,7 @@ export default function HomeScreen({ songs, currentSong, liked, onPlay, onLike, 
         initialNumToRender={8}
         maxToRenderPerBatch={10}
         windowSize={5}
+        removeClippedSubviews={true}
         renderItem={({ item }) => (
           <SongCard
             song={item}

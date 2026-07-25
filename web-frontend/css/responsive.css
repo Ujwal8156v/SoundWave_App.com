@@ -88,8 +88,50 @@
     gap: 1.5rem;
   }
 
-  .footer-container {
-    gap: 2.5rem;
+/* Responsive Payment Modal Layout for All Devices */
+@media (max-width: 768px) {
+  .payment-modal-content {
+    width: 95% !important;
+    max-width: 95% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    padding: 1.25rem !important;
+    margin: 1rem auto !important;
+    border-radius: 16px !important;
+  }
+
+  .plan-tabs-row {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+
+  .payment-body-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .method-tabs {
+    flex-direction: column !important;
+    gap: 0.4rem !important;
+  }
+
+  .netbanking-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-header h2 {
+    font-size: 1.3rem !important;
+  }
+
+  .total-amount {
+    font-size: 1.4rem !important;
+  }
+
+  .checkout-action-btn {
+    padding: 0.75rem !important;
+    font-size: 0.95rem !important;
   }
 }
 

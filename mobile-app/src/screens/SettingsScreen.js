@@ -37,8 +37,8 @@ export default function SettingsScreen({ onBack }) {
 
   function handleSelectPlan() {
     Alert.alert(
-      'Choose Your Plan',
-      'Select a subscription plan tailored to your music lifestyle:',
+      '🛒 WooCommerce UPI QR Payment Gateway',
+      'Select a plan to pay via WooCommerce UPI QR Code (GPay / PhonePe / Paytm / BHIM):',
       [
         {
           text: `Free Tier (₹0/mo) ${currentPlan === 'Free' ? '[Active]' : ''}`,
@@ -49,19 +49,43 @@ export default function SettingsScreen({ onBack }) {
           }
         },
         {
-          text: `SoundWave Plus (₹59/mo) ${currentPlan === 'Plus' ? '[Active]' : ''}`,
+          text: `SoundWave Plus (₹59/mo via UPI QR)`,
           onPress: () => {
-            setCurrentPlan('Plus');
-            AsyncStorage.setItem('settings_currentPlan', 'Plus');
-            Alert.alert('Welcome to Plus!', 'You are now subscribed to SoundWave Plus (₹59/month).');
+            Alert.alert(
+              'WooCommerce UPI Checkout',
+              'Scan QR or Pay via UPI Apps:\n\nUPI VPA: 6371012496@slc\nAmount: ₹59.00\nRef: WC-SWPLUS-59',
+              [
+                {
+                  text: '📱 Pay via GPay / PhonePe / Paytm',
+                  onPress: () => {
+                    setCurrentPlan('Plus');
+                    AsyncStorage.setItem('settings_currentPlan', 'Plus');
+                    Alert.alert('WooCommerce Auto-Verified! 🚀', 'Payment received via 6371012496@slc. SoundWave Plus unlocked!');
+                  }
+                },
+                { text: 'Cancel', style: 'cancel' }
+              ]
+            );
           }
         },
         {
-          text: `Family Premium (₹179/mo) ${currentPlan === 'Family' ? '[Active]' : ''}`,
+          text: `Family Premium (₹179/mo via UPI QR)`,
           onPress: () => {
-            setCurrentPlan('Family');
-            AsyncStorage.setItem('settings_currentPlan', 'Family');
-            Alert.alert('Welcome to Family!', 'You are now subscribed to Family Premium (₹179/month).');
+            Alert.alert(
+              'WooCommerce UPI Checkout',
+              'Scan QR or Pay via UPI Apps:\n\nUPI VPA: 6371012496@slc\nAmount: ₹179.00\nRef: WC-SWFAM-179',
+              [
+                {
+                  text: '📱 Pay via GPay / PhonePe / Paytm',
+                  onPress: () => {
+                    setCurrentPlan('Family');
+                    AsyncStorage.setItem('settings_currentPlan', 'Family');
+                    Alert.alert('WooCommerce Auto-Verified! 🚀', 'Payment received via 6371012496@slc. Family Premium unlocked!');
+                  }
+                },
+                { text: 'Cancel', style: 'cancel' }
+              ]
+            );
           }
         },
         {

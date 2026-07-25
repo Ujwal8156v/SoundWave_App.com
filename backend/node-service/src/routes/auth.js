@@ -8,11 +8,23 @@ const { logger } = require('../middleware/logger');
 const users = new Map();
 let userId = 1;
 
+// Synchronously pre-seed 1-Click Demo User for zero-latency login (<5ms)
+const demoUser = {
+  id: userId++,
+  email: 'demo@soundwave.com',
+  username: 'demo_user',
+  firstName: 'Demo',
+  lastName: 'User',
+  password: bcrypt.hashSync('soundwave123', 4),
+  createdAt: new Date()
+};
+users.set(demoUser.id, demoUser);
+
 // Generate JWT token
 const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, username: user.username },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || 'soundwave-secret-key-12345',
     { expiresIn: process.env.JWT_EXPIRE || '7d' }
   );
 };
@@ -39,8 +51,8 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash password with 6 rounds for instant performance
+    const hashedPassword = await bcrypt.hash(password, 6);
 
     // Create user
     const newUser = {

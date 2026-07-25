@@ -44,12 +44,77 @@ const songs = [
     artist: 'Yo Yo Honey Singh',
     album: 'Single',
     duration: 220,
-    genre: 'Punjabi',
+    genre: 'Punjabi Hip-Hop',
     coverArt: 'https://img.youtube.com/vi/N9sCJ04s29s/hqdefault.jpg',
     source: 'free-demo',
-    plays: 50000,
+    plays: 500000,
+    rating: 4.9,
+    audioUrl: '/api/v1/songs/yt-N9sCJ04s29s/stream'
+  },
+  {
+    id: 'yt-v2S824L1kZ4',
+    title: 'Desi Kalakaar',
+    artist: 'Yo Yo Honey Singh',
+    album: 'Desi Kalakaar',
+    duration: 258,
+    genre: 'Punjabi Hip-Hop',
+    coverArt: 'https://img.youtube.com/vi/v2S824L1kZ4/hqdefault.jpg',
+    source: 'free-demo',
+    plays: 420000,
     rating: 4.8,
-    audioUrl: 'http://192.168.29.19:5000/api/v1/songs/yt-N9sCJ04s29s/stream'
+    audioUrl: '/api/v1/songs/yt-v2S824L1kZ4/stream'
+  },
+  {
+    id: 'yt-PqFMFVcC5ac',
+    title: 'Brown Rang',
+    artist: 'Yo Yo Honey Singh',
+    album: 'International Villager',
+    duration: 179,
+    genre: 'Punjabi Hip-Hop',
+    coverArt: 'https://img.youtube.com/vi/PqFMFVcC5ac/hqdefault.jpg',
+    source: 'free-demo',
+    plays: 680000,
+    rating: 4.9,
+    audioUrl: '/api/v1/songs/yt-PqFMFVcC5ac/stream'
+  },
+  {
+    id: 'yt-KhnVcAC5bIM',
+    title: 'One Bottle Down',
+    artist: 'Yo Yo Honey Singh',
+    album: 'Single',
+    duration: 195,
+    genre: 'Punjabi Party',
+    coverArt: 'https://img.youtube.com/vi/KhnVcAC5bIM/hqdefault.jpg',
+    source: 'free-demo',
+    plays: 340000,
+    rating: 4.7,
+    audioUrl: '/api/v1/songs/yt-KhnVcAC5bIM/stream'
+  },
+  {
+    id: 'yt-GODSTYLE001',
+    title: 'GOD STYLE',
+    artist: 'Yo Yo Honey Singh',
+    album: 'GLORY',
+    duration: 215,
+    genre: 'Urban Rap',
+    coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80',
+    source: 'free-demo',
+    plays: 290000,
+    rating: 4.8,
+    audioUrl: '/api/v1/songs/yt-GODSTYLE001/stream'
+  },
+  {
+    id: 'yt-BBAyRZW9b7M',
+    title: 'Kesariya',
+    artist: 'Arijit Singh',
+    album: 'Brahmastra',
+    duration: 268,
+    genre: 'Bollywood Romance',
+    coverArt: 'https://img.youtube.com/vi/BBAyRZW9b7M/hqdefault.jpg',
+    source: 'free-demo',
+    plays: 890000,
+    rating: 4.9,
+    audioUrl: '/api/v1/songs/yt-BBAyRZW9b7M/stream'
   }
 ];
 
