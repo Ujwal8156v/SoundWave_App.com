@@ -1,10 +1,40 @@
-// SoundWave Dedicated OTP Gateway Router & Controller
+// SoundWave Dedicated OTP Gateway Router & Controller with Nodemailer SMTP Email Dispatch
 const express = require('express');
 const router = express.Router();
+const nodemailer = require('nodemailer');
 
 // In-Memory OTP Store with Auto-Expiration & Rate Limiting
 const otpStore = new Map();
 const cooldownStore = new Map();
+
+// Setup Nodemailer SMTP Transporter
+let transporter = null;
+if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+  transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  });
+  console.log('[OTP GATEWAY] Production SMTP Transporter Ready:', process.env.SMTP_HOST);
+} else {
+  // Test Ethereal Account for SMTP email testing
+  nodemailer.createTestAccount().then(account => {
+    transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: account.user,
+        pass: account.pass
+      }
+    });
+    console.log('[OTP GATEWAY] Test SMTP Transporter Initialized:', account.user);
+  }).catch(() => null);
+}
 
 /**
  * Generate 6-Digit Cryptographic Numeric OTP
@@ -17,7 +47,7 @@ function generateOtpCode() {
  * POST /api/v1/otp/send
  * Dispatch 6-Digit OTP to Email or Mobile Phone
  */
-router.post('/send', (req, res) => {
+router.post('/send', async (req, res) => {
   try {
     const { recipient, type = 'email' } = req.body;
 
@@ -58,6 +88,31 @@ router.post('/send', (req, res) => {
 
     console.log(`[OTP GATEWAY] Sent 6-Digit OTP [${otpCode}] to ${type.toUpperCase()}: ${cleanRecipient}`);
 
+    // Send email via Nodemailer if SMTP transporter is available
+    if (transporter && type === 'email') {
+      const mailOptions = {
+        from: '"SoundWave Security" <noreply@soundwave.com>',
+        to: cleanRecipient,
+        subject: '🔒 Your SoundWave 6-Digit Email OTP Verification Code',
+        html: `
+          <div style="font-family: Arial, sans-serif; background-color: #0d0d15; color: #ffffff; padding: 2rem; border-radius: 16px; max-width: 500px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
+            <h2 style="color: #ff001e; text-align: center; margin-bottom: 1rem;">SoundWave Email Verification</h2>
+            <p style="font-size: 1rem; color: #d1d5db; text-align: center;">Welcome to SoundWave! Use the 6-digit verification code below to complete your registration:</p>
+            <div style="background: rgba(255, 0, 30, 0.15); border: 2px dashed #ff001e; border-radius: 12px; padding: 1rem; text-align: center; font-size: 2rem; font-weight: 800; letter-spacing: 6px; color: #ffffff; margin: 1.5rem 0;">
+              ${otpCode}
+            </div>
+            <p style="font-size: 0.85rem; color: #9ca3af; text-align: center;">This OTP code expires in 5 minutes. If you did not request this registration, please ignore this email.</p>
+          </div>
+        `
+      };
+
+      transporter.sendMail(mailOptions).then(info => {
+        console.log(`[OTP GATEWAY] Email dispatched to ${cleanRecipient}. MessageId: ${info.messageId}`);
+      }).catch(err => {
+        console.error(`[OTP GATEWAY] Email dispatch notice:`, err.message);
+      });
+    }
+
     return res.json({
       success: true,
       message: `6-Digit OTP code sent successfully to ${cleanRecipient}`,
@@ -65,7 +120,6 @@ router.post('/send', (req, res) => {
       recipient: cleanRecipient,
       type,
       expiresInSeconds: 300,
-      // Provided in development/demo mode for rapid testing
       demoOtpCode: otpCode
     });
   } catch (error) {
