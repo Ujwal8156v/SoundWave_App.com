@@ -5,7 +5,7 @@
 ## Features
 
 ### Core Features
-- 🎶 Stream music from free sources
+- 🎶 Stream music from free sources with some ads
 - ⏯️ Advanced playback controls
 - 📱 Offline download capability
 - 🤝 Social features (follow, share, comments)
