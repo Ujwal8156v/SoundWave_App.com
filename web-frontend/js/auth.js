@@ -261,6 +261,43 @@ class AuthHandler {
       throw new Error('Please fill in required email and password');
     }
 
+    // Check duplicate email & username
+    const existingUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
+    const presetEmails = ['demo@soundwave.com', 'admin@soundwave.com', 'user@soundwave.com'];
+    const presetUsernames = ['demo_user', 'admin', 'soundwave_user'];
+
+    const emailExists = presetEmails.includes(email.toLowerCase()) || 
+      existingUsers.some(u => u.email && u.email.toLowerCase() === email.toLowerCase()) ||
+      (localStorage.getItem('soundwave_user') && JSON.parse(localStorage.getItem('soundwave_user')).email?.toLowerCase() === email.toLowerCase());
+
+    const usernameExists = presetUsernames.includes(username.toLowerCase()) || 
+      existingUsers.some(u => u.username && u.username.toLowerCase() === username.toLowerCase()) ||
+      (localStorage.getItem('soundwave_user') && JSON.parse(localStorage.getItem('soundwave_user')).username?.toLowerCase() === username.toLowerCase());
+
+    if (emailExists) {
+      const msg = 'User Already Exists with this Email! ⚠️ Please log in or use another email.';
+      const alertBox = document.getElementById('authAlert');
+      if (alertBox) {
+        alertBox.style.display = 'block';
+        alertBox.textContent = msg;
+      }
+      const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+      if (targetApp) targetApp.showNotification(msg, 'error', 'top-right');
+      return;
+    }
+
+    if (usernameExists) {
+      const msg = 'Username Already Taken! ⚠️ Please choose a different username.';
+      const alertBox = document.getElementById('authAlert');
+      if (alertBox) {
+        alertBox.style.display = 'block';
+        alertBox.textContent = msg;
+      }
+      const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+      if (targetApp) targetApp.showNotification(msg, 'error', 'top-right');
+      return;
+    }
+
     // Store pending user registration payload
     this.pendingUser = { email, password, username, firstName, lastName };
 
@@ -352,6 +389,11 @@ class AuthHandler {
       firstName: this.pendingUser.firstName,
       lastName: this.pendingUser.lastName
     };
+
+    // Save to local registered users store for duplicate protection
+    const registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
+    registeredUsers.push(user);
+    localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
 
     localStorage.setItem('token', 'token-' + Date.now());
     if (targetApp) {
