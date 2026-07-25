@@ -1142,27 +1142,39 @@ class SoundWaveApp {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 
-  showNotification(message, type = 'info') {
+  showNotification(message, type = 'info', position = 'bottom') {
     console.log(`[${type}] ${message}`);
     const toast = document.createElement('div');
     toast.style.position = 'fixed';
-    toast.style.bottom = '100px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.backgroundColor = type === 'error' ? '#ef4444' : '#1f1f1f';
+
+    if (position === 'top-right') {
+      toast.style.top = '24px';
+      toast.style.right = '24px';
+    } else {
+      toast.style.bottom = '100px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+    }
+
+    toast.style.backgroundColor = type === 'error' ? '#ef4444' : (type === 'success' ? '#10b981' : '#1f1f1f');
     toast.style.color = '#ffffff';
-    toast.style.padding = '0.75rem 1.5rem';
+    toast.style.padding = '0.85rem 1.75rem';
     toast.style.borderRadius = '30px';
-    toast.style.zIndex = '9999';
-    toast.style.fontSize = '0.9rem';
-    toast.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
-    toast.style.border = '1px solid #3f3f3f';
+    toast.style.zIndex = '99999';
+    toast.style.fontSize = '0.95rem';
+    toast.style.fontWeight = '700';
+    toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+    toast.style.border = '1px solid rgba(255,255,255,0.2)';
+    toast.style.backdropFilter = 'blur(16px)';
+    toast.style.webkitBackdropFilter = 'blur(16px)';
+    toast.style.transition = 'all 0.3s ease';
     toast.textContent = message;
-    
+
     document.body.appendChild(toast);
     setTimeout(() => {
-      toast.remove();
-    }, 2500);
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 2800);
   }
 }
 

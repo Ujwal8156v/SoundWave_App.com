@@ -39,12 +39,12 @@ class AuthHandler {
         lastName: 'User'
       };
       localStorage.setItem('token', 'demo-token-12345');
+      this.closeModal();
       const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
       if (targetApp) {
         targetApp.setCurrentUser(demoUser);
-        targetApp.showNotification('Logged in with Demo Account 🚀', 'success');
+        targetApp.showNotification('Logined 🚀', 'success', 'top-right');
       }
-      this.closeModal();
 
       // Background async sync with API
       if (window.API) {
@@ -144,7 +144,7 @@ class AuthHandler {
         alertBox.style.display = 'block';
         alertBox.textContent = msg;
       }
-      if (targetApp) targetApp.showNotification(msg, 'error');
+      if (targetApp) targetApp.showNotification(msg, 'error', 'top-right');
     }
   }
 
@@ -157,13 +157,14 @@ class AuthHandler {
     }
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+    this.closeModal();
 
     try {
       const response = await window.API.login(email, password);
       const user = response.data || response.user || { id: 1, email, username: email.split('@')[0] };
       if (targetApp) {
         targetApp.setCurrentUser(user);
-        targetApp.showNotification('Logged in successfully 🚀', 'success');
+        targetApp.showNotification('Logined 🚀', 'success', 'top-right');
       }
     } catch (apiErr) {
       // Fallback for local session login
@@ -177,7 +178,7 @@ class AuthHandler {
       localStorage.setItem('token', 'local-token-' + Date.now());
       if (targetApp) {
         targetApp.setCurrentUser(fallbackUser);
-        targetApp.showNotification('Signed in with local profile 🚀', 'success');
+        targetApp.showNotification('Logined 🚀', 'success', 'top-right');
       }
     }
   }
@@ -195,6 +196,7 @@ class AuthHandler {
     }
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+    this.closeModal();
 
     try {
       const response = await window.API.register({
@@ -207,7 +209,7 @@ class AuthHandler {
       const user = response.data || response.user || { id: Date.now(), email, username, firstName, lastName };
       if (targetApp) {
         targetApp.setCurrentUser(user);
-        targetApp.showNotification('Account created successfully! Welcome to SoundWave ✨', 'success');
+        targetApp.showNotification('Registered ✨', 'success', 'top-right');
       }
     } catch (apiErr) {
       // Fallback for local session registration
@@ -221,7 +223,7 @@ class AuthHandler {
       localStorage.setItem('token', 'local-token-' + Date.now());
       if (targetApp) {
         targetApp.setCurrentUser(fallbackUser);
-        targetApp.showNotification('Welcome! Account created successfully ✨', 'success');
+        targetApp.showNotification('Registered ✨', 'success', 'top-right');
       }
     }
   }
