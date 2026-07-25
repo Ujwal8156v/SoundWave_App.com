@@ -76,6 +76,28 @@ class AuthHandler {
       });
     });
 
+    // Paste Support for 6-digit OTP
+    const otpContainer = document.getElementById('otpStepContainer');
+    otpContainer?.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pastedData = (e.clipboardData || window.clipboardData).getData('text').trim();
+      if (/^\d{6}$/.test(pastedData)) {
+        const otpInputs = document.querySelectorAll('.otp-digit-input');
+        pastedData.split('').forEach((char, i) => {
+          if (otpInputs[i]) otpInputs[i].value = char;
+        });
+        if (otpInputs[5]) otpInputs[5].focus();
+        this.verifyOtp();
+      }
+    });
+
+    // Back to Registration link
+    document.getElementById('backToRegisterLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.isOtpStep = false;
+      this.updateForm();
+    });
+
     // Verify OTP Button Action
     document.getElementById('verifyOtpBtn')?.addEventListener('click', () => this.verifyOtp());
 
