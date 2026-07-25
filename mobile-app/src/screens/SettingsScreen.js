@@ -180,6 +180,31 @@ export default function SettingsScreen({ onBack }) {
     );
   }
 
+  function handleDeleteAccount() {
+    Alert.alert(
+      '⚠️ Permanently Delete Account',
+      'Are you sure you want to permanently delete your SoundWave account? All playlists, liked songs, downloads, and account settings will be erased immediately. This action CANNOT be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: '🗑️ Delete Permanently',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem('soundwave_user');
+              await AsyncStorage.removeItem('token');
+              await AsyncStorage.removeItem('userEmail');
+              Alert.alert('Account Deleted 🗑️', 'Your SoundWave account has been permanently deleted.');
+              if (onBack) onBack();
+            } catch (err) {
+              Alert.alert('Error', 'Failed to delete account');
+            }
+          }
+        }
+      ]
+    );
+  }
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -425,6 +450,21 @@ export default function SettingsScreen({ onBack }) {
               trackColor={{ false: '#3f3f3f', true: colors.primary }}
             />
           </View>
+        </View>
+
+        {/* Danger Zone */}
+        <View style={[styles.section, { borderColor: 'rgba(239, 68, 68, 0.4)', backgroundColor: 'rgba(239, 68, 68, 0.08)', padding: spacing.md }]}>
+          <Text style={[styles.sectionTitle, { color: '#ef4444' }]}>⚠️ Danger Zone</Text>
+
+          <TouchableOpacity style={styles.row} onPress={handleDeleteAccount}>
+            <View style={styles.rowInfo}>
+              <Text style={[styles.rowTitle, { color: '#ef4444', fontWeight: '800' }]}>Permanently Delete Account</Text>
+              <Text style={styles.rowDesc}>Erase account data, playlists & liked songs permanently</Text>
+            </View>
+            <View style={[styles.actionBadge, { borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.2)' }]}>
+              <Text style={[styles.actionBadgeText, { color: '#ef4444', fontWeight: '800' }]}>DELETE</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

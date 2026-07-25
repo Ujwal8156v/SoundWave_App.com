@@ -139,6 +139,21 @@ class SoundWaveApp {
       }
     });
 
+    // Delete Account click handler
+    document.getElementById('deleteAccountBtn')?.addEventListener('click', () => {
+      if (confirm('⚠️ PERMANENT ACCOUNT DELETION\n\nAre you sure you want to permanently delete your SoundWave account?\n\nAll playlists, liked songs, listening history, and subscription data will be permanently erased. This action CANNOT be undone.')) {
+        localStorage.removeItem('soundwave_user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('registered_users');
+
+        this.currentUser = null;
+        this.updateAuthUI();
+        this.showNotification('Your SoundWave account has been permanently deleted 🗑️', 'warning');
+        window.location.hash = '#home';
+      }
+    });
+
     // AI BeatVibe Live Audio Drum Synth & DJ Loop Handlers
     document.getElementById('padKick')?.addEventListener('click', () => window.AIBeatVibe?.triggerKick());
     document.getElementById('padSnare')?.addEventListener('click', () => window.AIBeatVibe?.triggerSnare());
