@@ -1203,6 +1203,23 @@ class SoundWaveApp {
       payBtnText.textContent = this.selectedPlan === 'free' ? 'Activate Free Tier (₹0) 🎧' : `Complete Payment & Unlock ${this.selectedPlan.toUpperCase()}`;
     }
 
+    // Dynamic PayU Gateway Button & Link Generator
+    const payuLinks = {
+      plus: 'https://u.payu.in/Erl7hKgICCH1',
+      family: 'https://u.payu.in/rrlLa18bmvEL'
+    };
+    const payuUrl = payuLinks[this.selectedPlan] || payuLinks.plus;
+    const payuBtn = document.getElementById('payuDirectBuyBtn');
+    const payuTitle = document.getElementById('payuPlanTitle');
+
+    if (payuBtn) {
+      payuBtn.href = payuUrl;
+      payuBtn.textContent = `Pay Now (₹${total.toFixed(0)}) 🚀`;
+    }
+    if (payuTitle) {
+      payuTitle.textContent = `${info.name} Subscription (₹${total.toFixed(0)})`;
+    }
+
     // Dynamic WooCommerce UPI QR Code Generator
     const upiQrImg = document.getElementById('upiQrCodeImg');
     if (upiQrImg) {
@@ -1226,9 +1243,15 @@ class SoundWaveApp {
     }
 
     // Direct redirect to Official PayU Gateway Link
-    if (this.selectedPaymentMethod === 'payu' || this.selectedPlan === 'plus') {
+    const payuLinks = {
+      plus: 'https://u.payu.in/Erl7hKgICCH1',
+      family: 'https://u.payu.in/rrlLa18bmvEL'
+    };
+    const targetPayuUrl = payuLinks[this.selectedPlan] || payuLinks.plus;
+
+    if (this.selectedPaymentMethod === 'payu' || this.selectedPlan === 'plus' || this.selectedPlan === 'family') {
       try {
-        window.open('https://u.payu.in/Erl7hKgICCH1', '_blank');
+        window.open(targetPayuUrl, '_blank');
       } catch (e) {}
     }
 
