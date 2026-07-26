@@ -360,20 +360,22 @@ class AuthHandler {
 
     // Store pending user registration payload
     this.pendingUser = { email, password, username, firstName, lastName };
-
-    // Generate 6-digit OTP
-    this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
     this.isOtpStep = true;
 
-    // Dispatch via Backend OTP Gateway API
+    // Dispatch via Backend OTP Gateway API and sync server generated OTP code
     if (window.API) {
-      window.API.sendOtp(email, 'email')
-        .then(res => {
-          if (res && res.demoOtpCode) {
-            this.currentOtp = res.demoOtpCode;
-          }
-        })
-        .catch(() => null);
+      try {
+        const res = await window.API.sendOtp(email, 'email');
+        if (res && res.demoOtpCode) {
+          this.currentOtp = res.demoOtpCode;
+        }
+      } catch (e) {
+        console.warn('API sendOtp notice:', e.message);
+      }
+    }
+
+    if (!this.currentOtp) {
+      this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
     }
 
     // Switch UI to OTP step view
@@ -423,18 +425,24 @@ class AuthHandler {
     }, 1000);
   }
 
-  resendOtp() {
+  async resendOtp() {
     if (!this.pendingUser) return;
-    this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
     this.startOtpTimer();
 
     if (window.API) {
-      window.API.sendOtp(this.pendingUser.email, 'email').catch(() => null);
+      try {
+        const res = await window.API.sendOtp(this.pendingUser.email, 'email');
+        if (res && res.demoOtpCode) {
+          this.currentOtp = res.demoOtpCode;
+        }
+      } catch (e) {
+        console.warn('API resendOtp notice:', e.message);
+      }
     }
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
-      targetApp.showNotification(`New OTP Code Sent to ${this.pendingUser.email} 📩. Please check your email.`, 'info', 'top-right');
+      targetApp.showNotification(`New OTP Code Sent to ${this.pendingUser.email} 📩. Please check your email inbox.`, 'info', 'top-right');
     }
   }
 
