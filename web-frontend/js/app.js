@@ -1088,13 +1088,15 @@ class SoundWaveApp {
     });
 
     // Payment Method Tabs
-    ['upi', 'card', 'netbanking'].forEach(method => {
+    ['payu', 'upi', 'card', 'netbanking'].forEach(method => {
       document.getElementById(`method${method.charAt(0).toUpperCase() + method.slice(1)}`)?.addEventListener('click', () => {
         document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`method${method.charAt(0).toUpperCase() + method.slice(1)}`)?.classList.add('active');
 
         document.querySelectorAll('.method-pane').forEach(p => p.style.display = 'none');
-        document.getElementById(`pane${method.charAt(0).toUpperCase() + method.slice(1)}`).style.display = 'block';
+        const pane = document.getElementById(`pane${method.charAt(0).toUpperCase() + method.slice(1)}`);
+        if (pane) pane.style.display = 'block';
+        this.selectedPaymentMethod = method;
       });
     });
 
@@ -1221,6 +1223,13 @@ class SoundWaveApp {
       this.showNotification('Welcome to SoundWave Free Tier! Active Free User status assigned. 🎧', 'success');
       window.location.hash = '#discover';
       return;
+    }
+
+    // Direct redirect to Official PayU Gateway Link
+    if (this.selectedPaymentMethod === 'payu' || this.selectedPlan === 'plus') {
+      try {
+        window.open('https://u.payu.in/Erl7hKgICCH1', '_blank');
+      } catch (e) {}
     }
 
     const payBtn = document.getElementById('completePaymentBtn');

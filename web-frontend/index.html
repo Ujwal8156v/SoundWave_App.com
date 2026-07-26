@@ -903,13 +903,29 @@
                 <div class="payment-left">
                     <h3>Select Payment Method</h3>
                     <div class="method-tabs">
-                        <button class="method-btn active" id="methodUpi" data-method="upi">📱 UPI / QR Code</button>
+                        <button class="method-btn active" id="methodPayu" data-method="payu">⚡ PayU (₹59)</button>
+                        <button class="method-btn" id="methodUpi" data-method="upi">📱 UPI / QR Code</button>
                         <button class="method-btn" id="methodCard" data-method="card">💳 Credit / Debit Card</button>
                         <button class="method-btn" id="methodNetbanking" data-method="netbanking">🏦 Net Banking</button>
                     </div>
 
+                    <!-- PayU Gateway View -->
+                    <div class="method-pane active" id="panePayu">
+                        <div class="payu-box" style="text-align: center; padding: 1.5rem 1rem; background: rgba(16, 101, 183, 0.12); border: 1px dashed #1065b7; border-radius: 16px; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #60a5fa; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 0.5rem;">Official PayU Payment Gateway</div>
+                            <h3 style="color: #fff; margin: 0 0 0.5rem; font-size: 1.3rem;">SoundWave Plus Subscription (₹59)</h3>
+                            <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 1.25rem;">Pay securely using Cards, UPI, Net Banking, or Wallets via PayU</p>
+                            
+                            <div style="margin-bottom: 1rem;">
+                                <a id="payuDirectBuyBtn" target="_blank" rel="noopener noreferrer" style="width: 180px; background-color: #1065b7; text-align: center; font-weight: 800; padding: 13px 0px; color: white; font-size: 14px; display: inline-block; text-decoration: none; border-radius: 8px; box-shadow: 0 8px 20px rgba(16,101,183,0.4); transition: transform 0.2s;" href="https://u.payu.in/Erl7hKgICCH1">Buy Now (₹59) 🚀</a>
+                            </div>
+
+                            <span style="font-size: 0.78rem; color: rgba(255,255,255,0.5);">🔒 256-Bit SSL Encrypted • Instant Subscription Activation</span>
+                        </div>
+                    </div>
+
                     <!-- UPI View -->
-                    <div class="method-pane active" id="paneUpi">
+                    <div class="method-pane" id="paneUpi" style="display:none;">
                         <div class="upi-box">
                             <div class="wc-upi-header">
                                 <span class="wc-badge">🛒 WooCommerce UPI QR Gateway v3.5</span>
