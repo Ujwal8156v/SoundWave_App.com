@@ -33,11 +33,11 @@ def send_email_otp(receiver_email: str, otp_code: str) -> bool:
         return True
 
     try:
-        subject = "🔒 Your SoundWave 6-Digit Verification Code"
-        body = f"Welcome to SoundWave!\n\nYour OTP for registration is: {otp_code}\nIt will expire in 5 minutes.\n\nIf you did not request this, please ignore this email."
+        subject = "Your OTP Code"
+        body = f"Your OTP is {otp_code}"
 
         msg = MIMEMultipart()
-        msg['From'] = sender_email
+        msg['From'] = f'"OTP Service" <{sender_email}>'
         msg['To'] = receiver_email
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))

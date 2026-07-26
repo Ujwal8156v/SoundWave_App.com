@@ -90,19 +90,20 @@ router.post('/send', async (req, res) => {
     console.log(`[OTP GATEWAY DISPATCH] 6-Digit Code: ${otpCode}`);
     console.log(`==================================================\n`);
 
-    // Prepare HTML Email Content
+    // Prepare Clean, Deliverable Email Content
     const mailOptions = {
-      from: '"SoundWave Security" <wsound283@gmail.com>',
+      from: '"OTP Service" <wsound283@gmail.com>',
       to: cleanRecipient,
-      subject: '🔒 Your SoundWave 6-Digit Email OTP Verification Code',
+      subject: 'Your OTP Code',
+      text: `Your OTP is ${otpCode}`,
       html: `
-        <div style="font-family: Arial, sans-serif; background-color: #0d0d15; color: #ffffff; padding: 2rem; border-radius: 16px; max-width: 500px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
-          <h2 style="color: #ff001e; text-align: center; margin-bottom: 1rem;">SoundWave Email Verification</h2>
-          <p style="font-size: 1rem; color: #d1d5db; text-align: center;">Welcome to SoundWave! Use the 6-digit verification code below to complete your registration:</p>
-          <div style="background: rgba(255, 0, 30, 0.15); border: 2px dashed #ff001e; border-radius: 12px; padding: 1rem; text-align: center; font-size: 2rem; font-weight: 800; letter-spacing: 6px; color: #ffffff; margin: 1.5rem 0;">
+        <div style="font-family: Arial, sans-serif; background-color: #0d0d15; color: #ffffff; padding: 2rem; border-radius: 16px; max-width: 480px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
+          <h2 style="color: #ff001e; text-align: center; margin-bottom: 0.5rem;">SoundWave Verification</h2>
+          <p style="font-size: 1rem; color: #d1d5db; text-align: center; margin-bottom: 1.25rem;">Your OTP for registration is:</p>
+          <div style="background: rgba(255, 0, 30, 0.15); border: 2px dashed #ff001e; border-radius: 12px; padding: 1rem; text-align: center; font-size: 2.2rem; font-weight: 800; letter-spacing: 6px; color: #ffffff; margin-bottom: 1.25rem;">
             ${otpCode}
           </div>
-          <p style="font-size: 0.85rem; color: #9ca3af; text-align: center;">This OTP code expires in 5 minutes. If you did not request this registration, please ignore this email.</p>
+          <p style="font-size: 0.85rem; color: #9ca3af; text-align: center; margin: 0;">Your OTP is ${otpCode}. It will expire in 5 minutes.</p>
         </div>
       `
     };
