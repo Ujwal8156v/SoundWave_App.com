@@ -126,11 +126,11 @@ async def verify_otp(payload: OTPVerifyRequest):
             detail="Maximum verification attempts exceeded. Please request a new OTP."
         )
 
-    # Check OTP Match
-    if record["otp"] != user_otp and user_otp != "123456":
+    # Check OTP Match - Strict Exact Match Only
+    if record["otp"] != user_otp:
         raise HTTPException(
             status_code=400,
-            detail="Invalid OTP code. Please check and try again."
+            detail="Invalid OTP code. Please enter the exact code sent to your email."
         )
 
     # 4. Mark OTP as Used upon valid verification

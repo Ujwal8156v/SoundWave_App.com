@@ -426,10 +426,9 @@ class AuthHandler {
     }
   }
 
-  verifyOtp() {
+  async verifyOtp() {
     const otpInputs = document.querySelectorAll('.otp-digit-input');
     const enteredOtp = Array.from(otpInputs).map(i => i.value).join('').trim();
-
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
 
     if (enteredOtp.length !== 6) {
@@ -437,14 +436,37 @@ class AuthHandler {
       return;
     }
 
-    if (enteredOtp !== this.currentOtp && enteredOtp !== '123456') {
-      if (targetApp) targetApp.showNotification('Invalid OTP Code. Please check & try again!', 'error', 'top-right');
-      otpInputs.forEach(i => i.style.borderColor = '#ef4444');
-      setTimeout(() => otpInputs.forEach(i => i.style.borderColor = 'rgba(255,255,255,0.18)'), 1500);
+    if (!this.pendingUser) {
+      if (targetApp) targetApp.showNotification('Registration session expired. Please start again.', 'error', 'top-right');
+      this.isOtpStep = false;
+      this.updateForm();
       return;
     }
 
-    // OTP Verified successfully! Complete registration.
+    // Strict local verification against generated OTP code sent to user email
+    if (enteredOtp !== this.currentOtp) {
+      const errMsg = 'Invalid OTP Code! ⚠️ Please enter the exact 6-digit code sent to your email.';
+      if (targetApp) targetApp.showNotification(errMsg, 'error', 'top-right');
+      const alertBox = document.getElementById('authAlert');
+      if (alertBox) {
+        alertBox.style.display = 'block';
+        alertBox.textContent = errMsg;
+      }
+      otpInputs.forEach(i => i.style.borderColor = '#ef4444');
+      setTimeout(() => otpInputs.forEach(i => i.style.borderColor = 'rgba(255,255,255,0.18)'), 2000);
+      return;
+    }
+
+    // Attempt Backend OTP Verification if online API is active
+    if (window.API && window.API.verifyOtp) {
+      try {
+        await window.API.verifyOtp(this.pendingUser.email, enteredOtp);
+      } catch (err) {
+        console.warn('Backend OTP sync notice:', err.message);
+      }
+    }
+
+    // OTP Verified strictly! Complete user registration.
     const user = {
       id: Date.now(),
       email: this.pendingUser.email,

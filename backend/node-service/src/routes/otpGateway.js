@@ -159,11 +159,11 @@ router.post('/verify', (req, res) => {
       });
     }
 
-    // Verify OTP Code
-    if (record.code !== cleanCode && cleanCode !== '123456') {
+    // Verify OTP Code - Strict Exact Match Only
+    if (record.code !== cleanCode) {
       return res.status(400).json({
         success: false,
-        error: { code: 'INVALID_OTP', message: 'Invalid OTP code. Please check and try again.' }
+        error: { code: 'INVALID_OTP', message: 'Invalid OTP code. Please enter the exact code sent to your email.' }
       });
     }
 
