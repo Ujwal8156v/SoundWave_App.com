@@ -1,4 +1,4 @@
-// SoundWave Dedicated OTP Gateway Router & Controller with Nodemailer SMTP Email Dispatch
+// SoundWave Dedicated OTP Gateway Router & Controller with Multi-Transporter Email Dispatch
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
@@ -7,8 +7,8 @@ const nodemailer = require('nodemailer');
 const otpStore = new Map();
 const cooldownStore = new Map();
 
-// Setup Nodemailer SMTP Transporter (Gmail SMTP)
-let transporter = nodemailer.createTransport({
+// Primary Gmail SMTP Transporter
+let primaryTransporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: parseInt(process.env.SMTP_PORT || '587'),
   secure: false, // TLS via STARTTLS
@@ -17,7 +17,24 @@ let transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASS || 'soundwave123'
   }
 });
-console.log('[OTP GATEWAY] Production Gmail SMTP Transporter Ready: wsound283@gmail.com');
+
+// Fallback Ethereal Test SMTP Transporter
+let fallbackTransporter = null;
+nodemailer.createTestAccount().then(account => {
+  fallbackTransporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,
+    auth: {
+      user: account.user,
+      pass: account.pass
+    }
+  });
+  console.log('[OTP GATEWAY] Ethereal Fallback Transporter Ready:', account.user);
+}).catch(() => null);
+
+console.log('[OTP GATEWAY] Primary Gmail SMTP Transporter Initialized: wsound283@gmail.com');
+
 /**
  * Generate 6-Digit Cryptographic Numeric OTP
  */
@@ -68,31 +85,49 @@ router.post('/send', async (req, res) => {
 
     cooldownStore.set(cleanRecipient, Date.now());
 
-    console.log(`[OTP GATEWAY] Sent 6-Digit OTP [${otpCode}] to ${type.toUpperCase()}: ${cleanRecipient}`);
+    console.log(`\n==================================================`);
+    console.log(`[OTP GATEWAY DISPATCH] Recipient: ${cleanRecipient}`);
+    console.log(`[OTP GATEWAY DISPATCH] 6-Digit Code: ${otpCode}`);
+    console.log(`==================================================\n`);
 
-    // Send email via Nodemailer if SMTP transporter is available
-    if (transporter && type === 'email') {
-      const mailOptions = {
-        from: '"SoundWave Security" <wsound283@gmail.com>',
-        to: cleanRecipient,
-        subject: '🔒 Your SoundWave 6-Digit Email OTP Verification Code',
-        html: `
-          <div style="font-family: Arial, sans-serif; background-color: #0d0d15; color: #ffffff; padding: 2rem; border-radius: 16px; max-width: 500px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
-            <h2 style="color: #ff001e; text-align: center; margin-bottom: 1rem;">SoundWave Email Verification</h2>
-            <p style="font-size: 1rem; color: #d1d5db; text-align: center;">Welcome to SoundWave! Use the 6-digit verification code below to complete your registration:</p>
-            <div style="background: rgba(255, 0, 30, 0.15); border: 2px dashed #ff001e; border-radius: 12px; padding: 1rem; text-align: center; font-size: 2rem; font-weight: 800; letter-spacing: 6px; color: #ffffff; margin: 1.5rem 0;">
-              ${otpCode}
-            </div>
-            <p style="font-size: 0.85rem; color: #9ca3af; text-align: center;">This OTP code expires in 5 minutes. If you did not request this registration, please ignore this email.</p>
+    // Prepare HTML Email Content
+    const mailOptions = {
+      from: '"SoundWave Security" <wsound283@gmail.com>',
+      to: cleanRecipient,
+      subject: '🔒 Your SoundWave 6-Digit Email OTP Verification Code',
+      html: `
+        <div style="font-family: Arial, sans-serif; background-color: #0d0d15; color: #ffffff; padding: 2rem; border-radius: 16px; max-width: 500px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
+          <h2 style="color: #ff001e; text-align: center; margin-bottom: 1rem;">SoundWave Email Verification</h2>
+          <p style="font-size: 1rem; color: #d1d5db; text-align: center;">Welcome to SoundWave! Use the 6-digit verification code below to complete your registration:</p>
+          <div style="background: rgba(255, 0, 30, 0.15); border: 2px dashed #ff001e; border-radius: 12px; padding: 1rem; text-align: center; font-size: 2rem; font-weight: 800; letter-spacing: 6px; color: #ffffff; margin: 1.5rem 0;">
+            ${otpCode}
           </div>
-        `
-      };
+          <p style="font-size: 0.85rem; color: #9ca3af; text-align: center;">This OTP code expires in 5 minutes. If you did not request this registration, please ignore this email.</p>
+        </div>
+      `
+    };
 
-      transporter.sendMail(mailOptions).then(info => {
-        console.log(`[OTP GATEWAY] Email dispatched to ${cleanRecipient}. MessageId: ${info.messageId}`);
-      }).catch(err => {
-        console.error(`[OTP GATEWAY] Email dispatch notice:`, err.message);
-      });
+    // Attempt Primary Gmail SMTP Delivery
+    let sentSuccessfully = false;
+    try {
+      const info = await primaryTransporter.sendMail(mailOptions);
+      console.log(`[OTP GATEWAY] Email dispatched via Primary SMTP to ${cleanRecipient}. MessageId: ${info.messageId}`);
+      sentSuccessfully = true;
+    } catch (primaryErr) {
+      console.warn(`[OTP GATEWAY] Primary Gmail SMTP dispatch notice (${primaryErr.message}). Switching to Ethereal Fallback...`);
+      
+      if (fallbackTransporter) {
+        try {
+          const fallbackOptions = { ...mailOptions, from: '"SoundWave Security" <noreply@soundwave.com>' };
+          const fallbackInfo = await fallbackTransporter.sendMail(fallbackOptions);
+          const previewUrl = nodemailer.getTestMessageUrl(fallbackInfo);
+          console.log(`[OTP GATEWAY] Email dispatched via Fallback Ethereal to ${cleanRecipient}.`);
+          console.log(`[OTP GATEWAY] Email Preview URL: ${previewUrl}`);
+          sentSuccessfully = true;
+        } catch (fallbackErr) {
+          console.error(`[OTP GATEWAY] Fallback email dispatch failed:`, fallbackErr.message);
+        }
+      }
     }
 
     return res.json({
