@@ -1050,6 +1050,33 @@
         </div>
     </div>
 
+    <!-- Payment Cancelled Modal -->
+    <div id="paymentCancelModal" class="modal payment-cancel-modal">
+        <div class="modal-content cancel-modal-content" style="max-width: 440px; text-align: center;">
+            <div class="cancel-icon-wrap" style="width: 70px; height: 70px; background: rgba(239,68,68,0.15); border: 2px solid #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1rem; box-shadow: 0 0 20px rgba(239,68,68,0.3);">
+                <span>⚠️</span>
+            </div>
+            <h2 style="margin-bottom: 0.5rem; color: #fff; font-size: 1.5rem; font-weight: 800;">Payment Incomplete</h2>
+            <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 1.2rem; line-height: 1.4;">Your payment was cancelled. No charges were made to your account.</p>
+
+            <div class="receipt-box" style="margin-bottom: 1.5rem; background: rgba(255,255,255,0.04); padding: 1rem 1.2rem; border-radius: 14px; text-align: left;">
+                <div class="receipt-row" style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <span style="color: rgba(255,255,255,0.6);">Selected Plan:</span>
+                    <strong id="cancelPlanTitle" style="color: #fff;">SoundWave Plus</strong>
+                </div>
+                <div class="receipt-row" style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                    <span style="color: rgba(255,255,255,0.6);">Status:</span>
+                    <span style="color: #ef4444; font-weight: 700;">CANCELLED / NOT DEBITED</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; flex-direction: column;">
+                <button class="btn btn-primary" id="retryPaymentModalBtn" style="padding: 0.85rem; font-weight: 700; border-radius: 12px;">🔄 Retry Payment</button>
+                <button class="btn btn-secondary" id="closeCancelModalBtn" style="padding: 0.85rem; font-weight: 700; border-radius: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);">Return to Music Player</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Expandable Web Player Modal -->
     <div id="playerModal" class="modal player-modal">
         <div class="modal-content player-modal-content">

@@ -226,6 +226,21 @@ class SoundWaveApp {
         document.getElementById('contactForm').reset();
       }
     });
+
+    // Payment Success & Cancel Modal Action Handlers
+    document.getElementById('startListeningRedirectBtn')?.addEventListener('click', () => this.redirectAfterPayment());
+    
+    document.getElementById('retryPaymentModalBtn')?.addEventListener('click', () => {
+      const cancelModal = document.getElementById('paymentCancelModal');
+      if (cancelModal) cancelModal.style.display = 'none';
+      this.openPaymentModal(this.selectedPlan || 'plus');
+    });
+
+    document.getElementById('closeCancelModalBtn')?.addEventListener('click', () => {
+      const cancelModal = document.getElementById('paymentCancelModal');
+      if (cancelModal) cancelModal.style.display = 'none';
+      window.location.hash = '#home';
+    });
   }
 
   handleRouting() {
@@ -251,6 +266,18 @@ class SoundWaveApp {
       if (receiptTxnId) receiptTxnId.textContent = txnId;
       if (receiptAmount) receiptAmount.textContent = amount;
       if (successModal) successModal.style.display = 'flex';
+    }
+
+    // Handle #payment-cancel or ?payment=cancel route URL
+    if (hash.startsWith('payment-cancel') || urlParams.get('payment') === 'cancel') {
+      const plan = urlParams.get('plan') || 'plus';
+      const planTitle = this.planPrices[plan]?.name || 'SoundWave Plus';
+
+      const cancelPlanTitle = document.getElementById('cancelPlanTitle');
+      const cancelModal = document.getElementById('paymentCancelModal');
+
+      if (cancelPlanTitle) cancelPlanTitle.textContent = planTitle;
+      if (cancelModal) cancelModal.style.display = 'flex';
     }
 
     // Check if the hash is a sub-anchor on the landing page
