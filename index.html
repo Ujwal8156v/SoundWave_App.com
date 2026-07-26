@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
-  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-CR4HQ88N.js"></script>
+  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-PDDJcS0S.js"></script>
   <link rel="stylesheet" crossorigin href="/soundwave-musicstream-app/assets/index-CcuyB1K7.css">
 </head>
 <body>
@@ -690,10 +690,21 @@
                     <div id="otpStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
                         <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
                         <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Email OTP Verification</h3>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 1rem;">
                             We sent a 6-digit OTP code to <strong id="otpEmailTarget" style="color: var(--primary-color);">user@example.com</strong>
                         </p>
                         
+                        <!-- Live Verification Code Badge & One-Click Auto-Fill -->
+                        <div id="liveOtpBadge" style="background: rgba(255, 0, 30, 0.12); border: 1px dashed rgba(255, 0, 30, 0.5); border-radius: 12px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="text-align: left;">
+                                <span style="font-size: 0.72rem; color: rgba(255,255,255,0.6); display: block; text-transform: uppercase; letter-spacing: 0.5px;">Verification Code</span>
+                                <strong id="liveOtpDisplayCode" style="font-size: 1.35rem; color: #ff001e; letter-spacing: 3px; font-weight: 800;">------</strong>
+                            </div>
+                            <button type="button" id="autoFillOtpBtn" style="background: linear-gradient(135deg, #ff001e, #ff4d00); color: #fff; border: none; border-radius: 8px; padding: 0.5rem 0.85rem; font-weight: 700; font-size: 0.82rem; cursor: pointer; box-shadow: 0 4px 12px rgba(255,0,30,0.3); transition: transform 0.2s;">
+                                ⚡ Auto-Fill Code
+                            </button>
+                        </div>
+
                         <div class="otp-inputs-row" style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.25rem;">
                             <input type="text" maxlength="1" class="otp-digit-input" data-index="0" inputmode="numeric">
                             <input type="text" maxlength="1" class="otp-digit-input" data-index="1" inputmode="numeric">

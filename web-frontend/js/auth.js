@@ -98,6 +98,18 @@ class AuthHandler {
       this.updateForm();
     });
 
+    // One-Click Auto-Fill Code Button
+    document.getElementById('autoFillOtpBtn')?.addEventListener('click', () => {
+      if (this.currentOtp && this.currentOtp.length === 6) {
+        const otpInputs = document.querySelectorAll('.otp-digit-input');
+        this.currentOtp.split('').forEach((char, i) => {
+          if (otpInputs[i]) otpInputs[i].value = char;
+        });
+        if (otpInputs[5]) otpInputs[5].focus();
+        this.verifyOtp();
+      }
+    });
+
     // Verify OTP Button Action
     document.getElementById('verifyOtpBtn')?.addEventListener('click', () => this.verifyOtp());
 
@@ -381,6 +393,9 @@ class AuthHandler {
 
     const emailTarget = document.getElementById('otpEmailTarget');
     if (emailTarget) emailTarget.textContent = email;
+
+    const liveDisplay = document.getElementById('liveOtpDisplayCode');
+    if (liveDisplay) liveDisplay.textContent = this.currentOtp;
 
     // Clear and focus first OTP digit input
     const otpInputs = document.querySelectorAll('.otp-digit-input');
