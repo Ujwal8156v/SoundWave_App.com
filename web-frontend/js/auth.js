@@ -371,10 +371,6 @@ class AuthHandler {
         .then(res => {
           if (res && res.demoOtpCode) {
             this.currentOtp = res.demoOtpCode;
-            const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
-            if (targetApp) {
-              targetApp.showNotification(`OTP Code Sent to ${email} 📩 (Code: ${this.currentOtp})`, 'info', 'top-right');
-            }
           }
         })
         .catch(() => null);
@@ -394,9 +390,6 @@ class AuthHandler {
     const emailTarget = document.getElementById('otpEmailTarget');
     if (emailTarget) emailTarget.textContent = email;
 
-    const liveDisplay = document.getElementById('liveOtpDisplayCode');
-    if (liveDisplay) liveDisplay.textContent = this.currentOtp;
-
     // Clear and focus first OTP digit input
     const otpInputs = document.querySelectorAll('.otp-digit-input');
     otpInputs.forEach(input => input.value = '');
@@ -407,7 +400,7 @@ class AuthHandler {
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
-      targetApp.showNotification(`OTP Code Sent to ${email} 📩 (Code: ${this.currentOtp})`, 'info', 'top-right');
+      targetApp.showNotification(`OTP Code Sent to ${email} 📩. Please check your inbox.`, 'info', 'top-right');
     }
   }
 
@@ -435,9 +428,13 @@ class AuthHandler {
     this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
     this.startOtpTimer();
 
+    if (window.API) {
+      window.API.sendOtp(this.pendingUser.email, 'email').catch(() => null);
+    }
+
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
-      targetApp.showNotification(`New OTP Sent 📩 (Code: ${this.currentOtp})`, 'info', 'top-right');
+      targetApp.showNotification(`New OTP Code Sent to ${this.pendingUser.email} 📩. Please check your email.`, 'info', 'top-right');
     }
   }
 
