@@ -14,7 +14,7 @@ let primaryTransporter = nodemailer.createTransport({
   secure: false, // TLS via STARTTLS
   auth: {
     user: process.env.SMTP_USER || 'wsound283@gmail.com',
-    pass: process.env.SMTP_PASS || 'SoundWave@6371012496'
+    pass: process.env.SMTP_PASS || 'sgro djxs ooam gbjz'
   }
 });
 
