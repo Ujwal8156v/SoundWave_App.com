@@ -2311,47 +2311,78 @@ canvas,
 
 /* FX Modal Layout */
 .fx-modal-content {
-  max-width: 680px;
-  background: rgba(14, 14, 20, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(24px);
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--primary-glow);
-  animation: modalScaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  max-width: 720px;
+  background: linear-gradient(135deg, rgba(16, 12, 32, 0.45), rgba(8, 8, 18, 0.55)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border-radius: 28px !important;
+  padding: 2.2rem !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 60px rgba(139, 92, 246, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
+  position: relative;
+  overflow: hidden;
+  animation: fxModalGlowScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes modalScaleUp {
-  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+.fx-modal-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 0, 128, 0.15), transparent 45%),
+              radial-gradient(circle at 70% 70%, rgba(99, 102, 241, 0.15), transparent 45%);
+  pointer-events: none;
+  animation: fxAuraRotate 18s linear infinite;
+  z-index: 0;
+}
+
+@keyframes fxAuraRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fxModalGlowScale {
+  from { opacity: 0; transform: scale(0.9) translateY(25px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .fx-header {
+  position: relative;
+  z-index: 1;
   margin-bottom: 1.5rem;
 }
 
 .fx-header h2 {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.75rem;
-  color: #fff;
+  font-size: 1.85rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff, #a78bfa, #f43f5e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 0.25rem;
 }
 
 .fx-header p {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.9rem;
 }
 
 /* Karaoke Banner */
 .karaoke-banner {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, rgba(255, 0, 100, 0.15), rgba(80, 0, 200, 0.15));
-  border: 1px solid rgba(255, 0, 100, 0.3);
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(139, 92, 246, 0.25)) !important;
+  border: 1px solid rgba(244, 63, 94, 0.4) !important;
+  backdrop-filter: blur(20px) !important;
+  padding: 1.15rem 1.4rem !important;
+  border-radius: 18px !important;
+  margin-bottom: 1.25rem !important;
+  box-shadow: 0 10px 30px rgba(244, 63, 94, 0.2) !important;
 }
 
 .karaoke-info {
@@ -2362,7 +2393,13 @@ canvas,
 
 .karaoke-icon {
   font-size: 1.8rem;
-  filter: drop-shadow(0 0 8px var(--primary-color));
+  filter: drop-shadow(0 0 12px #f43f5e);
+  animation: micPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes micPulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 8px #f43f5e); }
+  100% { transform: scale(1.12); filter: drop-shadow(0 0 18px #f43f5e); }
 }
 
 .karaoke-info h4 {
@@ -2373,28 +2410,38 @@ canvas,
 
 .karaoke-info p {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.75);
   margin: 0;
 }
 
 .karaoke-toggle-btn.active {
-  background: var(--primary-color) !important;
+  background: linear-gradient(135deg, #f43f5e, #8b5cf6) !important;
   color: #fff !important;
-  box-shadow: 0 0 15px var(--primary-color);
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.6);
 }
 
 /* FX Control Sections */
 .fx-section {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(16px) !important;
+  border-radius: 18px !important;
+  padding: 1.35rem !important;
+  margin-bottom: 1.25rem !important;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fx-section:hover {
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.12) !important;
 }
 
 .fx-section h3 {
   font-size: 1.05rem;
-  color: var(--text-primary);
+  color: #ffffff;
+  font-weight: 700;
   margin-bottom: 1rem;
 }
 
@@ -2413,7 +2460,7 @@ canvas,
 
 .preset-select-wrapper label {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .fx-control-group {
@@ -2429,7 +2476,7 @@ canvas,
 
 .fx-control-group label {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
 }
 
@@ -2441,27 +2488,29 @@ canvas,
 }
 
 .pill-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pill-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5);
   color: #fff;
+  transform: translateY(-2px);
 }
 
 .pill-btn.active {
-  background: var(--primary-color);
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
   color: #fff;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 12px var(--primary-glow);
+  border-color: #8b5cf6;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
 }
 
 /* 5-Band Equalizer Sliders */
@@ -2469,7 +2518,7 @@ canvas,
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
-  padding: 1rem 0 0.5rem;
+  padding: 0.5rem 0;
 }
 
 .eq-band {
@@ -2477,6 +2526,24 @@ canvas,
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.85rem 0.5rem;
+  border-radius: 16px;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.eq-band:hover {
+  background: rgba(139, 92, 246, 0.12);
+  border-color: rgba(139, 92, 246, 0.4);
+  transform: translateY(-4px);
+}
+
+.eq-val {
+  font-weight: 800 !important;
+  color: #a78bfa !important;
+  font-size: 0.82rem !important;
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
 }
 
 .eq-val {
