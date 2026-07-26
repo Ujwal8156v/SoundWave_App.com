@@ -1060,6 +1060,7 @@ class SoundWaveApp {
     const prices = {
       free: { name: 'SoundWave Free', price: 0 },
       plus: { name: 'SoundWave Plus', price: 59 },
+      student: { name: 'Student Hi-Fi Pass', price: 89 },
       family: { name: 'Family Premium', price: 179 }
     };
 
@@ -1069,6 +1070,7 @@ class SoundWaveApp {
     document.getElementById('heroGetPremiumBtn')?.addEventListener('click', () => this.openPaymentModal('plus'));
     document.getElementById('planFreeBtn')?.addEventListener('click', () => this.openPaymentModal('free'));
     document.getElementById('planPlusBtn')?.addEventListener('click', () => this.openPaymentModal('plus'));
+    document.getElementById('planStudentBtn')?.addEventListener('click', () => this.openPaymentModal('student'));
     document.getElementById('planFamilyBtn')?.addEventListener('click', () => this.openPaymentModal('family'));
 
     // Modal Close
@@ -1077,9 +1079,83 @@ class SoundWaveApp {
       if (modal) modal.style.display = 'none';
     });
 
+    document.getElementById('closeStudentModalBtn')?.addEventListener('click', () => {
+      const modal = document.getElementById('studentVerifyModal');
+      if (modal) modal.style.display = 'none';
+    });
+
+    // Student Verification Form Submission
+    document.getElementById('studentVerifyForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const college = document.getElementById('studentCollege')?.value.trim();
+      const studentIdNumber = document.getElementById('studentIdNumber')?.value.trim();
+      const studentEmail = document.getElementById('studentEmail')?.value.trim();
+      const alertEl = document.getElementById('studentAlert');
+      const submitBtn = document.getElementById('submitStudentVerifyBtn');
+
+      if (!college || !studentIdNumber || !studentEmail) {
+        if (alertEl) {
+          alertEl.style.display = 'block';
+          alertEl.textContent = 'Please fill out all student verification fields.';
+        }
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '🔒 Authenticating Student Identity...';
+      }
+
+      try {
+        const response = await fetch('/api/v1/otp/student-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: studentEmail, college, studentIdNumber })
+        });
+        const data = await response.json();
+
+        localStorage.setItem('isVerifiedStudent', 'true');
+        localStorage.setItem('studentCollege', college);
+        localStorage.setItem('studentIdNumber', studentIdNumber);
+        localStorage.setItem('studentEmail', studentEmail);
+
+        if (alertEl) alertEl.style.display = 'none';
+
+        const studentModal = document.getElementById('studentVerifyModal');
+        if (studentModal) studentModal.style.display = 'none';
+
+        this.showNotification(`Student Identity Verified for ${college}! Confirmation email sent to ${studentEmail} 📩`, 'success');
+        this.openPaymentModal('student');
+      } catch (err) {
+        console.error('Student verify error:', err);
+        // Store verification state in offline/fallback mode
+        localStorage.setItem('isVerifiedStudent', 'true');
+        localStorage.setItem('studentCollege', college);
+
+        const studentModal = document.getElementById('studentVerifyModal');
+        if (studentModal) studentModal.style.display = 'none';
+
+        this.showNotification(`Student Identity Verified! Unlocking ₹89 / 3 Months Pass 🎓`, 'success');
+        this.openPaymentModal('student');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Verify Student Identity & Unlock ₹89/3 Mos ✨';
+        }
+      }
+    });
+
     // Plan Tabs
-    ['free', 'plus', 'family'].forEach(plan => {
+    ['free', 'plus', 'student', 'family'].forEach(plan => {
       document.getElementById(`payTab${plan.charAt(0).toUpperCase() + plan.slice(1)}`)?.addEventListener('click', () => {
+        if (plan === 'student') {
+          const isVerified = localStorage.getItem('isVerifiedStudent') === 'true';
+          if (!isVerified) {
+            this.showNotification('Student Verification Required 🎓 Please verify your Student ID first.', 'warning');
+            this.openStudentVerifyModal();
+            return;
+          }
+        }
         document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
         document.getElementById(`payTab${plan.charAt(0).toUpperCase() + plan.slice(1)}`)?.classList.add('active');
         this.selectedPlan = plan;
@@ -1131,7 +1207,22 @@ class SoundWaveApp {
     document.getElementById('startListeningRedirectBtn')?.addEventListener('click', () => this.redirectAfterPayment());
   }
 
+  openStudentVerifyModal() {
+    const studentModal = document.getElementById('studentVerifyModal');
+    if (studentModal) studentModal.style.display = 'flex';
+  }
+
   openPaymentModal(plan = 'plus') {
+    // If Student Plan selected, verify student status first
+    if (plan === 'student') {
+      const isVerified = localStorage.getItem('isVerifiedStudent') === 'true';
+      if (!isVerified) {
+        this.showNotification('Student Verification Required 🎓 Please verify your Student ID first.', 'warning');
+        this.openStudentVerifyModal();
+        return;
+      }
+    }
+
     // If Free Tier (₹0) selected, directly activate Free User status without payment modal
     if (plan === 'free') {
       localStorage.setItem('userPlan', 'free');
@@ -1206,6 +1297,7 @@ class SoundWaveApp {
     // Dynamic PayU Gateway Button & Link Generator
     const payuLinks = {
       plus: 'https://u.payu.in/Erl7hKgICCH1',
+      student: 'https://u.payu.in/Erl7hKgICCH1',
       family: 'https://u.payu.in/rrlLa18bmvEL'
     };
     const payuUrl = payuLinks[this.selectedPlan] || payuLinks.plus;

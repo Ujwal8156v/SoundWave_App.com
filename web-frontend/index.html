@@ -257,6 +257,19 @@
                             </ul>
                             <button class="btn btn-primary" id="planPlusBtn">Go Plus</button>
                         </div>
+                        <div class="pricing-card" style="border: 1px solid rgba(139,92,246,0.4); background: rgba(139,92,246,0.06);">
+                            <span class="badge" style="background: #8b5cf6;">Student Pass 🎓</span>
+                            <h3>Student Hi-Fi</h3>
+                            <div class="price">₹89<span>/3 months</span></div>
+                            <ul class="price-features">
+                                <li>✓ Requires Verified College Student ID</li>
+                                <li>✓ Stream studio quality (320kbps)</li>
+                                <li>✓ 100% Ads-free experience</li>
+                                <li>✓ Unlimited offline song downloads</li>
+                                <li>✓ Instant verification email notification</li>
+                            </ul>
+                            <button class="btn btn-secondary-accent" id="planStudentBtn" style="border-color: #8b5cf6; color: #a78bfa;">Verify & Get Student (₹89)</button>
+                        </div>
                         <div class="pricing-card">
                             <h3>Family Premium</h3>
                             <div class="price">₹179<span>/month</span></div>
@@ -727,6 +740,52 @@
         </div>
     </div>
 
+    <!-- Student Identity Verification Modal -->
+    <div id="studentVerifyModal" class="modal student-verify-modal">
+        <div class="modal-content student-modal-content" style="max-width: 460px; text-align: center; background: rgba(18, 18, 30, 0.75); backdrop-filter: blur(40px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 24px; padding: 2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(139, 92, 246, 0.25);">
+            <button class="modal-close" id="closeStudentModalBtn">&times;</button>
+            <div class="student-header" style="margin-bottom: 1.25rem;">
+                <div style="width: 70px; height: 70px; background: rgba(139, 92, 246, 0.15); border: 2px solid #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1rem; box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);">
+                    🎓
+                </div>
+                <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.35rem;">Student Identity Verification</h2>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.88rem; margin: 0;">Verify your college student identity to access the ₹89 / 3 Months plan</p>
+            </div>
+
+            <form id="studentVerifyForm" style="text-align: left;">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">College / University Name</label>
+                    <div class="input-with-icon" style="position: relative;">
+                        <span class="input-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1rem;">🏛️</span>
+                        <input type="text" id="studentCollege" placeholder="e.g. Stanford University / IIT Delhi" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">Student Roll / ID Number</label>
+                    <div class="input-with-icon" style="position: relative;">
+                        <span class="input-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1rem;">🪪</span>
+                        <input type="text" id="studentIdNumber" placeholder="e.g. STU-2026-98218" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">Student Email Address</label>
+                    <div class="input-with-icon" style="position: relative;">
+                        <span class="input-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1rem;">✉️</span>
+                        <input type="email" id="studentEmail" placeholder="student@university.edu" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                    </div>
+                </div>
+
+                <div id="studentAlert" style="display:none; padding: 0.75rem; background: rgba(239,68,68,0.15); border: 1px solid #ef4444; border-radius: 10px; color: #ef4444; font-size: 0.82rem; margin-bottom: 1rem; text-align: center;"></div>
+
+                <button type="submit" class="btn btn-primary" id="submitStudentVerifyBtn" style="width: 100%; padding: 0.85rem; background: linear-gradient(135deg, #8b5cf6, #6366f1); border: none; border-radius: 12px; color: #fff; font-weight: 800; font-size: 0.95rem; cursor: pointer; box-shadow: 0 6px 20px rgba(139,92,246,0.4);">
+                    Verify Student Identity & Unlock ₹89/3 Mos ✨
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- SoundWave FX Studio Modal -->
     <div id="fxModal" class="modal fx-modal">
         <div class="modal-content fx-modal-content">
@@ -890,6 +949,12 @@
                     <div class="plan-tab-title">SoundWave Plus</div>
                     <div class="plan-tab-price">₹59<span>/mo</span></div>
                     <div class="plan-tab-sub">320kbps Hi-Fi & Ads-Free</div>
+                </div>
+                <div class="plan-tab" id="payTabStudent" data-plan="student">
+                    <span class="tab-recommended" style="background:#8b5cf6;">STUDENT 🎓</span>
+                    <div class="plan-tab-title">Student Hi-Fi</div>
+                    <div class="plan-tab-price">₹89<span>/3 mos</span></div>
+                    <div class="plan-tab-sub">Verified Student Pass</div>
                 </div>
                 <div class="plan-tab" id="payTabFamily" data-plan="family">
                     <div class="plan-tab-title">Family Premium</div>

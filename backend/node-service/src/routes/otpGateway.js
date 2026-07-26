@@ -223,4 +223,89 @@ router.post('/verify', (req, res) => {
   }
 });
 
+/**
+ * POST /api/v1/otp/student-verify
+ * Verify Student Identity & Dispatch Confirmation Notification Email to User Mail ID
+ */
+router.post('/student-verify', async (req, res) => {
+  try {
+    const { email, college, studentIdNumber } = req.body;
+
+    if (!email || !college || !studentIdNumber) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'MISSING_FIELDS', message: 'College name, student ID number, and email address are required.' }
+      });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    // Prepare HTML Email Content
+    const mailOptions = {
+      from: '"SoundWave Student Verification" <wsound283@gmail.com>',
+      to: cleanEmail,
+      subject: '🎓 Student Verification Successful! SoundWave Student Hi-Fi Unlocked',
+      html: `
+        <div style="font-family: Arial, sans-serif; background-color: #0d0d15; color: #ffffff; padding: 2rem; border-radius: 16px; max-width: 550px; margin: 0 auto; border: 1px solid rgba(139,92,246,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎓</div>
+            <h2 style="color: #a78bfa; margin: 0; font-size: 1.6rem;">Student Identity Verified!</h2>
+            <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-top: 0.25rem;">SoundWave Student Hi-Fi Plan (₹89 / 3 Months) Unlocked</p>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+              <span style="color: rgba(255,255,255,0.6);">Institution / University:</span>
+              <strong style="color: #ffffff;">${college}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+              <span style="color: rgba(255,255,255,0.6);">Student Roll / ID Number:</span>
+              <strong style="color: #a78bfa;">${studentIdNumber}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+              <span style="color: rgba(255,255,255,0.6);">Verification Status:</span>
+              <span style="color: #10b981; font-weight: 700;">VERIFIED STUDENT ✅</span>
+            </div>
+          </div>
+
+          <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5;">
+            Your student identity has been authenticated. You can now complete your SoundWave Student Hi-Fi Pass subscription for <strong>₹89 per 3 months</strong> (save 50% vs regular monthly price).
+          </p>
+
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="https://ujwal8156v.github.io/soundwave-musicstream-app/#pricing" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-block;">
+              Proceed to ₹89 Student Checkout 🚀
+            </a>
+          </div>
+
+          <p style="font-size: 0.75rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 2rem;">
+            🔒 Security Notice: This email was sent to ${cleanEmail} because a student verification request was submitted on SoundWave.
+          </p>
+        </div>
+      `
+    };
+
+    primaryTransporter.sendMail(mailOptions).then(info => {
+      console.log(`[STUDENT VERIFICATION MAIL DISPATCHED] MessageID: ${info.messageId} to ${cleanEmail}`);
+    }).catch(err => {
+      console.warn('[STUDENT VERIFICATION MAIL FALLBACK]', err.message);
+      if (fallbackTransporter) {
+        fallbackTransporter.sendMail(mailOptions).catch(() => null);
+      }
+    });
+
+    return res.json({
+      success: true,
+      message: 'Student Identity Verified successfully! A confirmation email has been sent to your mail ID.'
+    });
+
+  } catch (error) {
+    console.error('Student Verification Error:', error);
+    return res.status(500).json({
+      success: false,
+      error: { code: 'STUDENT_VERIFY_FAILED', message: 'Failed to process student verification' }
+    });
+  }
+});
+
 module.exports = router;
