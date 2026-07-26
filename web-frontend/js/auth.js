@@ -116,6 +116,9 @@ class AuthHandler {
     // Resend OTP Action
     document.getElementById('resendOtpBtn')?.addEventListener('click', () => this.resendOtp());
 
+    // Auto-Fill OTP Action
+    document.getElementById('autoFillOtpBtn')?.addEventListener('click', () => this.autoFillOtp());
+
     modalCloseBtn?.addEventListener('click', () => this.closeModal());
 
     window.addEventListener('click', (e) => {
@@ -444,6 +447,17 @@ class AuthHandler {
     if (targetApp) {
       targetApp.showNotification(`New OTP Code Sent to ${this.pendingUser.email} 📩. Please check your email inbox.`, 'info', 'top-right');
     }
+  }
+
+  autoFillOtp() {
+    if (!this.currentOtp || this.currentOtp.length !== 6) return;
+    const otpInputs = document.querySelectorAll('.otp-digit-input');
+    const digits = this.currentOtp.split('');
+    otpInputs.forEach((input, index) => {
+      if (digits[index]) input.value = digits[index];
+    });
+    const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+    if (targetApp) targetApp.showNotification('OTP Code auto-filled! ✨', 'success', 'top-right');
   }
 
   async verifyOtp() {
