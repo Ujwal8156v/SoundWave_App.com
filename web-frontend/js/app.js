@@ -1297,7 +1297,7 @@ class SoundWaveApp {
     // Dynamic PayU Gateway Button & Link Generator
     const payuLinks = {
       plus: 'https://u.payu.in/Erl7hKgICCH1',
-      student: 'https://u.payu.in/Erl7hKgICCH1',
+      student: 'https://u.payu.in/YIoRtYtdRxuS',
       family: 'https://u.payu.in/rrlLa18bmvEL'
     };
     const payuUrl = payuLinks[this.selectedPlan] || payuLinks.plus;
@@ -1306,7 +1306,19 @@ class SoundWaveApp {
 
     if (payuBtn) {
       payuBtn.href = payuUrl;
-      payuBtn.textContent = this.selectedPlan === 'family' ? 'Pay Now' : 'Buy Now';
+      if (this.selectedPlan === 'student') {
+        payuBtn.textContent = 'Pay Now';
+        payuBtn.style.backgroundColor = '#0D1E29';
+        payuBtn.style.color = 'white';
+      } else if (this.selectedPlan === 'family') {
+        payuBtn.textContent = 'Pay Now';
+        payuBtn.style.backgroundColor = '#E2E5EC';
+        payuBtn.style.color = 'black';
+      } else {
+        payuBtn.textContent = 'Buy Now';
+        payuBtn.style.backgroundColor = '#E2E5EC';
+        payuBtn.style.color = 'black';
+      }
     }
     if (payuTitle) {
       payuTitle.textContent = `${info.name} Subscription (₹${total.toFixed(0)})`;
@@ -1337,11 +1349,12 @@ class SoundWaveApp {
     // Direct redirect to Official PayU Gateway Link
     const payuLinks = {
       plus: 'https://u.payu.in/Erl7hKgICCH1',
+      student: 'https://u.payu.in/YIoRtYtdRxuS',
       family: 'https://u.payu.in/rrlLa18bmvEL'
     };
     const targetPayuUrl = payuLinks[this.selectedPlan] || payuLinks.plus;
 
-    if (this.selectedPaymentMethod === 'payu' || this.selectedPlan === 'plus' || this.selectedPlan === 'family') {
+    if (this.selectedPaymentMethod === 'payu' || this.selectedPlan === 'plus' || this.selectedPlan === 'student' || this.selectedPlan === 'family') {
       try {
         window.open(targetPayuUrl, '_blank');
       } catch (e) {}
