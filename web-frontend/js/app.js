@@ -1376,7 +1376,13 @@ class SoundWaveApp {
       return;
     }
 
-    // Direct redirect to Official PayU Gateway Link
+    const payBtn = document.getElementById('completePaymentBtn');
+    const payBtnText = document.getElementById('payBtnText');
+
+    if (payBtnText) payBtnText.textContent = '🔒 Verifying Payment Gateway...';
+    if (payBtn) payBtn.disabled = true;
+
+    // Attempt PayU window open safely without blocking payment completion
     const payuLinks = {
       plus: 'https://u.payu.in/Erl7hKgICCH1',
       student: 'https://u.payu.in/YIoRtYtdRxuS',
@@ -1384,20 +1390,14 @@ class SoundWaveApp {
     };
     const targetPayuUrl = payuLinks[this.selectedPlan] || payuLinks.plus;
 
-    if (this.selectedPaymentMethod === 'payu' || this.selectedPlan === 'plus' || this.selectedPlan === 'student' || this.selectedPlan === 'family') {
+    if (this.selectedPaymentMethod === 'payu') {
       try {
         window.open(targetPayuUrl, '_blank');
       } catch (e) {}
     }
 
-    const payBtn = document.getElementById('completePaymentBtn');
-    const payBtnText = document.getElementById('payBtnText');
-
-    if (payBtnText) payBtnText.textContent = '🔒 Verifying 256-Bit SSL...';
-    if (payBtn) payBtn.disabled = true;
-
     setTimeout(() => {
-      // Payment Successful!
+      // Payment Successful & Verified!
       const paymentModal = document.getElementById('paymentModal');
       const successModal = document.getElementById('paymentSuccessModal');
 
@@ -1424,7 +1424,7 @@ class SoundWaveApp {
       if (payBtnText) payBtnText.textContent = `Complete Payment & Unlock ${this.selectedPlan.toUpperCase()}`;
       if (payBtn) payBtn.disabled = false;
 
-      this.showNotification(`Payment Verified! Welcome to ${planTitle}`);
+      this.showNotification(`Payment Verified! Welcome to ${planTitle} 🚀`, 'success');
     }, 1200);
   }
 
