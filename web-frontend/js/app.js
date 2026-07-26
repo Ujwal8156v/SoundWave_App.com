@@ -1214,7 +1214,7 @@ class SoundWaveApp {
 
     if (payuBtn) {
       payuBtn.href = payuUrl;
-      payuBtn.textContent = `Pay Now (₹${total.toFixed(0)}) 🚀`;
+      payuBtn.textContent = this.selectedPlan === 'family' ? 'Pay Now' : 'Buy Now';
     }
     if (payuTitle) {
       payuTitle.textContent = `${info.name} Subscription (₹${total.toFixed(0)})`;
