@@ -1084,6 +1084,36 @@ class SoundWaveApp {
       if (modal) modal.style.display = 'none';
     });
 
+    // Student Verification Method Switcher
+    document.querySelectorAll('.verify-method-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const method = btn.getAttribute('data-vmethod');
+        document.querySelectorAll('.verify-method-btn').forEach(b => {
+          b.style.background = 'rgba(255, 255, 255, 0.05)';
+          b.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+          b.style.color = 'rgba(255, 255, 255, 0.8)';
+        });
+        btn.style.background = 'rgba(139, 92, 246, 0.2)';
+        btn.style.borderColor = '#8b5cf6';
+        btn.style.color = '#ffffff';
+
+        const pEmail = document.getElementById('vPaneEmail');
+        const pDoc = document.getElementById('vPaneDoc');
+
+        if (method === 'doc') {
+          if (pEmail) pEmail.style.display = 'none';
+          if (pDoc) pDoc.style.display = 'block';
+        } else {
+          if (pEmail) pEmail.style.display = 'block';
+          if (pDoc) pDoc.style.display = 'none';
+        }
+
+        if (['verifypass', 'trove', 'sso'].includes(method)) {
+          this.showNotification(`Switched to ${btn.textContent.trim()} Provider Mode`, 'info');
+        }
+      });
+    });
+
     // Student Verification Form Submission
     document.getElementById('studentVerifyForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();

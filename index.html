@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
-  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-BAyBZ3dD.js"></script>
+  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-B7xYN9BX.js"></script>
   <link rel="stylesheet" crossorigin href="/soundwave-musicstream-app/assets/index-CcuyB1K7.css">
 </head>
 <body>
@@ -742,22 +742,45 @@
 
     <!-- Student Identity Verification Modal -->
     <div id="studentVerifyModal" class="modal student-verify-modal">
-        <div class="modal-content student-modal-content" style="max-width: 460px; text-align: center; background: rgba(18, 18, 30, 0.75); backdrop-filter: blur(40px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 24px; padding: 2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(139, 92, 246, 0.25);">
+        <div class="modal-content student-modal-content" style="max-width: 650px; text-align: center; background: rgba(18, 18, 30, 0.85); backdrop-filter: blur(40px); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 24px; padding: 2rem; box-shadow: 0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(139, 92, 246, 0.25); max-height: 90vh; overflow-y: auto;">
             <button class="modal-close" id="closeStudentModalBtn">&times;</button>
             <div class="student-header" style="margin-bottom: 1.25rem;">
                 <div style="width: 70px; height: 70px; background: rgba(139, 92, 246, 0.15); border: 2px solid #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1rem; box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);">
                     🎓
                 </div>
-                <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.35rem;">Student Identity Verification</h2>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.88rem; margin: 0;">Verify your college student identity to access the ₹89 / 3 Months plan</p>
+                <h2 style="color: #fff; font-size: 1.6rem; font-weight: 800; margin-bottom: 0.35rem;">Student Identity Verification</h2>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.88rem; margin: 0;">Select your preferred verification method to unlock ₹89 / 3 Months Student Pass</p>
             </div>
 
+            <!-- Verification Method Options Selector Grid -->
+            <div style="margin-bottom: 1.5rem; text-align: left;">
+                <label style="display: block; font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-bottom: 0.6rem; font-weight: 700;">Select Student Verification Method:</label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem;">
+                    <button type="button" class="verify-method-btn active" id="vMethodEmail" data-vmethod="email" style="padding: 0.75rem 0.6rem; background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; border-radius: 12px; color: #fff; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📧 Institutional Email</span>
+                    </button>
+                    <button type="button" class="verify-method-btn" id="vMethodDoc" data-vmethod="doc" style="padding: 0.75rem 0.6rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: rgba(255,255,255,0.8); font-size: 0.8rem; font-weight: 700; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📄 Manual ID Upload</span>
+                    </button>
+                    <button type="button" class="verify-method-btn" id="vMethodVerifypass" data-vmethod="verifypass" style="padding: 0.75rem 0.6rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: rgba(255,255,255,0.8); font-size: 0.8rem; font-weight: 700; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>⚡ VerifyPass Gateway</span>
+                    </button>
+                    <button type="button" class="verify-method-btn" id="vMethodTrove" data-vmethod="trove" style="padding: 0.75rem 0.6rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: rgba(255,255,255,0.8); font-size: 0.8rem; font-weight: 700; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🛡️ Trove Verify Student</span>
+                    </button>
+                    <button type="button" class="verify-method-btn" id="vMethodSso" data-vmethod="sso" style="padding: 0.75rem 0.6rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: rgba(255,255,255,0.8); font-size: 0.8rem; font-weight: 700; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🔑 University SSO (Auth0)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Verification Input Form -->
             <form id="studentVerifyForm" style="text-align: left;">
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">College / University Name</label>
                     <div class="input-with-icon" style="position: relative;">
                         <span class="input-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1rem;">🏛️</span>
-                        <input type="text" id="studentCollege" placeholder="e.g. Stanford University / IIT Delhi" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                        <input type="text" id="studentCollege" placeholder="e.g. Centurion University / Stanford / IIT Delhi" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
                     </div>
                 </div>
 
@@ -765,15 +788,26 @@
                     <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">Student Roll / ID Number</label>
                     <div class="input-with-icon" style="position: relative;">
                         <span class="input-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1rem;">🪪</span>
-                        <input type="text" id="studentIdNumber" placeholder="e.g. STU-2026-98218" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                        <input type="text" id="studentIdNumber" placeholder="e.g. STU-2026-98218 / CUTM-891" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">Student Email Address</label>
+                <!-- Dynamic Email or Document Upload Pane -->
+                <div id="vPaneEmail" class="v-pane" style="display: block; margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">Institutional Email Address (.edu or @centurionuniv.edu.in)</label>
                     <div class="input-with-icon" style="position: relative;">
                         <span class="input-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1rem;">✉️</span>
-                        <input type="email" id="studentEmail" placeholder="student@university.edu" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                        <input type="email" id="studentEmail" placeholder="student@centurionuniv.edu.in or @stanford.edu" required style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.8rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                    </div>
+                    <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.35rem; display: block;">🔒 Instant notification email will be dispatched to your student inbox.</span>
+                </div>
+
+                <div id="vPaneDoc" class="v-pane" style="display: none; margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.82rem; color: rgba(255,255,255,0.8); margin-bottom: 0.35rem; font-weight: 600;">Upload Student ID Card or Fee Receipt (JPG, PNG, PDF)</label>
+                    <div style="border: 2px dashed rgba(139, 92, 246, 0.4); border-radius: 14px; padding: 1.25rem; text-align: center; background: rgba(139, 92, 246, 0.05); cursor: pointer;" onclick="document.getElementById('studentIdDocInput').click();">
+                        <span style="font-size: 1.8rem; display: block; margin-bottom: 0.25rem;">📁</span>
+                        <span style="font-size: 0.85rem; color: #a78bfa; font-weight: 700;" id="uploadFileNameDisplay">Click to Select ID Card / Receipt File</span>
+                        <input type="file" id="studentIdDocInput" accept="image/*,.pdf" style="display: none;" onchange="document.getElementById('uploadFileNameDisplay').textContent = this.files[0] ? 'Selected: ' + this.files[0].name : 'Click to Select File';">
                     </div>
                 </div>
 
@@ -783,6 +817,63 @@
                     Verify Student Identity & Unlock ₹89/3 Mos ✨
                 </button>
             </form>
+
+            <!-- Verification Method Comparison Matrix Table -->
+            <div style="margin-top: 1.75rem; text-align: left; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.2rem;">
+                <h4 style="margin: 0 0 0.75rem; font-size: 0.95rem; color: #fff; font-weight: 800; display: flex; align-items: center; gap: 0.4rem;">
+                    📊 Verification Methods Comparison Matrix
+                </h4>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; color: rgba(255,255,255,0.85);">
+                        <thead>
+                            <tr style="background: rgba(139, 92, 246, 0.15); border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left;">
+                                <th style="padding: 0.5rem; color: #a78bfa;">Service / Method</th>
+                                <th style="padding: 0.5rem; color: #a78bfa;">Cost</th>
+                                <th style="padding: 0.5rem; color: #a78bfa;">Fraud Protection</th>
+                                <th style="padding: 0.5rem; color: #a78bfa;">Ease of Use</th>
+                                <th style="padding: 0.5rem; color: #a78bfa;">Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 0.5rem; font-weight: 700; color: #fff;">Institutional Email</td>
+                                <td style="padding: 0.5rem; color: #10b981;">Free</td>
+                                <td style="padding: 0.5rem; color: #f59e0b;">Low</td>
+                                <td style="padding: 0.5rem; color: #10b981;">Easy</td>
+                                <td style="padding: 0.5rem;">Small projects, local portals</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 0.5rem; font-weight: 700; color: #fff;">Manual Upload</td>
+                                <td style="padding: 0.5rem; color: #10b981;">Free</td>
+                                <td style="padding: 0.5rem; color: #60a5fa;">Medium (manual)</td>
+                                <td style="padding: 0.5rem; color: #f59e0b;">Moderate</td>
+                                <td style="padding: 0.5rem;">Small orgs, flexible cases</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 0.5rem; font-weight: 700; color: #fff;">VerifyPass</td>
+                                <td style="padding: 0.5rem; color: #60a5fa;">Free tier</td>
+                                <td style="padding: 0.5rem; color: #60a5fa;">Medium</td>
+                                <td style="padding: 0.5rem; color: #10b981;">Easy API</td>
+                                <td style="padding: 0.5rem;">Startups, small brands</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 0.5rem; font-weight: 700; color: #fff;">Trove Verify Student</td>
+                                <td style="padding: 0.5rem; color: #60a5fa;">Free tier</td>
+                                <td style="padding: 0.5rem; color: #60a5fa;">Medium</td>
+                                <td style="padding: 0.5rem; color: #10b981;">Easy API</td>
+                                <td style="padding: 0.5rem;">Student discounts</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; font-weight: 700; color: #fff;">Keycloak / Auth0</td>
+                                <td style="padding: 0.5rem; color: #60a5fa;">Free tier</td>
+                                <td style="padding: 0.5rem; color: #10b981;">High (SSO)</td>
+                                <td style="padding: 0.5rem; color: #ef4444;">Complex</td>
+                                <td style="padding: 0.5rem;">Tech projects, portals</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
