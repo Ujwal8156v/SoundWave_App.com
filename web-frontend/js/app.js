@@ -231,11 +231,33 @@ class SoundWaveApp {
   handleRouting() {
     let hash = window.location.hash.replace('#', '');
     
+    // Handle #payment-success or ?payment=success route URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (hash.startsWith('payment-success') || urlParams.get('payment') === 'success') {
+      const plan = urlParams.get('plan') || 'plus';
+      const txnId = urlParams.get('txn_id') || ('SW-' + Math.floor(100000000 + Math.random() * 900000000));
+      const amount = urlParams.get('amount') || (plan === 'family' ? '₹179.00' : '₹59.00');
+      const planTitle = this.planPrices[plan]?.name || 'SoundWave Plus';
+
+      localStorage.setItem('userPlan', plan);
+      localStorage.setItem('userPlanName', planTitle);
+
+      const receiptPlanTitle = document.getElementById('receiptPlanTitle');
+      const receiptTxnId = document.getElementById('receiptTxnId');
+      const receiptAmount = document.getElementById('receiptAmount');
+      const successModal = document.getElementById('paymentSuccessModal');
+
+      if (receiptPlanTitle) receiptPlanTitle.textContent = planTitle;
+      if (receiptTxnId) receiptTxnId.textContent = txnId;
+      if (receiptAmount) receiptAmount.textContent = amount;
+      if (successModal) successModal.style.display = 'flex';
+    }
+
     // Check if the hash is a sub-anchor on the landing page
     const subAnchors = ['features', 'pricing', 'faq', 'contact'];
     const isSubAnchor = subAnchors.includes(hash);
     
-    let activeSection = hash;
+    let activeSection = hash.split('?')[0];
     if (!activeSection || (!['home', 'discover', 'playlists', 'profile', 'settings'].includes(activeSection) && !isSubAnchor)) {
       activeSection = 'home';
     } else if (isSubAnchor) {
@@ -1174,6 +1196,9 @@ class SoundWaveApp {
       document.getElementById('receiptAmount').textContent = `₹${total.toFixed(2)}`;
 
       if (successModal) successModal.style.display = 'flex';
+
+      // Update URL hash to Payment Success URL route
+      window.location.hash = `#payment-success?plan=${this.selectedPlan}&txn_id=${txnId}&amount=₹${total.toFixed(2)}`;
 
       if (payBtnText) payBtnText.textContent = `Complete Payment & Unlock ${this.selectedPlan.toUpperCase()}`;
       if (payBtn) payBtn.disabled = false;
