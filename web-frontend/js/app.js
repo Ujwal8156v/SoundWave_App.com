@@ -241,6 +241,18 @@ class SoundWaveApp {
       if (cancelModal) cancelModal.style.display = 'none';
       window.location.hash = '#home';
     });
+
+    document.getElementById('retryFailurePaymentBtn')?.addEventListener('click', () => {
+      const failureModal = document.getElementById('paymentFailureModal');
+      if (failureModal) failureModal.style.display = 'none';
+      this.openPaymentModal(this.selectedPlan || 'plus');
+    });
+
+    document.getElementById('closeFailureModalBtn')?.addEventListener('click', () => {
+      const failureModal = document.getElementById('paymentFailureModal');
+      if (failureModal) failureModal.style.display = 'none';
+      window.location.hash = '#home';
+    });
   }
 
   handleRouting() {
@@ -278,6 +290,21 @@ class SoundWaveApp {
 
       if (cancelPlanTitle) cancelPlanTitle.textContent = planTitle;
       if (cancelModal) cancelModal.style.display = 'flex';
+    }
+
+    // Handle #payment-failure or ?payment=failure route URL
+    if (hash.startsWith('payment-failure') || urlParams.get('payment') === 'failure') {
+      const plan = urlParams.get('plan') || 'plus';
+      const reason = urlParams.get('reason') || 'Transaction could not be processed due to a bank processing error or decline.';
+      const planTitle = this.planPrices[plan]?.name || 'SoundWave Plus';
+
+      const failurePlanTitle = document.getElementById('failurePlanTitle');
+      const failureReasonText = document.getElementById('failureReasonText');
+      const failureModal = document.getElementById('paymentFailureModal');
+
+      if (failurePlanTitle) failurePlanTitle.textContent = planTitle;
+      if (failureReasonText) failureReasonText.textContent = reason;
+      if (failureModal) failureModal.style.display = 'flex';
     }
 
     // Check if the hash is a sub-anchor on the landing page

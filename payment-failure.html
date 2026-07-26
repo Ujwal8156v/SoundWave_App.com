@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Cancelled | SoundWave Hi-Fi Music</title>
+    <title>Payment Failed | SoundWave Hi-Fi Music</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,11 +20,11 @@
             align-items: center;
             justify-content: center;
             background-image: 
-                radial-gradient(circle at 20% 20%, rgba(255, 77, 0, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(239, 68, 68, 0.12) 0%, transparent 40%);
+                radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 85, 0.12) 0%, transparent 40%);
         }
 
-        .cancel-card {
+        .failure-card {
             background: rgba(18, 18, 30, 0.65);
             backdrop-filter: blur(40px);
             -webkit-backdrop-filter: blur(40px);
@@ -35,7 +35,7 @@
             width: 90%;
             text-align: center;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
-                        0 0 40px rgba(255, 77, 0, 0.15);
+                        0 0 40px rgba(239, 68, 68, 0.2);
             animation: cardScaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -44,10 +44,10 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .cancel-badge-icon {
+        .failure-badge-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(255, 77, 0, 0.05));
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(239, 68, 68, 0.05));
             border: 2px solid #ef4444;
             border-radius: 50%;
             display: flex;
@@ -58,7 +58,7 @@
             box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
         }
 
-        .cancel-card h1 {
+        .failure-card h1 {
             font-size: 1.8rem;
             font-weight: 800;
             margin: 0 0 0.5rem;
@@ -67,7 +67,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .cancel-card p {
+        .failure-card p {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.95rem;
             margin-bottom: 1.5rem;
@@ -105,14 +105,14 @@
             color: #ffffff;
         }
 
-        .status-cancelled {
-            background: rgba(239, 68, 68, 0.15);
+        .status-failed {
+            background: rgba(239, 68, 68, 0.2);
             color: #ef4444;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 700;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.4);
         }
 
         .btn-retry {
@@ -138,7 +138,7 @@
             box-shadow: 0 15px 30px rgba(255, 0, 85, 0.5);
         }
 
-        .btn-home {
+        .btn-support {
             display: inline-block;
             width: 100%;
             padding: 0.85rem;
@@ -154,7 +154,7 @@
             transition: background 0.2s;
         }
 
-        .btn-home:hover {
+        .btn-support:hover {
             background: rgba(255, 255, 255, 0.15);
         }
 
@@ -166,10 +166,10 @@
     </style>
 </head>
 <body>
-    <div class="cancel-card">
-        <div class="cancel-badge-icon">⚠️</div>
-        <h1>Payment Incomplete</h1>
-        <p>Your payment process was cancelled. No charges were made to your account.</p>
+    <div class="failure-card">
+        <div class="failure-badge-icon">❌</div>
+        <h1>Payment Failed</h1>
+        <p id="errorMsgDisplay">Transaction could not be completed due to a bank authorization decline or network timeout.</p>
 
         <div class="details-box">
             <div class="details-row">
@@ -181,14 +181,18 @@
                 <span class="details-value" id="amountDisplay">₹59.00</span>
             </div>
             <div class="details-row">
+                <span class="details-label">Error Code:</span>
+                <span class="details-value" id="errorCodeDisplay" style="color: #ef4444;">ERR_PAYMENT_DECLINED</span>
+            </div>
+            <div class="details-row">
                 <span class="details-label">Transaction Status:</span>
-                <span class="status-cancelled">CANCELLED / NOT DEBITED ⚠️</span>
+                <span class="status-failed">FAILED / DECLINED ❌</span>
             </div>
         </div>
 
-        <a href="index.html#pricing" class="btn-retry" id="retryPaymentBtn">🔄 Retry Payment</a>
-        <a href="index.html#home" class="btn-home">🏠 Return to Home Page</a>
-        <div class="footer-note">🔒 SSL Encrypted • SoundWave Security Shield</div>
+        <a href="index.html#pricing" class="btn-retry" id="retryPaymentBtn">🔄 Try Again with Different Method</a>
+        <a href="index.html#contact" class="btn-support">💬 Contact Customer Support</a>
+        <div class="footer-note">🔒 SSL Secured • Need help? Email wsound283@gmail.com</div>
     </div>
 
     <script>
@@ -198,6 +202,8 @@
         
         const plan = urlParams.get('plan') || hashParams.get('plan') || 'plus';
         const amount = urlParams.get('amount') || hashParams.get('amount') || (plan === 'family' ? '₹179.00' : '₹59.00');
+        const reason = urlParams.get('reason') || hashParams.get('reason') || 'Transaction could not be completed due to a bank authorization decline or network timeout.';
+        const errCode = urlParams.get('err_code') || hashParams.get('err_code') || 'ERR_BANK_DECLINE_502';
 
         const planNames = {
             free: 'SoundWave Free',
@@ -209,6 +215,8 @@
 
         document.getElementById('planTitleDisplay').textContent = planTitle;
         document.getElementById('amountDisplay').textContent = amount;
+        document.getElementById('errorMsgDisplay').textContent = reason;
+        document.getElementById('errorCodeDisplay').textContent = errCode;
     </script>
 </body>
 </html>
