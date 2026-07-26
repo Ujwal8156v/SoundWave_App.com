@@ -17,6 +17,7 @@ class SoundWaveApp {
     this.setupEventListeners();
     this.initPaymentCheckout();
     this.restoreSession();
+    this.updateAdVisibility();
     await this.loadInitialData();
   }
 
@@ -1424,7 +1425,8 @@ class SoundWaveApp {
       if (payBtnText) payBtnText.textContent = `Complete Payment & Unlock ${this.selectedPlan.toUpperCase()}`;
       if (payBtn) payBtn.disabled = false;
 
-      this.showNotification(`Payment Verified! Welcome to ${planTitle} 🚀`, 'success');
+      this.updateAdVisibility();
+      this.showNotification(`Payment Verified! Welcome to ${planTitle} 🚀 (Ad-Free Active)`, 'success');
     }, 1200);
   }
 
@@ -1432,7 +1434,31 @@ class SoundWaveApp {
     const successModal = document.getElementById('paymentSuccessModal');
     if (successModal) successModal.style.display = 'none';
     window.location.hash = '#discover';
-    this.showNotification('🎉 Premium Unlocked! Enjoy 320kbps Hi-Fi streaming.');
+    this.updateAdVisibility();
+    this.showNotification('🎉 Premium Unlocked! Enjoy 100% Ad-Free 320kbps Hi-Fi streaming.');
+  }
+
+  updateAdVisibility() {
+    const activePlan = localStorage.getItem('userPlan') || (this.currentUser ? this.currentUser.plan : 'free');
+    const isPaidSubscriber = ['plus', 'student', 'family'].includes(activePlan);
+
+    const adSelectors = [
+      '#sponsoredAd',
+      '.native-ad-wrapper',
+      '.banner-ad-320x50',
+      '.adsterra-banner-container'
+    ];
+
+    adSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        el.style.display = isPaidSubscriber ? 'none' : 'block';
+      });
+    });
+
+    if (isPaidSubscriber) {
+      // Remove any dynamic iframe/popunder ad overlays for paid subscribers
+      document.querySelectorAll('iframe[src*="effectivecpmnetwork.com"], iframe[src*="highperformanceformat.com"]').forEach(el => el.remove());
+    }
   }
 
   formatDuration(seconds) {
