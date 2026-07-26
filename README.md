@@ -19,7 +19,7 @@
 - **Mobile App**: React Native / Flutter compatible API
 - **Backend**: Node.js + Python microservices
 - **Database**: PostgreSQL
-- **APIs**: YouTube Music(YOUTUBE_API_KEY=AIzaSyBS-jmRDJCZ20X47qQc29VCtUhqZtXo0UU)
+- **APIs**: YouTube Music
 - **Real-time**: WebSocket support
 - **Caching**: Redis
 - **Storage**: AWS S3 or similar
