@@ -309,7 +309,7 @@ class SoundWaveApp {
     }
 
     // Check if the hash is a sub-anchor on the landing page
-    const subAnchors = ['features', 'pricing', 'faq', 'contact'];
+    const subAnchors = ['features', 'pricing', 'faq', 'contact', 'artists'];
     const isSubAnchor = subAnchors.includes(hash);
     const socialSections = ['social-feed', 'reels', 'direct-messages'];
     
