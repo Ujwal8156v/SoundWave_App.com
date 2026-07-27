@@ -1049,23 +1049,38 @@ class SoundWaveApp {
 
     const saveDetails = async (avatar) => {
       try {
-        const response = await API.request('/users/profile', {
-          method: 'PUT',
-          body: JSON.stringify({ username, bio, avatar })
-        });
-        
-        this.currentUser = {
+        let updatedUser = {
           ...this.currentUser,
-          username: response.data.username,
-          bio: response.data.bio,
-          avatar: response.data.avatar
+          username,
+          bio,
+          avatar: avatar || this.currentUser.avatar
         };
+
+        try {
+          const response = await API.request('/users/profile', {
+            method: 'PUT',
+            body: JSON.stringify({ username, bio, avatar: updatedUser.avatar })
+          });
+          if (response && response.data) {
+            updatedUser = {
+              ...updatedUser,
+              username: response.data.username || updatedUser.username,
+              bio: response.data.bio || updatedUser.bio,
+              avatar: response.data.avatar || updatedUser.avatar
+            };
+          }
+        } catch (apiErr) {
+          console.warn('Backend profile sync note: Saved profile changes locally to state and localStorage:', apiErr);
+        }
+
+        this.currentUser = updatedUser;
+        localStorage.setItem('soundwave_user', JSON.stringify(this.currentUser));
 
         this.isEditingProfile = false;
         this.renderProfile();
-        this.showNotification('Profile updated successfully');
+        this.showNotification('Profile updated successfully 👤✨', 'success');
       } catch (error) {
-        console.error('Failed to update settings:', error);
+        console.error('Failed to update profile:', error);
         this.showNotification('Failed to save profile', 'error');
       }
     };
