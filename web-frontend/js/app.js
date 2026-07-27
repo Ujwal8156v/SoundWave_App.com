@@ -311,7 +311,7 @@ class SoundWaveApp {
     // Check if the hash is a sub-anchor on the landing page
     const subAnchors = ['features', 'pricing', 'faq', 'contact'];
     const isSubAnchor = subAnchors.includes(hash);
-    const socialSections = ['social-feed', 'reels', 'direct-messages', 'instagram-profile'];
+    const socialSections = ['social-feed', 'reels', 'direct-messages'];
     
     let activeSection = hash.split('?')[0];
     if (!activeSection || (!['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections].includes(activeSection) && !isSubAnchor)) {
@@ -435,7 +435,7 @@ class SoundWaveApp {
     if (navPlaylists) navPlaylists.style.display = user ? 'block' : 'none';
 
     // Toggle Instagram Social Media Navigation items on Login
-    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages', 'navInstagramProfile'];
+    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages'];
     socialNavIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = user ? 'block' : 'none';
@@ -481,7 +481,7 @@ class SoundWaveApp {
     this.isEditingProfile = false;
     
     // Hide Instagram Social Media Navigation items on Logout
-    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages', 'navInstagramProfile'];
+    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages'];
     socialNavIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
