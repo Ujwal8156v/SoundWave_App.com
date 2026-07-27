@@ -439,8 +439,15 @@
                         <div class="dm-sidebar">
                             <div class="dm-sidebar-header">
                                 <span>💬 Direct Messages</span>
-                                <span style="font-size:1.2rem; cursor:pointer;">📝</span>
+                                <span style="font-size:1.2rem; cursor:pointer;" title="New Chat">📝</span>
                             </div>
+
+                            <!-- Instagram Primary & Requests Dual Tab Row -->
+                            <div class="dm-tabs-row" style="display:flex; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:0.5rem; padding: 0 0.85rem;">
+                                <button class="dm-tab-btn active" id="dmTabPrimary" onclick="window.SocialApp.switchDmTab('primary')" style="flex:1; padding:0.6rem 0; background:none; border:none; border-bottom:2px solid #8b5cf6; color:#fff; font-size:0.85rem; font-weight:700; cursor:pointer;">Primary</button>
+                                <button class="dm-tab-btn" id="dmTabRequests" onclick="window.SocialApp.switchDmTab('requests')" style="flex:1; padding:0.6rem 0; background:none; border:none; border-bottom:2px solid transparent; color:rgba(255,255,255,0.5); font-size:0.85rem; font-weight:700; cursor:pointer;">Requests <span style="background:#ff0055; color:#fff; font-size:0.65rem; padding:0.1rem 0.35rem; border-radius:10px; font-weight:800;">1</span></button>
+                            </div>
+
                             <div class="dm-threads-list" id="dmThreadsList">
                                 <!-- Dynamic Chat Threads Loaded Here -->
                             </div>
@@ -458,7 +465,7 @@
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-secondary" id="verifyE2eeKeyBtn" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 12px; font-weight: 700; border-color: rgba(16, 185, 129, 0.4); color: #10b981;">
-                                    🔑 Verify Key
+                                    🔑 Verify WhatsApp Safety Key
                                 </button>
                             </div>
                             <div class="dm-messages-stream" id="dmMessagesStream">
@@ -1517,6 +1524,30 @@
             <div style="position:absolute; bottom:0; left:0; right:0; padding:1.5rem; background:linear-gradient(to top, rgba(0,0,0,0.95), transparent);">
                 <h4 id="storyViewerName" style="color:#fff; margin:0 0 0.25rem; font-size:1.1rem; font-weight:800;">Username</h4>
                 <div id="storyViewerTrack" style="color:#a78bfa; font-size:0.85rem; font-weight:600;">🎵 Music Track</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp-Style Security Code & Safety Key Verification Modal -->
+    <div id="whatsappSafetyKeyModal" class="modal" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); z-index:99999;">
+        <div style="position:relative; width:100%; max-width:480px; background:#12121c; border-radius:24px; padding:2rem; border:1px solid rgba(16,185,129,0.3); box-shadow:0 25px 60px rgba(0,0,0,0.9); text-align:center;">
+            <button class="modal-close" id="closeSafetyKeyModalBtn" style="top:15px; right:15px; z-index:10;">&times;</button>
+            <div style="font-size:2.5rem; margin-bottom:0.5rem;">🔒</div>
+            <h3 style="color:#fff; margin-bottom:0.4rem; font-weight:800;">Verify Security Code</h3>
+            <p style="color:rgba(255,255,255,0.7); font-size:0.85rem; margin-bottom:1.5rem; line-height:1.4;">
+                To verify that messages and audio calls with <strong id="safetyKeyContactName" style="color:#10b981;">Contact</strong> are end-to-end encrypted, compare the 60-digit security code below with their device.
+            </p>
+
+            <!-- 60-Digit Security Code 12-Grid -->
+            <div id="safetyCodeGrid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.6rem; background:rgba(0,0,0,0.4); padding:1rem; border-radius:16px; border:1px solid rgba(255,255,255,0.08); margin-bottom:1.5rem; font-family:monospace; font-size:0.9rem; font-weight:700; color:#10b981; letter-spacing:1px;">
+                <span>83912</span><span>04817</span><span>99281</span><span>10293</span>
+                <span>84719</span><span>02847</span><span>91827</span><span>38402</span>
+                <span>59182</span><span>04821</span><span>73910</span><span>84729</span>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:1rem;">
+                <button type="button" class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('safetyCodeGrid').innerText); if (window.app) window.app.showNotification('Security code copied to clipboard 📋');" style="border-radius:14px; padding:0.5rem 1.25rem; font-size:0.85rem;">Copy Code 📋</button>
+                <button type="button" class="btn btn-primary" id="confirmSafetyKeyBtn" style="background:#10b981; border:none; border-radius:14px; padding:0.5rem 1.25rem; font-size:0.85rem; font-weight:700;">Verified & Secure ✅</button>
             </div>
         </div>
     </div>

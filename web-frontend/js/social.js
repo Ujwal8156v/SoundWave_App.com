@@ -69,13 +69,15 @@ class InstagramSocialController {
       }
     ];
 
-    this.dmThreads = [
+    this.currentDmTab = 'primary';
+    this.primaryThreads = [
       {
         id: 301,
         name: 'Badshah',
         avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150',
         lastMsg: 'Yo! Did you check out the new 320kbps master track?',
         time: '12m',
+        safetyKey: '83912 04817 99281 10293 84719 02847 91827 38402 59182 04821 73910 84729',
         messages: [
           { sender: 'them', text: 'Hey MusicVibe team! Thanks for putting "Soulmate" on top trending!' },
           { sender: 'me', text: 'Glad to have you on SoundWave! The fans are loving it 🔥' },
@@ -88,8 +90,23 @@ class InstagramSocialController {
         avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
         lastMsg: 'Arena tour live concert audio ready for upload 🎤',
         time: '1h',
+        safetyKey: '94820 10293 84719 28401 57201 09281 38201 84019 73910 04821 91827 38402',
         messages: [
           { sender: 'them', text: 'Sat Shri Akal! Arena tour live concert audio ready for upload 🎤' }
+        ]
+      }
+    ];
+
+    this.requestThreads = [
+      {
+        id: 303,
+        name: 'arijit_fan_group',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+        lastMsg: 'Hey! We loved your playlist. Can we submit our remix track?',
+        time: '3h',
+        safetyKey: '10293 84719 99281 83912 02847 38402 91827 59182 04821 73910 84729 84019',
+        messages: [
+          { sender: 'them', text: 'Hey! We loved your playlist. Can we submit our remix track for SoundWave feature?' }
         ]
       }
     ];
@@ -113,8 +130,18 @@ class InstagramSocialController {
       if (e.key === 'Enter') this.sendDmMessage();
     });
 
-    // E2EE Safety Key Verification Button
+    // WhatsApp Safety Key Verification Button
     document.getElementById('verifyE2eeKeyBtn')?.addEventListener('click', () => this.verifyE2eeKey());
+    document.getElementById('closeSafetyKeyModalBtn')?.addEventListener('click', () => {
+      const modal = document.getElementById('whatsappSafetyKeyModal');
+      if (modal) modal.style.display = 'none';
+    });
+    document.getElementById('confirmSafetyKeyBtn')?.addEventListener('click', () => {
+      const modal = document.getElementById('whatsappSafetyKeyModal');
+      if (modal) modal.style.display = 'none';
+      const app = window.app || (typeof app !== 'undefined' ? app : null);
+      if (app) app.showNotification('WhatsApp 60-digit Security Code Verified ✅', 'success');
+    });
 
     // Story Modal Close Action
     document.getElementById('closeStoryModalBtn')?.addEventListener('click', () => {
@@ -123,12 +150,48 @@ class InstagramSocialController {
     });
   }
 
+  switchDmTab(tabName) {
+    this.currentDmTab = tabName;
+    const btnPrimary = document.getElementById('dmTabPrimary');
+    const btnRequests = document.getElementById('dmTabRequests');
+
+    if (btnPrimary && btnRequests) {
+      if (tabName === 'primary') {
+        btnPrimary.style.color = '#fff';
+        btnPrimary.style.borderBottomColor = '#8b5cf6';
+        btnRequests.style.color = 'rgba(255,255,255,0.5)';
+        btnRequests.style.borderBottomColor = 'transparent';
+      } else {
+        btnRequests.style.color = '#fff';
+        btnRequests.style.borderBottomColor = '#8b5cf6';
+        btnPrimary.style.color = 'rgba(255,255,255,0.5)';
+        btnPrimary.style.borderBottomColor = 'transparent';
+      }
+    }
+
+    const threads = tabName === 'primary' ? this.primaryThreads : this.requestThreads;
+    if (threads.length > 0) {
+      this.currentDmThreadId = threads[0].id;
+    }
+    this.renderDmInbox();
+  }
+
   verifyE2eeKey() {
-    const thread = this.dmThreads.find(t => t.id === this.currentDmThreadId);
-    const threadName = thread ? thread.name : 'Active Contact';
-    const sampleFingerprint = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
-    
-    alert(`🔒 End-to-End Encryption Verification\n\nContact: ${threadName}\nAlgorithm: AES-GCM 256-Bit\nKey Fingerprint:\n${sampleFingerprint}\n\nStatus: Verified & Secure. Messages & audio notes are encrypted directly on your device before transmission.`);
+    const allThreads = [...this.primaryThreads, ...this.requestThreads];
+    const thread = allThreads.find(t => t.id === this.currentDmThreadId);
+    const contactName = thread ? thread.name : 'Active Contact';
+    const safetyKey = thread ? thread.safetyKey : '83912 04817 99281 10293 84719 02847 91827 38402 59182 04821 73910 84729';
+
+    const nameEl = document.getElementById('safetyKeyContactName');
+    const gridEl = document.getElementById('safetyCodeGrid');
+    const modal = document.getElementById('whatsappSafetyKeyModal');
+
+    if (nameEl) nameEl.textContent = contactName;
+    if (gridEl) {
+      const blocks = safetyKey.split(' ');
+      gridEl.innerHTML = blocks.map(b => `<span>${b}</span>`).join('');
+    }
+    if (modal) modal.style.display = 'flex';
   }
 
   renderStoriesRail() {
@@ -282,7 +345,14 @@ class InstagramSocialController {
     const list = document.getElementById('dmThreadsList');
     if (!list) return;
 
-    list.innerHTML = this.dmThreads.map(thread => `
+    const threads = this.currentDmTab === 'primary' ? this.primaryThreads : this.requestThreads;
+    if (threads.length === 0) {
+      list.innerHTML = `<div style="padding: 2rem 1rem; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.85rem;">No message requests</div>`;
+      this.renderDmMessages();
+      return;
+    }
+
+    list.innerHTML = threads.map(thread => `
       <div class="dm-thread-item ${thread.id === this.currentDmThreadId ? 'active' : ''}" onclick="window.SocialApp.selectDmThread(${thread.id})">
         <img src="${thread.avatar}" alt="${thread.name}" class="dm-thread-avatar">
         <div class="dm-thread-info">
@@ -300,15 +370,47 @@ class InstagramSocialController {
     this.renderDmInbox();
   }
 
+  acceptRequest(threadId) {
+    const idx = this.requestThreads.findIndex(t => t.id === threadId);
+    if (idx !== -1) {
+      const [thread] = this.requestThreads.splice(idx, 1);
+      this.primaryThreads.push(thread);
+      this.currentDmTab = 'primary';
+      this.currentDmThreadId = thread.id;
+      this.switchDmTab('primary');
+      const app = window.app || (typeof app !== 'undefined' ? app : null);
+      if (app) app.showNotification(`Message request from ${thread.name} accepted! 📥`, 'success');
+    }
+  }
+
   renderDmMessages() {
     const stream = document.getElementById('dmMessagesStream');
     const headerName = document.getElementById('dmChatHeaderName');
-    const thread = this.dmThreads.find(t => t.id === this.currentDmThreadId);
-    if (!stream || !thread) return;
+    const allThreads = [...this.primaryThreads, ...this.requestThreads];
+    const thread = allThreads.find(t => t.id === this.currentDmThreadId);
+
+    if (!stream) return;
+
+    if (!thread) {
+      if (headerName) headerName.textContent = 'Select a Chat';
+      stream.innerHTML = `<div style="text-align: center; margin-top: 3rem; color: rgba(255,255,255,0.4);">No chat selected</div>`;
+      return;
+    }
 
     if (headerName) headerName.textContent = thread.name;
 
-    stream.innerHTML = thread.messages.map(msg => `
+    let requestNoticeHtml = '';
+    if (this.currentDmTab === 'requests') {
+      requestNoticeHtml = `
+        <div style="background: rgba(236, 72, 153, 0.15); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 16px; padding: 1rem; margin-bottom: 1.25rem; text-align: center;">
+          <div style="font-weight: 700; color: #fff; font-size: 0.9rem; margin-bottom: 0.3rem;">Message Request from ${thread.name}</div>
+          <div style="font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-bottom: 0.85rem;">Accepting allows them to send you messages and see when you are active.</div>
+          <button class="btn btn-primary" onclick="window.SocialApp.acceptRequest(${thread.id})" style="background: #8b5cf6; border: none; padding: 0.45rem 1.25rem; border-radius: 12px; font-weight: 700; font-size: 0.8rem;">Accept Request 📥</button>
+        </div>
+      `;
+    }
+
+    const messagesHtml = thread.messages.map(msg => `
       <div class="dm-bubble ${msg.sender === 'me' ? 'outgoing' : 'incoming'}">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.2rem;">
           <span>${msg.text}</span>
@@ -317,6 +419,7 @@ class InstagramSocialController {
       </div>
     `).join('');
 
+    stream.innerHTML = requestNoticeHtml + messagesHtml;
     stream.scrollTop = stream.scrollHeight;
   }
 
@@ -327,9 +430,11 @@ class InstagramSocialController {
     const text = input.value.trim();
     input.value = '';
 
-    const thread = this.dmThreads.find(t => t.id === this.currentDmThreadId);
+    const allThreads = [...this.primaryThreads, ...this.requestThreads];
+    const thread = allThreads.find(t => t.id === this.currentDmThreadId);
     if (!thread) return;
 
+    // Zero-latency optimistic UI update
     thread.messages.push({ sender: 'me', text });
     thread.lastMsg = text;
 
