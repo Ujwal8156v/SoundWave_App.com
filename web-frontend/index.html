@@ -714,6 +714,7 @@
 
                 <div class="player-actions">
                     <button class="action-btn fx-trigger-btn" id="fxModalBtn" title="SoundWave FX Studio">🎛️ FX</button>
+                    <button class="action-btn dingdong-btn" id="dingDongBtn" title="DingDong — Interrupt & Chime" onclick="window.triggerDingDong()">🔔</button>
                     <button class="action-btn" id="sleepTimerBtn" title="Sleep Timer">⏱️</button>
                     <button class="action-btn" id="downloadBtn" title="Download">⬇</button>
                     <button class="action-btn" id="shareBtn" title="Share">📤</button>
@@ -1519,6 +1520,9 @@
         </div>
     </div>
 
+    <!-- DingDong Notification Toast -->
+    <div id="dingdongToast">🔔 DingDong! Resuming playback...</div>
+
     <!-- Scripts -->
     <script>
         window.ENV = {
@@ -1534,5 +1538,6 @@
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/utils.js"></script>
     <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/dingdong.js"></script>
 </body>
 </html>

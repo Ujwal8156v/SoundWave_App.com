@@ -3967,3 +3967,61 @@ canvas,
   }
   .morning-routine-title { font-size: 0.9rem; }
 }
+
+/* ==========================================================================
+   DingDong 🔔 Interrupt-Chime-Resume Button
+   ========================================================================== */
+
+.dingdong-btn {
+  position: relative;
+  color: #facc15 !important;
+  transition: transform 0.2s ease, text-shadow 0.2s ease !important;
+}
+
+.dingdong-btn:hover {
+  transform: rotate(-15deg) scale(1.25) !important;
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.85);
+}
+
+.dingdong-btn.ringing {
+  animation: dingDongRing 0.5s ease-in-out 2;
+  color: #fde68a !important;
+  text-shadow: 0 0 16px rgba(250, 204, 21, 1);
+  pointer-events: none;
+}
+
+@keyframes dingDongRing {
+  0%   { transform: rotate(0deg)   scale(1.1); }
+  20%  { transform: rotate(-18deg) scale(1.2); }
+  40%  { transform: rotate(18deg)  scale(1.2); }
+  60%  { transform: rotate(-12deg) scale(1.15); }
+  80%  { transform: rotate(12deg)  scale(1.15); }
+  100% { transform: rotate(0deg)   scale(1.1); }
+}
+
+/* DingDong overlay notification bar */
+#dingdongToast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: linear-gradient(135deg, rgba(250,204,21,0.15), rgba(251,146,60,0.12));
+  border: 1px solid rgba(250,204,21,0.45);
+  color: #fff;
+  padding: 0.6rem 1.4rem;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  white-space: nowrap;
+  z-index: 9999;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+#dingdongToast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

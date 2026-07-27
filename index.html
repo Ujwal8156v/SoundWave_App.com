@@ -11,8 +11,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="./assets/logo-DhK5Oro6.png">
-  <script type="module" crossorigin src="./assets/index-B9cDOOT2.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DLEzqeha.css">
+  <script type="module" crossorigin src="./assets/index-DRwebhO7.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DWrmyseg.css">
 </head>
 <body>
     <div id="app">
@@ -713,6 +713,7 @@
 
                 <div class="player-actions">
                     <button class="action-btn fx-trigger-btn" id="fxModalBtn" title="SoundWave FX Studio">🎛️ FX</button>
+                    <button class="action-btn dingdong-btn" id="dingDongBtn" title="DingDong — Interrupt & Chime" onclick="window.triggerDingDong()">🔔</button>
                     <button class="action-btn" id="sleepTimerBtn" title="Sleep Timer">⏱️</button>
                     <button class="action-btn" id="downloadBtn" title="Download">⬇</button>
                     <button class="action-btn" id="shareBtn" title="Share">📤</button>
@@ -1518,11 +1519,14 @@
         </div>
     </div>
 
+    <!-- DingDong Notification Toast -->
+    <div id="dingdongToast">🔔 DingDong! Resuming playback...</div>
+
     <!-- Scripts -->
     <script>
         window.ENV = {
             API_BASE_URL: "http://10.46.71.106:5000/api/v1"
         };
-    </script>
+    </script>
 </body>
 </html>
