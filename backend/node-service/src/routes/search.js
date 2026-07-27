@@ -18,6 +18,48 @@ function decodeHtmlEntities(str) {
     .replace(/&tilde;/g, '~');
 }
 
+const YOUTUBE_DATA_API_KEY = process.env.YOUTUBE_API_KEY || 'AIzaSyBGdoXzyWBgLsp5AO313zFF4QjaCLklQeM';
+
+async function searchYouTubeDataAPI(q, host, protocol) {
+  try {
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${encodeURIComponent(q)}&key=${YOUTUBE_DATA_API_KEY}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2500);
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+
+    if (!response.ok) return [];
+    const data = await response.json();
+    if (!data.items) return [];
+
+    return data.items.map(item => {
+      const videoId = item.id.videoId;
+      const title = item.snippet?.title || 'YouTube Track';
+      const artist = item.snippet?.channelTitle || 'YouTube Artist';
+      const coverArt = item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url;
+
+      return {
+        id: `yt-${videoId}`,
+        videoId,
+        title: decodeHtmlEntities(title),
+        artist: decodeHtmlEntities(artist),
+        album: 'YouTube Music',
+        duration: 240,
+        genre: 'YouTube',
+        coverArt: coverArt || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=400&q=80',
+        embedUrl: `https://www.youtube.com/embed/${videoId}`,
+        source: 'youtube',
+        plays: 150000,
+        rating: 4.9,
+        audioUrl: `${protocol}://${host}/api/v1/songs/yt-${videoId}/stream?title=${encodeURIComponent(decodeHtmlEntities(title))}&artist=${encodeURIComponent(decodeHtmlEntities(artist))}`
+      };
+    });
+  } catch (err) {
+    logger.warn('YouTube Data API search error:', err.message);
+    return [];
+  }
+}
+
 async function searchYouTubeScraper(q, host, protocol) {
   try {
     const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
@@ -277,12 +319,16 @@ router.get('/', optionalAuth, async (req, res) => {
       const host = req.headers.host || 'localhost:5000';
       const protocol = req.secure ? 'https' : 'http';
 
-      const [spotifySongs, itunesSongs, audiusSongs, archiveSongs, ytSongs] = await Promise.all([
+      let ytSongs = await searchYouTubeDataAPI(q, host, protocol);
+      if (!ytSongs || ytSongs.length === 0) {
+        ytSongs = await searchYouTubeScraper(q, host, protocol);
+      }
+
+      const [spotifySongs, itunesSongs, audiusSongs, archiveSongs] = await Promise.all([
         searchSpotifyAPI(q),
         searchiTunesAPI(q),
         searchAudiusAPI(q),
-        searchArchiveOrgAPI(q),
-        searchYouTubeScraper(q, host, protocol)
+        searchArchiveOrgAPI(q)
       ]);
 
       const seen = new Set(results.songs.map(s => String(s.id)));
