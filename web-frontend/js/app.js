@@ -311,16 +311,17 @@ class SoundWaveApp {
     // Check if the hash is a sub-anchor on the landing page
     const subAnchors = ['features', 'pricing', 'faq', 'contact'];
     const isSubAnchor = subAnchors.includes(hash);
+    const socialSections = ['social-feed', 'reels', 'direct-messages', 'instagram-profile'];
     
     let activeSection = hash.split('?')[0];
-    if (!activeSection || (!['home', 'discover', 'playlists', 'profile', 'settings'].includes(activeSection) && !isSubAnchor)) {
+    if (!activeSection || (!['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections].includes(activeSection) && !isSubAnchor)) {
       activeSection = 'home';
     } else if (isSubAnchor) {
       activeSection = 'home';
     }
 
     // Hide all primary sections
-    const sections = ['home', 'discover', 'playlists', 'profile', 'settings'];
+    const sections = ['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections];
     sections.forEach(sec => {
       const el = document.getElementById(sec);
       if (el) el.style.display = 'none';

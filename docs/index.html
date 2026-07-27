@@ -9,12 +9,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Sound Wave - Free Music Streaming</title>
+    <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <!-- Ad Network Social Bar for ujwal8156v.github.io -->
     <script src="https://pl30549269.effectivecpmnetwork.com/e4/0a/dc/e40adc4c04938f24c4a1c5238e4bd6c2.js"></script>
-  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index--_u8nEry.js"></script>
-  <link rel="stylesheet" crossorigin href="/soundwave-musicstream-app/assets/index-B_7iXE8D.css">
+  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-MpmJjX5B.js"></script>
+  <link rel="stylesheet" crossorigin href="/soundwave-musicstream-app/assets/index-CVTk5Y_u.css">
 </head>
 <body>
     <div id="app">
@@ -33,11 +33,12 @@
                 </button>
                 <ul class="nav-menu">
                     <li><a href="#home" class="nav-link active">Home</a></li>
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#artists" class="nav-link">Artists</a></li>
-                    <li><a href="#events" class="nav-link">Events</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
                     <li><a href="#discover" class="nav-link">Discover</a></li>
+                    <li><a href="#social-feed" class="nav-link">📸 Feed</a></li>
+                    <li><a href="#reels" class="nav-link">🎬 Reels</a></li>
+                    <li><a href="#direct-messages" class="nav-link ig-nav-item">💬 Chat <span class="ig-badge-count">2</span></a></li>
+                    <li><a href="#instagram-profile" class="nav-link">👤 Profile</a></li>
+                    <li><a href="#artists" class="nav-link">Artists</a></li>
                     <li id="navPlaylists" style="display:none;"><a href="#playlists" class="nav-link">Playlists</a></li>
                     <li id="loginNavItem"><button id="loginBtn" class="btn btn-primary" style="padding:0.45rem 1.1rem; font-size:0.85rem; border-radius:20px; font-weight:700; margin-left:0.5rem;">Login 🔑</button></li>
                     <li class="dropdown" id="settingsDropdown" style="display:none;">
@@ -394,6 +395,122 @@
                     <div id="searchSuggestions" class="suggestions-container" style="display:none;"></div>
                     <div class="songs-grid" id="songsGrid">
                         <!-- Songs will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 📸 Instagram Social Feed Section -->
+            <section id="social-feed" class="section" style="display:none;">
+                <div class="container">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <h2 class="ig-brand" style="justify-content: center;">📸 SoundWave Social Feed</h2>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.88rem;">See stories, posts, and behind-the-scenes from top creators</p>
+                    </div>
+
+                    <!-- Stories Rail -->
+                    <div class="stories-rail-container" id="storiesRail">
+                        <!-- Dynamic Stories Loaded Here -->
+                    </div>
+
+                    <!-- Instagram Feed Posts Container -->
+                    <div class="ig-feed-container" id="igFeedContainer">
+                        <!-- Dynamic Feed Cards Loaded Here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 🎬 Instagram Fullscreen Reels Section -->
+            <section id="reels" class="section" style="display:none;">
+                <div class="container">
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <h2 class="ig-brand" style="justify-content: center;">🎬 SoundWave Reels</h2>
+                    </div>
+                    <div class="reels-feed-container" id="reelsContainer">
+                        <!-- Dynamic Fullscreen Reels Loaded Here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 💬 Instagram Direct Messages Section -->
+            <section id="direct-messages" class="section" style="display:none;">
+                <div class="container">
+                    <div class="dm-container">
+                        <div class="dm-sidebar">
+                            <div class="dm-sidebar-header">
+                                <span>💬 Direct Messages</span>
+                                <span style="font-size:1.2rem; cursor:pointer;">📝</span>
+                            </div>
+                            <div class="dm-threads-list" id="dmThreadsList">
+                                <!-- Dynamic Chat Threads Loaded Here -->
+                            </div>
+                        </div>
+
+                        <div class="dm-chat-area">
+                            <div class="dm-chat-header">
+                                <span style="font-size:1.4rem;">👤</span>
+                                <span id="dmChatHeaderName" style="font-weight:700; color:#fff; font-size:1rem;">Select a Chat</span>
+                            </div>
+                            <div class="dm-messages-stream" id="dmMessagesStream">
+                                <!-- Dynamic Bubble Messages Loaded Here -->
+                            </div>
+                            <div class="dm-input-area">
+                                <input type="text" id="dmInputField" class="dm-input-field" placeholder="Message...">
+                                <button type="button" class="btn btn-primary" id="dmSendBtn" style="border-radius:20px; padding:0.6rem 1.25rem;">Send ✈️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 👤 Instagram Profile & 3-Column Grid Section -->
+            <section id="instagram-profile" class="section" style="display:none;">
+                <div class="container">
+                    <div class="ig-profile-header">
+                        <div class="ig-profile-avatar-wrap">
+                            <img src="/soundwave-musicstream-app/assets/about_headphones-l_GwfHI4.jpg" alt="Profile" class="ig-profile-avatar">
+                        </div>
+                        <div class="ig-profile-info">
+                            <div class="ig-profile-username-row">
+                                <h2>music_vibe_official</h2>
+                                <button class="btn btn-secondary" style="padding:0.45rem 1rem; border-radius:10px; font-weight:700;">Edit Profile</button>
+                                <button class="btn btn-secondary" style="padding:0.45rem 1rem; border-radius:10px; font-weight:700;">Share Profile</button>
+                            </div>
+                            <div class="ig-stats-row">
+                                <div class="ig-stat-item"><strong>48</strong> posts</div>
+                                <div class="ig-stat-item"><strong>142.5K</strong> followers</div>
+                                <div class="ig-stat-item"><strong>312</strong> following</div>
+                            </div>
+                            <div class="ig-profile-bio">
+                                <strong>SoundWave Official</strong> 🎧<br>
+                                🎵 320kbps Master Audio Streaming<br>
+                                🚀 Daily Trending Beats & Reels<br>
+                                🔗 <a href="https://ujwal8156v.github.io/soundwave-musicstream-app/" target="_blank" style="color:#60a5fa; text-decoration:none;">soundwave.app</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid Tabs -->
+                    <div class="ig-grid-tabs">
+                        <button class="ig-grid-tab active">🧩 POSTS</button>
+                        <button class="ig-grid-tab">🎬 REELS</button>
+                        <button class="ig-grid-tab">🔖 SAVED</button>
+                        <button class="ig-grid-tab">🏷️ TAGGED</button>
+                    </div>
+
+                    <!-- 3-Column Posts Grid -->
+                    <div class="ig-posts-grid">
+                        <div class="ig-grid-item">
+                            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600" alt="Grid Post">
+                            <div class="ig-grid-overlay">❤️ 124.8K &nbsp; 💬 2.4K</div>
+                        </div>
+                        <div class="ig-grid-item">
+                            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600" alt="Grid Post">
+                            <div class="ig-grid-overlay">❤️ 98.4K &nbsp; 💬 1.8K</div>
+                        </div>
+                        <div class="ig-grid-item">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600" alt="Grid Post">
+                            <div class="ig-grid-overlay">❤️ 89.1K &nbsp; 💬 3.2K</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1381,6 +1498,18 @@
         </div>
     </div>
 
+    <!-- Instagram Story Viewer Modal -->
+    <div id="storyViewerModal" class="modal" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.92); z-index:9999;">
+        <div style="position:relative; width:100%; max-width:420px; height:80vh; background:#000; border-radius:24px; overflow:hidden; border:1px solid rgba(255,255,255,0.2); box-shadow:0 25px 60px rgba(0,0,0,0.9);">
+            <button class="modal-close" id="closeStoryModalBtn" style="top:15px; right:15px; z-index:10;">&times;</button>
+            <img id="storyViewerImg" src="" alt="Story Media" style="width:100%; height:100%; object-fit:cover;">
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:1.5rem; background:linear-gradient(to top, rgba(0,0,0,0.95), transparent);">
+                <h4 id="storyViewerName" style="color:#fff; margin:0 0 0.25rem; font-size:1.1rem; font-weight:800;">Username</h4>
+                <div id="storyViewerTrack" style="color:#a78bfa; font-size:0.85rem; font-weight:600;">🎵 Music Track</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
         window.ENV = {
@@ -1389,6 +1518,7 @@
     </script>
     <script src="js/beatSynth.js"></script>
     <script src="js/audioFx.js"></script>
-    <script src="js/visualizer.js"></script>
+    <script src="js/visualizer.js"></script>
+    <script src="js/social.js"></script>
 </body>
 </html>
