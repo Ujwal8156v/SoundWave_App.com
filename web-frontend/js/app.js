@@ -1581,3 +1581,92 @@ document.addEventListener('DOMContentLoaded', () => {
     window.app.handleRouting();
   }
 });
+
+// ============================================================
+//  🌅 Morning Routine — Play Favorite YouTube Playlist Shuffled
+//  Playlist ID: PL6H6TfFpYvpersEdHECeWkocaPueTqieF
+// ============================================================
+window.playMorningRoutinePlaylist = async function () {
+  const PLAYLIST_ID = 'PL6H6TfFpYvpersEdHECeWkocaPueTqieF';
+  const YT_API_KEY = 'AIzaSyBGdoXzyWBgLsp5AO313zFF4QjaCLklQeM';
+  const MAX_RESULTS = 50;
+  const btn = document.getElementById('morningRoutinePlayBtn');
+
+  if (btn) {
+    btn.classList.add('loading');
+    btn.querySelector('.morning-play-icon').textContent = '⏳';
+  }
+
+  try {
+    // Fetch playlist items from YouTube Data API v3
+    const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=${MAX_RESULTS}&playlistId=${PLAYLIST_ID}&key=${YT_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to fetch playlist');
+    const data = await res.json();
+
+    if (!data.items || data.items.length === 0) {
+      throw new Error('No tracks found in playlist');
+    }
+
+    // Map playlist items to SoundWave song objects
+    const songs = data.items
+      .filter(item => item.snippet?.resourceId?.videoId)
+      .map(item => {
+        const videoId = item.snippet.resourceId.videoId;
+        const title = item.snippet.title || 'YouTube Track';
+        const artist = item.snippet.videoOwnerChannelTitle || 'YouTube Artist';
+        const thumb = item.snippet.thumbnails?.high?.url
+          || item.snippet.thumbnails?.medium?.url
+          || item.snippet.thumbnails?.default?.url
+          || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=400&q=80';
+
+        const host = window.location.hostname === 'ujwal8156v.github.io'
+          ? 'ujwal8156v.github.io'
+          : 'localhost:5000';
+        const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
+        const apiBase = window.location.hostname === 'ujwal8156v.github.io'
+          ? 'http://localhost:5000/api/v1'
+          : `http://${host}/api/v1`;
+
+        return {
+          id: `yt-${videoId}`,
+          title,
+          artist,
+          album: 'Morning Routine 🌅',
+          coverArt: thumb,
+          duration: 240,
+          genre: 'YouTube',
+          source: 'youtube',
+          audioUrl: `${apiBase}/songs/yt-${videoId}/stream?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`
+        };
+      });
+
+    // Fisher-Yates shuffle
+    for (let i = songs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [songs[i], songs[j]] = [songs[j], songs[i]];
+    }
+
+    // Load into player
+    if (window.app) {
+      window.app.playlist = songs;
+      window.app.currentIndex = 0;
+      window.app.playSong(songs[0]);
+      window.app.showNotification(`🌅 Morning Routine playing — ${songs.length} tracks shuffled! 🔀`, 'success');
+    }
+
+    if (btn) {
+      btn.classList.remove('loading');
+      btn.querySelector('.morning-play-icon').textContent = '▶';
+    }
+  } catch (err) {
+    console.error('Morning Routine playlist error:', err);
+    if (window.app) {
+      window.app.showNotification('⚠️ Could not load playlist. Check your connection.', 'error');
+    }
+    if (btn) {
+      btn.classList.remove('loading');
+      btn.querySelector('.morning-play-icon').textContent = '▶';
+    }
+  }
+};
