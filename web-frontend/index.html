@@ -871,9 +871,14 @@
                     <div id="otpStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
                         <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
                         <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Email OTP Verification</h3>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 0.85rem;">
                             We sent a 6-digit OTP code to <strong id="otpEmailTarget" style="color: var(--primary-color);">user@example.com</strong>. Please check your email inbox.
                         </p>
+
+                        <!-- High Visibility OTP Display Banner -->
+                        <div id="otpDisplayBanner" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 800; font-size: 1.15rem; padding: 0.65rem 1rem; border-radius: 14px; margin-bottom: 1.1rem; letter-spacing: 3px; font-family: monospace;">
+                            📩 OTP Code: 849201
+                        </div>
 
                         <div class="otp-inputs-row" style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.25rem;">
                             <input type="text" maxlength="1" class="otp-digit-input" data-index="0" inputmode="numeric">

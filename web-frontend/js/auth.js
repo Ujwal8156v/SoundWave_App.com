@@ -395,6 +395,12 @@ class AuthHandler {
     const emailTarget = document.getElementById('otpEmailTarget');
     if (emailTarget) emailTarget.textContent = email;
 
+    const displayBanner = document.getElementById('otpDisplayBanner');
+    if (displayBanner) displayBanner.textContent = `📩 OTP Code: ${this.currentOtp}`;
+
+    const autoFillBtn = document.getElementById('autoFillOtpBtn');
+    if (autoFillBtn) autoFillBtn.textContent = `⚡ Click to Auto-Fill OTP (${this.currentOtp})`;
+
     // Clear and focus first OTP digit input
     const otpInputs = document.querySelectorAll('.otp-digit-input');
     otpInputs.forEach(input => input.value = '');
@@ -405,7 +411,7 @@ class AuthHandler {
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
-      targetApp.showNotification(`OTP Code Sent to ${email} 📩. Please check your inbox.`, 'info', 'top-right');
+      targetApp.showNotification(`📩 Email OTP Code: ${this.currentOtp} (Sent to ${email})`, 'info', 'top-right');
     }
   }
 
@@ -443,9 +449,15 @@ class AuthHandler {
       }
     }
 
+    const displayBanner = document.getElementById('otpDisplayBanner');
+    if (displayBanner) displayBanner.textContent = `📩 OTP Code: ${this.currentOtp}`;
+
+    const autoFillBtn = document.getElementById('autoFillOtpBtn');
+    if (autoFillBtn) autoFillBtn.textContent = `⚡ Click to Auto-Fill OTP (${this.currentOtp})`;
+
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
-      targetApp.showNotification(`New OTP Code Sent to ${this.pendingUser.email} 📩. Please check your email inbox.`, 'info', 'top-right');
+      targetApp.showNotification(`📩 New OTP Code: ${this.currentOtp} (Sent to ${this.pendingUser.email})`, 'info', 'top-right');
     }
   }
 
