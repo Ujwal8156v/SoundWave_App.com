@@ -1077,7 +1077,7 @@ class SoundWaveApp {
               <div class="ig-profile-bio">
                 <strong>${u.username || 'SoundWave Official'}</strong> 🎧<br>
                 ${u.bio ? u.bio : '🎵 320kbps Master Audio Streaming<br>🚀 Daily Trending Beats & Reels'}<br>
-                🔗 <a href="https://ujwal8156v.github.io/soundwave-musicstream-app/" target="_blank" style="color:#60a5fa; text-decoration:none;">soundwave.app</a>
+                🔗 <a href="https://ujwal8156v.github.io/soundwave-musicstream-app.io/" target="_blank" style="color:#60a5fa; text-decoration:none;">soundwave.app</a>
               </div>
             </div>
           </div>
