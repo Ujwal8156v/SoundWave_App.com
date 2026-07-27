@@ -1575,3 +1575,9 @@ class SoundWaveApp {
 
 window.app = new SoundWaveApp();
 
+// Ensure routing runs after full DOM + app init
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.app && typeof window.app.handleRouting === 'function') {
+    window.app.handleRouting();
+  }
+});
