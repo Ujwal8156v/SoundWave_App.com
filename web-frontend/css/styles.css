@@ -4025,3 +4025,29 @@ canvas,
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ==========================================================================
+   Song Radio 📻 Button & Active Indicator
+   ========================================================================== */
+
+.radio-btn {
+  color: #38bdf8 !important;
+  transition: transform 0.2s ease, text-shadow 0.2s ease !important;
+}
+
+.radio-btn:hover {
+  transform: scale(1.25) rotate(10deg) !important;
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
+}
+
+.radio-btn.active-radio {
+  animation: radioPulse 1.5s ease-in-out infinite;
+  color: #7dd3fc !important;
+  text-shadow: 0 0 16px rgba(56, 189, 248, 1);
+}
+
+@keyframes radioPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.4)); }
+  50%      { transform: scale(1.18); filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.9)); }
+}
+

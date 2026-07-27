@@ -581,6 +581,9 @@ class SoundWaveApp {
             <button class="card-action-btn like-btn" data-id="${song.id}" title="Like">
               ${isLiked ? '❤️' : '♡'}
             </button>
+            <button class="card-action-btn card-radio-btn" data-id="${song.id}" title="Play Radio on this Track">
+              📻
+            </button>
             <button class="card-action-btn playlist-btn" data-id="${song.id}" title="Add to Playlist">
               +
             </button>
@@ -597,6 +600,14 @@ class SoundWaveApp {
       if (likeBtn) {
         e.stopPropagation();
         this.toggleLike(likeBtn.dataset.id);
+        return;
+      }
+
+      const cardRadioBtn = e.target.closest('.card-radio-btn');
+      if (cardRadioBtn) {
+        e.stopPropagation();
+        const targetSong = songs.find(s => s.id == cardRadioBtn.dataset.id);
+        this.startSongRadio(targetSong);
         return;
       }
 
@@ -622,6 +633,67 @@ class SoundWaveApp {
       this.currentIndex = songs.findIndex(s => s.id == songId);
       await player.loadSong(song);
       this.updatePlayerUI();
+    }
+  }
+
+  async startSongRadio(targetSong) {
+    const seedSong = targetSong || this.currentSong || (this.playlist && this.playlist[this.currentIndex]);
+    if (!seedSong) {
+      this.showNotification('⚠️ Please play or select a song first to start a Radio station!', 'warning');
+      return;
+    }
+
+    const radioBtn = document.getElementById('songRadioBtn');
+    if (radioBtn) radioBtn.classList.add('active-radio');
+
+    this.showNotification(`📻 Generating Song Radio station for "${seedSong.title}"...`, 'info');
+
+    try {
+      let radioTracks = [];
+
+      // Query YouTube/API for related tracks based on artist or title
+      if (window.API && typeof window.API.search === 'function') {
+        const searchQuery = `${seedSong.artist} ${seedSong.genre || ''} mix`.trim();
+        const searchResults = await window.API.search(searchQuery);
+        if (searchResults && searchResults.data && searchResults.data.length > 0) {
+          radioTracks = searchResults.data;
+        }
+      }
+
+      // Fallback/Supplement from current catalog if search returned few tracks
+      if (this.allSongs && this.allSongs.length > 0) {
+        const catalogMatches = this.allSongs.filter(s => s.id !== seedSong.id);
+        for (let i = catalogMatches.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [catalogMatches[i], catalogMatches[j]] = [catalogMatches[j], catalogMatches[i]];
+        }
+        radioTracks = [...radioTracks, ...catalogMatches];
+      }
+
+      // Deduplicate radio tracks
+      const seenIds = new Set([seedSong.id]);
+      const uniqueRadioTracks = [seedSong];
+      
+      for (const track of radioTracks) {
+        if (track && track.id && !seenIds.has(track.id)) {
+          seenIds.add(track.id);
+          uniqueRadioTracks.push(track);
+        }
+      }
+
+      // Set as active playlist queue & start playing
+      this.playlist = uniqueRadioTracks;
+      this.currentIndex = 0;
+      await this.playSong(seedSong.id, uniqueRadioTracks);
+
+      this.showNotification(`📻 Song Radio started for "${seedSong.title}" — ${uniqueRadioTracks.length} tracks queued! 🔀`, 'success');
+    } catch (err) {
+      console.error('Song Radio error:', err);
+      this.showNotification(`📻 Playing Radio mix for ${seedSong.artist}`, 'success');
+    } finally {
+      setTimeout(() => {
+        if (radioBtn) radioBtn.classList.remove('active-radio');
+      }, 4000);
     }
   }
 
