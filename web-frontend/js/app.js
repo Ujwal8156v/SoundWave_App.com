@@ -320,6 +320,15 @@ class SoundWaveApp {
       activeSection = 'home';
     }
 
+    // Auth lock gate for Instagram Social Media features
+    const isLoggedIn = !!this.currentUser || !!localStorage.getItem('token') || !!localStorage.getItem('soundwave_user');
+    if (socialSections.includes(activeSection) && !isLoggedIn) {
+      this.showNotification('🔒 Please Log In to access Instagram Social Media Hub & Features!', 'warning');
+      this.openAuthModal();
+      window.location.hash = '#home';
+      return;
+    }
+
     // Hide all primary sections
     const sections = ['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections];
     sections.forEach(sec => {
@@ -420,13 +429,20 @@ class SoundWaveApp {
     
     // Toggle navigation visibilities
     const settingsDropdown = document.getElementById('settingsDropdown');
-    if (settingsDropdown) settingsDropdown.style.display = 'block';
+    if (settingsDropdown) settingsDropdown.style.display = user ? 'block' : 'none';
 
     const navPlaylists = document.getElementById('navPlaylists');
-    if (navPlaylists) navPlaylists.style.display = 'block';
+    if (navPlaylists) navPlaylists.style.display = user ? 'block' : 'none';
+
+    // Toggle Instagram Social Media Navigation items on Login
+    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages', 'navInstagramProfile'];
+    socialNavIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = user ? 'block' : 'none';
+    });
     
     const loginNavItem = document.getElementById('loginNavItem');
-    if (loginNavItem) loginNavItem.style.display = 'none';
+    if (loginNavItem) loginNavItem.style.display = user ? 'none' : 'block';
 
     // Resume pending checkout if user initiated subscription before login
     if (this.pendingCheckoutPlan) {
@@ -464,6 +480,26 @@ class SoundWaveApp {
     this.currentUser = null;
     this.isEditingProfile = false;
     
+    // Hide Instagram Social Media Navigation items on Logout
+    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages', 'navInstagramProfile'];
+    socialNavIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+
+    const settingsDropdown = document.getElementById('settingsDropdown');
+    if (settingsDropdown) settingsDropdown.style.display = 'none';
+
+    const navPlaylists = document.getElementById('navPlaylists');
+    if (navPlaylists) navPlaylists.style.display = 'none';
+
+    const loginNavItem = document.getElementById('loginNavItem');
+    if (loginNavItem) loginNavItem.style.display = 'block';
+
+    if (['social-feed', 'reels', 'direct-messages', 'instagram-profile'].some(sec => window.location.hash.includes(sec))) {
+      window.location.hash = '#home';
+    }
+    
     // Clear password and auth input fields
     const passwordInput = document.getElementById('password');
     const emailInput = document.getElementById('email');
@@ -483,15 +519,6 @@ class SoundWaveApp {
       window.auth.isOtpStep = false;
       if (window.auth.updateForm) window.auth.updateForm();
     }
-
-    const settingsDropdown = document.getElementById('settingsDropdown');
-    if (settingsDropdown) settingsDropdown.style.display = 'none';
-
-    const navPlaylists = document.getElementById('navPlaylists');
-    if (navPlaylists) navPlaylists.style.display = 'none';
-    
-    const loginNavItem = document.getElementById('loginNavItem');
-    if (loginNavItem) loginNavItem.style.display = 'block';
 
     this.renderProfile();
     window.location.hash = '#home';
