@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <!-- Ad Network Social Bar for ujwal8156v.github.io -->
     <script src="https://pl30549269.effectivecpmnetwork.com/e4/0a/dc/e40adc4c04938f24c4a1c5238e4bd6c2.js"></script>
-  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-RnsINpDh.js"></script>
+  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index-UXZUMwgg.js"></script>
   <link rel="stylesheet" crossorigin href="/soundwave-musicstream-app/assets/index-CVTk5Y_u.css">
 </head>
 <body>
@@ -900,8 +900,40 @@
                             <button type="button" id="autoFillOtpBtn" style="background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.2); color: #60a5fa; padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: background 0.2s;">⚡ Click to Auto-Fill Generated OTP Code</button>
                         </div>
 
+                    <!-- Reset Password Step Container -->
+                    <div id="resetPasswordStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
+                        <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔑</div>
+                        <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Reset Account Password</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 0.85rem;">
+                            Enter your email to receive a Password Recovery OTP code.
+                        </p>
+                        
+                        <div class="form-group" id="resetEmailGroup" style="margin-bottom: 1rem; text-align: left;">
+                            <label for="resetEmailInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">Account Email Address</label>
+                            <input type="email" id="resetEmailInput" placeholder="name@example.com" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem;">
+                        </div>
+
+                        <div id="resetOtpFields" style="display:none;">
+                            <!-- High Visibility OTP Display Banner -->
+                            <div id="resetOtpDisplayBanner" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 800; font-size: 1.15rem; padding: 0.65rem 1rem; border-radius: 14px; margin-bottom: 1.1rem; letter-spacing: 3px; font-family: monospace;">
+                                📩 Recovery OTP Code: 849201
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
+                                <label for="resetOtpInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">Enter 6-Digit Recovery OTP</label>
+                                <input type="text" id="resetOtpInput" placeholder="849201" maxlength="6" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem; font-size:1.1rem; letter-spacing:4px; font-family:monospace; text-align:center;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
+                                <label for="newPasswordInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">New Password</label>
+                                <input type="password" id="newPasswordInput" placeholder="Enter new password" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem;">
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="sendResetOtpBtn" style="width: 100%; padding: 0.8rem; margin-bottom: 0.75rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem;">
+                            Send Password Recovery OTP 📩
+                        </button>
+                        
                         <div style="font-size: 0.8rem;">
-                            <a href="#" id="backToRegisterLink" style="color: rgba(255,255,255,0.6); text-decoration: underline; transition: color 0.2s;">← Edit email address or back to registration</a>
+                            <a href="#" id="backToLoginFromResetLink" style="color: rgba(255,255,255,0.6); text-decoration: underline; transition: color 0.2s;">← Back to Sign In</a>
                         </div>
                     </div>
 
@@ -912,6 +944,9 @@
                     <p id="toggleAuth" class="toggle-auth-text">
                         Don't have an account? <a href="#" id="toggleAuthLink">Create one now</a>
                     </p>
+                    <div id="forgotPasswordWrap" style="margin-top: 0.5rem; font-size: 0.8rem; text-align: center;">
+                        <a href="#" id="forgotPasswordLink" style="color: #a78bfa; text-decoration: underline;">🔑 Forgot Password / Recover Account?</a>
+                    </div>
                 </form>
             </div>
         </div>
