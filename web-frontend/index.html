@@ -40,7 +40,7 @@
                     <li id="navDirectMessages" style="display:none;"><a href="#direct-messages" class="nav-link ig-nav-item">💬 Chat <span class="ig-badge-count">2</span></a></li>
                     <li><a href="#artists" class="nav-link">Artists</a></li>
                     <li id="navPlaylists" style="display:none;"><a href="#playlists" class="nav-link">Playlists</a></li>
-                    <li id="loginNavItem"><button id="loginBtn" class="btn btn-primary" style="padding:0.45rem 1.1rem; font-size:0.85rem; border-radius:20px; font-weight:700; margin-left:0.5rem;">Login 🔑</button></li>
+                    <li id="loginNavItem"><button id="loginBtn" onclick="if(window.app){window.app.openAuthModal();}else{const m=document.getElementById('authModal');if(m)m.style.display='flex';}" class="btn btn-primary" style="padding:0.45rem 1.1rem; font-size:0.85rem; border-radius:20px; font-weight:700; margin-left:0.5rem; cursor:pointer;">Login 🔑</button></li>
                     <li class="dropdown" id="settingsDropdown" style="display:none;">
                         <a href="#" class="nav-link dropdown-toggle" id="settingsLink" title="Menu">☰</a>
                         <ul class="dropdown-menu">
@@ -194,7 +194,7 @@
                     <div class="community-vibe-content">
                         <h2>Join the Music Community</h2>
                         <p>Connect with fellow music fans and stay updated!</p>
-                        <button class="btn btn-community-signup" id="communitySignUpBtn">Sign Up Now</button>
+                        <button class="btn btn-community-signup" id="communitySignUpBtn" onclick="if(window.app){window.app.openAuthModal();}else{const m=document.getElementById('authModal');if(m)m.style.display='flex';}" style="cursor:pointer;">Sign Up Now</button>
                     </div>
                 </div>
 
