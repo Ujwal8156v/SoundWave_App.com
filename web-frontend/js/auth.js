@@ -251,72 +251,37 @@ class AuthHandler {
     const cleanInput = email.toLowerCase();
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
 
-    // List of valid registered emails and usernames
-    const presetEmails = ['musicdemo@soundwave.com', 'musicdemo', 'demo@soundwave.com', 'admin@soundwave.com', 'user@soundwave.com'];
-    const presetUsernames = ['musicdemo', 'demo_user', 'admin', 'soundwave_user'];
-
     const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-    const activeUser = localStorage.getItem('soundwave_user') ? JSON.parse(localStorage.getItem('soundwave_user')) : null;
-
-    const isPresetUser = presetEmails.includes(cleanInput) || presetUsernames.includes(cleanInput);
-    const isStoredUser = storedUsers.some(u => 
+    let user = storedUsers.find(u => 
       (u.email && u.email.toLowerCase() === cleanInput) || 
       (u.username && u.username.toLowerCase() === cleanInput)
     );
-    const isActiveUser = activeUser && (
-      (activeUser.email && activeUser.email.toLowerCase() === cleanInput) || 
-      (activeUser.username && activeUser.username.toLowerCase() === cleanInput)
-    );
 
-    const isRegistered = isPresetUser || isStoredUser || isActiveUser;
-
-    if (!isRegistered) {
-      const msg = 'User Not Found! ⚠️ You are not registered yet. Please create an account to register.';
-      const alertBox = document.getElementById('authAlert');
-      if (alertBox) {
-        alertBox.style.display = 'block';
-        alertBox.textContent = msg;
-      }
-      if (targetApp) {
-        targetApp.showNotification(msg, 'warning', 'top-right');
-      }
-
-      // Automatically switch to Registration tab after 1s
-      setTimeout(() => {
-        if (this.isLogin) {
-          this.toggleMode();
-        }
-      }, 1000);
-
-      return;
+    if (!user) {
+      const inferredUsername = email.includes('@') ? email.split('@')[0] : email;
+      user = {
+        id: Date.now(),
+        email: email.includes('@') ? email : `${email}@soundwave.com`,
+        username: inferredUsername,
+        avatar: 'assets/about_headphones.jpg',
+        followers: '142.5K',
+        following: '312',
+        bio: '🎵 320kbps Master Audio Streaming | 🚀 Daily Trending Beats & Reels'
+      };
+      storedUsers.push(user);
+      localStorage.setItem('registered_users', JSON.stringify(storedUsers));
     }
-
-    // Process valid login for registered users
-    const isMusicDemo = cleanInput === 'musicdemo' || cleanInput === 'musicdemo@soundwave.com';
-    const optimisticUser = isMusicDemo ? {
-      id: 100,
-      username: 'MusicDemo',
-      email: 'MusicDemo@soundwave.com',
-      firstName: 'Music',
-      lastName: 'Demo'
-    } : (activeUser || {
-      id: Date.now(),
-      email,
-      username: email.includes('@') ? email.split('@')[0] : email,
-      firstName: 'Music',
-      lastName: 'User'
-    });
 
     localStorage.setItem('token', 'token-' + Date.now());
     if (targetApp) {
-      targetApp.setCurrentUser(optimisticUser);
-      targetApp.showNotification('Logined 🚀', 'success', 'top-right');
+      targetApp.setCurrentUser(user);
+      targetApp.showNotification(`Logined 🚀 Welcome back, ${user.username}!`, 'success', 'top-right');
     }
 
-    // Stay on login modal page until popup is shown, then close after 1.2s
+    // Stay on login modal page until popup is shown, then close after 800ms
     setTimeout(() => {
       this.closeModal();
-    }, 1200);
+    }, 800);
 
     // Async background API sync
     if (window.API) {
