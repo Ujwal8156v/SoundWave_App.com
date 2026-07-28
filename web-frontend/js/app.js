@@ -310,26 +310,16 @@ class SoundWaveApp {
     // Check if the hash is a sub-anchor on the landing page
     const subAnchors = ['features', 'pricing', 'faq', 'contact', 'artists'];
     const isSubAnchor = subAnchors.includes(hash);
-    const socialSections = ['social-feed', 'reels', 'direct-messages'];
     
     let activeSection = hash.split('?')[0];
-    if (!activeSection || (!['home', 'playlists', 'profile', 'settings', ...socialSections].includes(activeSection) && !isSubAnchor)) {
+    if (!activeSection || (!['home', 'playlists', 'profile', 'settings'].includes(activeSection) && !isSubAnchor)) {
       activeSection = 'home';
     } else if (isSubAnchor) {
       activeSection = 'home';
     }
 
-    // Auth lock gate for Instagram Social Media features
-    const isLoggedIn = !!this.currentUser || !!localStorage.getItem('token') || !!localStorage.getItem('soundwave_user');
-    if (socialSections.includes(activeSection) && !isLoggedIn) {
-      this.showNotification('🔒 Please Log In to access Instagram Social Media Hub & Features!', 'warning');
-      this.openAuthModal();
-      window.location.hash = '#home';
-      return;
-    }
-
     // Hide all primary sections
-    const sections = ['home', 'playlists', 'profile', 'settings', ...socialSections];
+    const sections = ['home', 'playlists', 'profile', 'settings'];
     sections.forEach(sec => {
       const el = document.getElementById(sec);
       if (el) el.style.display = 'none';
@@ -475,7 +465,7 @@ class SoundWaveApp {
     const loginNavItem = document.getElementById('loginNavItem');
     if (loginNavItem) loginNavItem.style.display = 'block';
 
-    if (['social-feed', 'reels', 'direct-messages', 'instagram-profile'].some(sec => window.location.hash.includes(sec))) {
+    if (window.location.hash.includes('social') || window.location.hash.includes('reels')) {
       window.location.hash = '#home';
     }
     

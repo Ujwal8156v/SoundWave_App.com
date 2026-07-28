@@ -9,10 +9,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Sound Wave - Free Music Streaming</title>
+    <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="./assets/logo-DhK5Oro6.png">
-  <script type="module" crossorigin src="./assets/index-SZEcA1Ye.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CCzh0gGM.css">
+  <script type="module" crossorigin src="./assets/index-CgAlHT4g.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BEzIL5S3.css">
 </head>
 <body>
     <div id="app">
@@ -33,9 +33,6 @@
                     <li><a href="#home" class="nav-link active">Home</a></li>
                     <li id="navPlaylists"><a href="#playlists" class="nav-link">Playlists</a></li>
                     <li><a href="#artists" class="nav-link">Artists</a></li>
-                    <li id="navSocialFeed"><a href="#social-feed" class="nav-link">📸 Feed</a></li>
-                    <li id="navReels"><a href="#reels" class="nav-link">🎬 Reels</a></li>
-                    <li id="navDirectMessages"><a href="#direct-messages" class="nav-link ig-nav-item">💬 Chat <span class="ig-badge-count">2</span></a></li>
                     <li class="dropdown" id="settingsDropdown">
                         <a href="#" class="nav-link dropdown-toggle" id="settingsLink" title="Menu">☰</a>
                         <ul class="dropdown-menu">
@@ -387,86 +384,6 @@
                         <textarea id="contactMessage" placeholder="Your Message" rows="5" required></textarea>
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
-                </div>
-            </section>
-
-            <!-- 📸 Instagram Social Feed Section -->
-            <section id="social-feed" class="section" style="display:none;">
-                <div class="container">
-                    <div style="text-align: center; margin-bottom: 1.5rem;">
-                        <h2 class="ig-brand" style="justify-content: center;">📸 SoundWave Social Feed</h2>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 0.88rem;">See stories, posts, and behind-the-scenes from top creators</p>
-                    </div>
-
-                    <!-- Stories Rail -->
-                    <div class="stories-rail-container" id="storiesRail">
-                        <!-- Dynamic Stories Loaded Here -->
-                    </div>
-
-                    <!-- Instagram Feed Posts Container -->
-                    <div class="ig-feed-container" id="igFeedContainer">
-                        <!-- Dynamic Feed Cards Loaded Here -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- 🎬 Instagram Fullscreen Reels Section -->
-            <section id="reels" class="section" style="display:none;">
-                <div class="container">
-                    <div style="text-align: center; margin-bottom: 1rem;">
-                        <h2 class="ig-brand" style="justify-content: center;">🎬 SoundWave Reels</h2>
-                    </div>
-                    <div class="reels-feed-container" id="reelsContainer">
-                        <!-- Dynamic Fullscreen Reels Loaded Here -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- 💬 Instagram Direct Messages Section -->
-            <section id="direct-messages" class="section" style="display:none;">
-                <div class="container">
-                    <div class="dm-container">
-                        <div class="dm-sidebar">
-                            <div class="dm-sidebar-header">
-                                <span>💬 Direct Messages</span>
-                                <span style="font-size:1.2rem; cursor:pointer;" title="New Chat">📝</span>
-                            </div>
-
-                            <!-- Instagram Primary & Requests Dual Tab Row -->
-                            <div class="dm-tabs-row" style="display:flex; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:0.5rem; padding: 0 0.85rem;">
-                                <button class="dm-tab-btn active" id="dmTabPrimary" onclick="window.SocialApp.switchDmTab('primary')" style="flex:1; padding:0.6rem 0; background:none; border:none; border-bottom:2px solid #8b5cf6; color:#fff; font-size:0.85rem; font-weight:700; cursor:pointer;">Primary</button>
-                                <button class="dm-tab-btn" id="dmTabRequests" onclick="window.SocialApp.switchDmTab('requests')" style="flex:1; padding:0.6rem 0; background:none; border:none; border-bottom:2px solid transparent; color:rgba(255,255,255,0.5); font-size:0.85rem; font-weight:700; cursor:pointer;">Requests <span style="background:#ff0055; color:#fff; font-size:0.65rem; padding:0.1rem 0.35rem; border-radius:10px; font-weight:800;">1</span></button>
-                            </div>
-
-                            <div class="dm-threads-list" id="dmThreadsList">
-                                <!-- Dynamic Chat Threads Loaded Here -->
-                            </div>
-                        </div>
-
-                        <div class="dm-chat-area">
-                            <div class="dm-chat-header" style="justify-content: space-between; align-items: center;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                    <span style="font-size:1.4rem;">👤</span>
-                                    <div>
-                                        <div id="dmChatHeaderName" style="font-weight:700; color:#fff; font-size:1rem;">Select a Chat</div>
-                                        <span class="e2ee-status-badge" style="font-size: 0.72rem; color: #10b981; font-weight: 700; display: flex; align-items: center; gap: 0.25rem;">
-                                            🔒 End-to-End Encrypted (256-Bit AES-GCM)
-                                        </span>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-secondary" id="verifyE2eeKeyBtn" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 12px; font-weight: 700; border-color: rgba(16, 185, 129, 0.4); color: #10b981;">
-                                    🔑 Verify WhatsApp Safety Key
-                                </button>
-                            </div>
-                            <div class="dm-messages-stream" id="dmMessagesStream">
-                                <!-- Dynamic Bubble Messages Loaded Here -->
-                            </div>
-                            <div class="dm-input-area">
-                                <input type="text" id="dmInputField" class="dm-input-field" placeholder="Message...">
-                                <button type="button" class="btn btn-primary" id="dmSendBtn" style="border-radius:20px; padding:0.6rem 1.25rem;">Send ✈️</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -1392,6 +1309,6 @@
         window.ENV = {
             API_BASE_URL: "http://10.46.71.106:5000/api/v1"
         };
-    </script>
+    </script>
 </body>
 </html>
