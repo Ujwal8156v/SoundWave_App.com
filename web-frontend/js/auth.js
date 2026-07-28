@@ -160,9 +160,9 @@ class AuthHandler {
     const subtitle = document.getElementById('authSubtitle');
     const submitBtn = document.getElementById('authSubmitBtn');
     const usernameInput = document.getElementById('username');
+    const otpContainer = document.getElementById('otpStepContainer');
     const resetContainer = document.getElementById('resetPasswordStepContainer');
     const forgotWrap = document.getElementById('forgotPasswordWrap');
-
     if (otpContainer) otpContainer.style.display = 'none';
     if (resetContainer) resetContainer.style.display = 'none';
 
