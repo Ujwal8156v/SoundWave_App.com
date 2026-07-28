@@ -1581,26 +1581,23 @@ class SoundWaveApp {
   }
 
   updateAdVisibility() {
-    const activePlan = localStorage.getItem('userPlan') || (this.currentUser ? this.currentUser.plan : 'free');
-    const isPaidSubscriber = ['plus', 'student', 'family'].includes(activePlan);
-
     const adSelectors = [
       '#sponsoredAd',
       '.native-ad-wrapper',
       '.banner-ad-320x50',
-      '.adsterra-banner-container'
+      '.adsterra-banner-container',
+      '.sponsored-ad'
     ];
 
     adSelectors.forEach(selector => {
       document.querySelectorAll(selector).forEach(el => {
-        el.style.display = isPaidSubscriber ? 'none' : 'block';
+        el.style.display = 'none';
+        el.remove();
       });
     });
 
-    if (isPaidSubscriber) {
-      // Remove any dynamic iframe/popunder ad overlays for paid subscribers
-      document.querySelectorAll('iframe[src*="effectivecpmnetwork.com"], iframe[src*="highperformanceformat.com"]').forEach(el => el.remove());
-    }
+    // Remove any dynamic iframe/popunder ad overlays for all users
+    document.querySelectorAll('iframe[src*="effectivecpmnetwork.com"], iframe[src*="highperformanceformat.com"], script[src*="effectivecpmnetwork.com"], script[src*="highperformanceformat.com"]').forEach(el => el.remove());
   }
 
   formatDuration(seconds) {
