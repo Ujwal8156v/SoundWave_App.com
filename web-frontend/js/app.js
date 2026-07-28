@@ -38,7 +38,7 @@ class SoundWaveApp {
     document.getElementById('loginBtn')?.addEventListener('click', () => this.openAuthModal());
     document.getElementById('communitySignUpBtn')?.addEventListener('click', () => this.openAuthModal());
     document.getElementById('exploreBtn')?.addEventListener('click', () => {
-      window.location.hash = '#discover';
+      document.getElementById('musicCatalog')?.scrollIntoView({ behavior: 'smooth' });
     });
     document.getElementById('logoutLink')?.addEventListener('click', () => this.logout());
 
@@ -94,9 +94,8 @@ class SoundWaveApp {
     // Playlists
     document.getElementById('createPlaylistBtn')?.addEventListener('click', () => this.createPlaylist());
 
-    // Explore Button Navigation
     document.getElementById('exploreBtn')?.addEventListener('click', () => {
-      window.location.hash = '#discover';
+      document.getElementById('musicCatalog')?.scrollIntoView({ behavior: 'smooth' });
     });
 
     // Minimized Player Bar Click (Expand Player Modal)
@@ -314,7 +313,7 @@ class SoundWaveApp {
     const socialSections = ['social-feed', 'reels', 'direct-messages'];
     
     let activeSection = hash.split('?')[0];
-    if (!activeSection || (!['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections].includes(activeSection) && !isSubAnchor)) {
+    if (!activeSection || (!['home', 'playlists', 'profile', 'settings', ...socialSections].includes(activeSection) && !isSubAnchor)) {
       activeSection = 'home';
     } else if (isSubAnchor) {
       activeSection = 'home';
@@ -330,7 +329,7 @@ class SoundWaveApp {
     }
 
     // Hide all primary sections
-    const sections = ['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections];
+    const sections = ['home', 'playlists', 'profile', 'settings', ...socialSections];
     sections.forEach(sec => {
       const el = document.getElementById(sec);
       if (el) el.style.display = 'none';
@@ -717,8 +716,10 @@ class SoundWaveApp {
     const query = document.getElementById('searchInput')?.value?.trim();
     if (!query) return;
 
-    // Switch view to discover so the user can see search results
-    window.location.hash = '#discover';
+    // Keep user on home page to view search results
+    if (window.location.hash !== '#home') {
+      window.location.hash = '#home';
+    }
 
     // Hide search suggestions on query search execution
     const suggestions = document.getElementById('searchSuggestions');
@@ -1407,7 +1408,7 @@ class SoundWaveApp {
       const paymentModal = document.getElementById('paymentModal');
       if (paymentModal) paymentModal.style.display = 'none';
 
-      window.location.hash = '#discover';
+      window.location.hash = '#home';
       return;
     }
 
@@ -1575,7 +1576,7 @@ class SoundWaveApp {
   redirectAfterPayment() {
     const successModal = document.getElementById('paymentSuccessModal');
     if (successModal) successModal.style.display = 'none';
-    window.location.hash = '#discover';
+    window.location.hash = '#home';
     this.updateAdVisibility();
     this.showNotification('🎉 Premium Unlocked! Enjoy 100% Ad-Free 320kbps Hi-Fi streaming.');
   }

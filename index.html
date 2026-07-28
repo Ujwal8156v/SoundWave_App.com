@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="./assets/logo-DhK5Oro6.png">
-  <script type="module" crossorigin src="./assets/index-BiILCijX.js"></script>
+  <script type="module" crossorigin src="./assets/index-CE19-kyD.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-CCzh0gGM.css">
 </head>
 <body>
@@ -31,7 +31,6 @@
                 </button>
                 <ul class="nav-menu">
                     <li><a href="#home" class="nav-link active">Home</a></li>
-                    <li><a href="#discover" class="nav-link">Discover</a></li>
                     <li id="navSocialFeed" style="display:none;"><a href="#social-feed" class="nav-link">📸 Feed</a></li>
                     <li id="navReels" style="display:none;"><a href="#reels" class="nav-link">🎬 Reels</a></li>
                     <li id="navDirectMessages" style="display:none;"><a href="#direct-messages" class="nav-link ig-nav-item">💬 Chat <span class="ig-badge-count">2</span></a></li>
@@ -102,6 +101,22 @@
                     </div>
                 </div>
 
+                <!-- Music Catalog & Search Section -->
+                <div id="musicCatalog" class="music-catalog-section" style="padding: 2.5rem 0;">
+                    <div class="container">
+                        <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem; color: #fff;">🎶 Music Catalog</h2>
+                        <div class="search-bar">
+                            <input type="text" id="searchInput" placeholder="Search songs, artists...">
+                            <button id="searchBtn" class="btn-search">🔍</button>
+                        </div>
+
+                        <div id="searchSuggestions" class="suggestions-container" style="display:none;"></div>
+                        <div class="songs-grid" id="songsGrid">
+                            <!-- Songs will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- About Us Section -->
                 <div id="about" class="about-vibe-section">
                     <div class="container">
@@ -125,7 +140,7 @@
                                     <div class="bullet-item"><span class="bullet-check">✓</span> 3D Spatial Audio &amp; FX Studio</div>
                                 </div>
 
-                                <button class="btn btn-gradient-orange" id="aboutExploreBtn" onclick="location.hash='#discover';">Explore More</button>
+                                <button class="btn btn-gradient-orange" id="aboutExploreBtn" onclick="document.getElementById('musicCatalog')?.scrollIntoView({behavior:'smooth'});">Explore Catalog 🎶</button>
                             </div>
                         </div>
                     </div>
@@ -374,23 +389,6 @@
                         <textarea id="contactMessage" placeholder="Your Message" rows="5" required></textarea>
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
-                </div>
-            </section>
-
-            <!-- Discover Section -->
-            <section id="discover" class="section" style="display:none;">
-                <div class="container">
-                    <h2>Discover</h2>
-                    
-                    <div class="search-bar">
-                        <input type="text" id="searchInput" placeholder="Search songs, artists...">
-                        <button id="searchBtn" class="btn-search">🔍</button>
-                    </div>
-
-                    <div id="searchSuggestions" class="suggestions-container" style="display:none;"></div>
-                    <div class="songs-grid" id="songsGrid">
-                        <!-- Songs will be loaded here -->
-                    </div>
                 </div>
             </section>
 
