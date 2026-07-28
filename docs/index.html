@@ -9,21 +9,19 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Sound Wave - Free Music Streaming</title>
-    <link rel="icon" type="image/png" href="/soundwave-musicstream-app/assets/favicon-DhK5Oro6.png">
-    <!-- Ad Network Social Bar for ujwal8156v.github.io -->
-    <script src="https://pl30549269.effectivecpmnetwork.com/e4/0a/dc/e40adc4c04938f24c4a1c5238e4bd6c2.js"></script>
-  <script type="module" crossorigin src="/soundwave-musicstream-app/assets/index--_u8nEry.js"></script>
-  <link rel="stylesheet" crossorigin href="/soundwave-musicstream-app/assets/index-B_7iXE8D.css">
+    <title>Sound Wave - Free Music Streaming</title>
+    <link rel="icon" type="image/png" href="./assets/logo-DhK5Oro6.png">
+  <script type="module" crossorigin src="./assets/index-K5Ohl8b7.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CCzh0gGM.css">
 </head>
 <body>
     <div id="app">
         <!-- Navigation -->
         <nav class="navbar">
             <div class="navbar-container">
-                <a href="#home" class="navbar-brand">
-                    <span class="logo-icon">🎧</span>
-                    <span class="brand-text">MusicVibe</span>
+                <a href="#home" class="navbar-brand" style="display:flex; align-items:center; gap:0.6rem; text-decoration:none;">
+                    <img src="./assets/logo-DhK5Oro6.png" alt="SoundWave MusicStream Logo" class="brand-logo-img" style="height:44px; width:auto; object-fit:contain; filter:drop-shadow(0 0 12px rgba(139,92,246,0.4));">
+                    <span class="brand-text" style="font-weight:800; font-size:1.3rem; background:linear-gradient(135deg, #ffffff 0%, #a78bfa 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">SoundWave</span>
                 </a>
 
                 <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
@@ -33,13 +31,13 @@
                 </button>
                 <ul class="nav-menu">
                     <li><a href="#home" class="nav-link active">Home</a></li>
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#artists" class="nav-link">Artists</a></li>
-                    <li><a href="#events" class="nav-link">Events</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
                     <li><a href="#discover" class="nav-link">Discover</a></li>
+                    <li id="navSocialFeed" style="display:none;"><a href="#social-feed" class="nav-link">📸 Feed</a></li>
+                    <li id="navReels" style="display:none;"><a href="#reels" class="nav-link">🎬 Reels</a></li>
+                    <li id="navDirectMessages" style="display:none;"><a href="#direct-messages" class="nav-link ig-nav-item">💬 Chat <span class="ig-badge-count">2</span></a></li>
+                    <li><a href="#artists" class="nav-link">Artists</a></li>
                     <li id="navPlaylists" style="display:none;"><a href="#playlists" class="nav-link">Playlists</a></li>
-                    <li id="loginNavItem"><button id="loginBtn" class="btn btn-primary" style="padding:0.45rem 1.1rem; font-size:0.85rem; border-radius:20px; font-weight:700; margin-left:0.5rem;">Login 🔑</button></li>
+                    <li id="loginNavItem"><button id="loginBtn" onclick="if(window.app){window.app.openAuthModal();}else{const m=document.getElementById('authModal');if(m)m.style.display='flex';}" class="btn btn-primary" style="padding:0.45rem 1.1rem; font-size:0.85rem; border-radius:20px; font-weight:700; margin-left:0.5rem; cursor:pointer;">Login 🔑</button></li>
                     <li class="dropdown" id="settingsDropdown" style="display:none;">
                         <a href="#" class="nav-link dropdown-toggle" id="settingsLink" title="Menu">☰</a>
                         <ul class="dropdown-menu">
@@ -71,6 +69,19 @@
                             <button class="btn btn-hero-secondary" onclick="location.hash='#pricing';">💎 Explore Plus</button>
                         </div>
 
+                        <!-- Morning Routine Shuffle Playlist Quick-Play -->
+                        <div class="morning-routine-card" id="morningRoutineCard">
+                            <div class="morning-routine-icon">🌅</div>
+                            <div class="morning-routine-info">
+                                <span class="morning-routine-label">MY FAVORITE PLAYLIST</span>
+                                <span class="morning-routine-title">Morning Routine</span>
+                                <span class="morning-routine-meta">🔀 Shuffle Mode • YouTube Playlist</span>
+                            </div>
+                            <button class="morning-routine-play-btn" id="morningRoutinePlayBtn" onclick="window.playMorningRoutinePlaylist()" title="Play Morning Routine in Shuffle Mode">
+                                <span class="morning-play-icon">▶</span>
+                            </button>
+                        </div>
+
                         <!-- Live Stats Bar -->
                         <div class="hero-live-stats-bar">
                             <div class="live-stat-item">
@@ -97,7 +108,7 @@
                         <h2 class="vibe-section-title align-left">About Us</h2>
                         <div class="about-vibe-grid">
                             <div class="about-vibe-media">
-                                <img src="/soundwave-musicstream-app/assets/about_headphones-l_GwfHI4.jpg" alt="Woman listening to music with headphones" class="about-vibe-img" loading="eager">
+                                <img src="./assets/about_headphones-l_GwfHI4.jpg" alt="Woman listening to music with headphones" class="about-vibe-img" loading="eager">
                                 <div class="about-img-badge">
                                     <span class="badge-icon">🎵</span>
                                     <span>Lossless 320kbps Audio</span>
@@ -120,28 +131,54 @@
                     </div>
                 </div>
 
-                <!-- Our Features Section -->
+                <!-- Google & SoundWave Music Player Features Section -->
                 <div id="features" class="features-vibe-section">
                     <div class="container">
-                        <h2 class="vibe-section-title">Our Features</h2>
-                        <div class="features-vibe-grid">
+                        <div class="section-header-centered" style="text-align: center; margin-bottom: 2.5rem;">
+                            <span class="vibe-kicker" style="color: var(--accent-purple); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">⚡ POWERFUL CAPABILITIES</span>
+                            <h2 class="vibe-section-title" style="margin-top: 0.4rem; font-size: 2.2rem;">Google Music Player Features</h2>
+                            <p style="color: var(--text-secondary); max-width: 600px; margin: 0.5rem auto 0 auto; font-size: 0.95rem;">A modern feature showcase built for seamless integration, smart Home Assistant automations, and lossless 320kbps playback.</p>
+                        </div>
+                        <div class="features-grid-showcase" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.5rem;">
                             <div class="feature-vibe-card">
                                 <div class="feature-vibe-icon-wrap">🎵</div>
-                                <h3>New Releases</h3>
-                                <p>Listen to the Latest Hits from top global charts with zero buffering.</p>
-                                <span class="feature-action-tag">Listen Now →</span>
+                                <h3>Stream from Google Music</h3>
+                                <p>Play playlists or stations directly from your Google &amp; YouTube Music library.</p>
                             </div>
                             <div class="feature-vibe-card">
-                                <div class="feature-vibe-icon-wrap">🎤</div>
-                                <h3>Live Events</h3>
-                                <p>Find Concerts &amp; Festivals streaming live with high-fidelity sound.</p>
-                                <span class="feature-action-tag">Explore Events →</span>
+                                <div class="feature-vibe-icon-wrap">🔧</div>
+                                <h3>Full Playback Controls</h3>
+                                <p>Supports play, pause, stop, next/previous track, 3D spatial audio, and volume adjustments.</p>
                             </div>
                             <div class="feature-vibe-card">
-                                <div class="feature-vibe-icon-wrap">⭐️</div>
-                                <h3>Top Artists</h3>
-                                <p>Discover Trending Musicians &amp; exclusive studio master recordings.</p>
-                                <span class="feature-action-tag">View Artists →</span>
+                                <div class="feature-vibe-icon-wrap">📂</div>
+                                <h3>Flexible Configuration</h3>
+                                <p>Set username, password, device ID, proxy, and speaker setup in YAML or Web UI.</p>
+                            </div>
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">🎚</div>
+                                <h3>Shuffle Modes</h3>
+                                <p>Choose between Shuffle, Random, or Morning Routine Shuffled Playlists.</p>
+                            </div>
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">🚀</div>
+                                <h3>Easy Installation</h3>
+                                <p>Install via HACS, npm, or directly on GitHub Pages custom_components.</p>
+                            </div>
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">⚡</div>
+                                <h3>Extra Functionalities</h3>
+                                <p>Includes auto-play, DingDong chime interruption, and auto-track advance via YAML scripts.</p>
+                            </div>
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">🌐</div>
+                                <h3>Speaker Selection</h3>
+                                <p>Stream music to any configured media player like bedroom_stereo or workshop_stereo.</p>
+                            </div>
+                            <div class="feature-vibe-card">
+                                <div class="feature-vibe-icon-wrap">📊</div>
+                                <h3>Service Integration</h3>
+                                <p>Works with media_player services: play_media, shuffle_set, volume_set, and more.</p>
                             </div>
                         </div>
                     </div>
@@ -193,7 +230,7 @@
                     <div class="community-vibe-content">
                         <h2>Join the Music Community</h2>
                         <p>Connect with fellow music fans and stay updated!</p>
-                        <button class="btn btn-community-signup" id="communitySignUpBtn">Sign Up Now</button>
+                        <button class="btn btn-community-signup" id="communitySignUpBtn" onclick="if(window.app){window.app.openAuthModal();}else{const m=document.getElementById('authModal');if(m)m.style.display='flex';}" style="cursor:pointer;">Sign Up Now</button>
                     </div>
                 </div>
 
@@ -341,7 +378,7 @@
             </section>
 
             <!-- Discover Section -->
-            <section id="discover" class="section">
+            <section id="discover" class="section" style="display:none;">
                 <div class="container">
                     <h2>Discover</h2>
                     
@@ -353,42 +390,11 @@
                             <p>Unlock 320kbps High-Fi streams, gapless preloading, and unlimited offline downloads for just ₹59/month!</p>
                         </div>
                         <button class="btn btn-primary" onclick="location.hash='#pricing';">Get Plus</button>
-                        <button class="ad-close-btn" onclick="document.getElementById('sponsoredAd').style.display='none';" title="Dismiss Ad">&times;</button>
-                    </div>
-
-                    <!-- Native Banner Ad Container for ujwal8156v.github.io -->
-                    <div class="native-ad-wrapper" style="margin-bottom: 1.5rem; text-align: center; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 16px; padding: 1rem;">
-                        <span style="font-size: 0.72rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.5rem;">Sponsored Native Ad</span>
-                        <script async="async" data-cfasync="false" src="https://pl30549274.effectivecpmnetwork.com/f17e5278629e19b08305a6ab7aeb935e/invoke.js"></script>
-                        <div id="container-f17e5278629e19b08305a6ab7aeb935e"></div>
-                    </div>
-
-                    <!-- Adsterra 468x60 GIF Referral Banner -->
-                    <div class="adsterra-banner-container" style="margin: 1.25rem auto; text-align: center; max-width: 500px; padding: 0.6rem; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.12); border-radius: 14px;">
-                        <span style="font-size: 0.68rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.4rem;">Partner Banner</span>
-                        <a href="https://beta.publishers.adsterra.com/referral/DP34uWnK3A" rel="nofollow" target="_blank" style="display: inline-block; transition: transform 0.2s;">
-                            <img alt="Adsterra Monetize Banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/468%20x%2060%20px.png" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);" />
-                        </a>
                     </div>
 
                     <div class="search-bar">
                         <input type="text" id="searchInput" placeholder="Search songs, artists...">
                         <button id="searchBtn" class="btn-search">🔍</button>
-                    </div>
-
-                    <!-- Banner Ad 320x50 for ujwal8156v.github.io -->
-                    <div class="banner-ad-320x50" style="margin: 1rem auto 1.5rem; text-align: center; max-width: 330px; padding: 0.5rem; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px;">
-                        <span style="font-size: 0.68rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.35rem;">Sponsored Banner (320x50)</span>
-                        <script type="text/javascript">
-                            atOptions = {
-                                'key' : 'a91a52afe11500ce909c9bd162d38637',
-                                'format' : 'iframe',
-                                'height' : 50,
-                                'width' : 320,
-                                'params' : {}
-                            };
-                        </script>
-                        <script type="text/javascript" src="https://www.highperformanceformat.com/a91a52afe11500ce909c9bd162d38637/invoke.js"></script>
                     </div>
 
                     <div id="searchSuggestions" class="suggestions-container" style="display:none;"></div>
@@ -398,8 +404,88 @@
                 </div>
             </section>
 
+            <!-- 📸 Instagram Social Feed Section -->
+            <section id="social-feed" class="section" style="display:none;">
+                <div class="container">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <h2 class="ig-brand" style="justify-content: center;">📸 SoundWave Social Feed</h2>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.88rem;">See stories, posts, and behind-the-scenes from top creators</p>
+                    </div>
+
+                    <!-- Stories Rail -->
+                    <div class="stories-rail-container" id="storiesRail">
+                        <!-- Dynamic Stories Loaded Here -->
+                    </div>
+
+                    <!-- Instagram Feed Posts Container -->
+                    <div class="ig-feed-container" id="igFeedContainer">
+                        <!-- Dynamic Feed Cards Loaded Here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 🎬 Instagram Fullscreen Reels Section -->
+            <section id="reels" class="section" style="display:none;">
+                <div class="container">
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <h2 class="ig-brand" style="justify-content: center;">🎬 SoundWave Reels</h2>
+                    </div>
+                    <div class="reels-feed-container" id="reelsContainer">
+                        <!-- Dynamic Fullscreen Reels Loaded Here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 💬 Instagram Direct Messages Section -->
+            <section id="direct-messages" class="section" style="display:none;">
+                <div class="container">
+                    <div class="dm-container">
+                        <div class="dm-sidebar">
+                            <div class="dm-sidebar-header">
+                                <span>💬 Direct Messages</span>
+                                <span style="font-size:1.2rem; cursor:pointer;" title="New Chat">📝</span>
+                            </div>
+
+                            <!-- Instagram Primary & Requests Dual Tab Row -->
+                            <div class="dm-tabs-row" style="display:flex; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:0.5rem; padding: 0 0.85rem;">
+                                <button class="dm-tab-btn active" id="dmTabPrimary" onclick="window.SocialApp.switchDmTab('primary')" style="flex:1; padding:0.6rem 0; background:none; border:none; border-bottom:2px solid #8b5cf6; color:#fff; font-size:0.85rem; font-weight:700; cursor:pointer;">Primary</button>
+                                <button class="dm-tab-btn" id="dmTabRequests" onclick="window.SocialApp.switchDmTab('requests')" style="flex:1; padding:0.6rem 0; background:none; border:none; border-bottom:2px solid transparent; color:rgba(255,255,255,0.5); font-size:0.85rem; font-weight:700; cursor:pointer;">Requests <span style="background:#ff0055; color:#fff; font-size:0.65rem; padding:0.1rem 0.35rem; border-radius:10px; font-weight:800;">1</span></button>
+                            </div>
+
+                            <div class="dm-threads-list" id="dmThreadsList">
+                                <!-- Dynamic Chat Threads Loaded Here -->
+                            </div>
+                        </div>
+
+                        <div class="dm-chat-area">
+                            <div class="dm-chat-header" style="justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-size:1.4rem;">👤</span>
+                                    <div>
+                                        <div id="dmChatHeaderName" style="font-weight:700; color:#fff; font-size:1rem;">Select a Chat</div>
+                                        <span class="e2ee-status-badge" style="font-size: 0.72rem; color: #10b981; font-weight: 700; display: flex; align-items: center; gap: 0.25rem;">
+                                            🔒 End-to-End Encrypted (256-Bit AES-GCM)
+                                        </span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="verifyE2eeKeyBtn" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.75rem; border-radius: 12px; font-weight: 700; border-color: rgba(16, 185, 129, 0.4); color: #10b981;">
+                                    🔑 Verify WhatsApp Safety Key
+                                </button>
+                            </div>
+                            <div class="dm-messages-stream" id="dmMessagesStream">
+                                <!-- Dynamic Bubble Messages Loaded Here -->
+                            </div>
+                            <div class="dm-input-area">
+                                <input type="text" id="dmInputField" class="dm-input-field" placeholder="Message...">
+                                <button type="button" class="btn btn-primary" id="dmSendBtn" style="border-radius:20px; padding:0.6rem 1.25rem;">Send ✈️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Playlists Section -->
-            <section id="playlists" class="section">
+            <section id="playlists" class="section" style="display:none;">
                 <div class="container">
                     <h2>My Playlists</h2>
                     <button class="btn btn-primary" id="createPlaylistBtn">+ Create Playlist</button>
@@ -410,7 +496,7 @@
             </section>
 
             <!-- Profile Section -->
-            <section id="profile" class="section">
+            <section id="profile" class="section" style="display:none;">
                 <div class="container">
                     <h2>Profile</h2>
                     <div class="profile-content" id="profileContent">
@@ -653,6 +739,8 @@
 
                 <div class="player-actions">
                     <button class="action-btn fx-trigger-btn" id="fxModalBtn" title="SoundWave FX Studio">🎛️ FX</button>
+                    <button class="action-btn radio-btn" id="songRadioBtn" title="Radio On Song — Play Radio Station" onclick="if(window.app){window.app.startSongRadio();}else{alert('Please play a song first!');}">📻</button>
+                    <button class="action-btn dingdong-btn" id="dingDongBtn" title="DingDong — Interrupt & Chime" onclick="window.triggerDingDong()">🔔</button>
                     <button class="action-btn" id="sleepTimerBtn" title="Sleep Timer">⏱️</button>
                     <button class="action-btn" id="downloadBtn" title="Download">⬇</button>
                     <button class="action-btn" id="shareBtn" title="Share">📤</button>
@@ -677,8 +765,8 @@
             <button class="modal-close" id="closeAuthModalBtn">&times;</button>
             
             <div class="auth-header">
-                <div class="auth-brand-logo">
-                    <span class="logo-text-accent">SW</span>
+                <div class="auth-brand-logo" style="background:none; width:auto; height:auto; margin-bottom:0.75rem;">
+                    <img src="./assets/logo-DhK5Oro6.png" alt="SoundWave Logo" style="height:65px; width:auto; object-fit:contain; filter:drop-shadow(0 0 15px rgba(139,92,246,0.5));">
                 </div>
                 <h2 id="authFormTitle">Welcome to SoundWave</h2>
                 <p id="authSubtitle">Log in to unlock 320kbps streams, playlists, and spatial audio</p>
@@ -736,9 +824,14 @@
                     <div id="otpStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
                         <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
                         <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Email OTP Verification</h3>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 0.85rem;">
                             We sent a 6-digit OTP code to <strong id="otpEmailTarget" style="color: var(--primary-color);">user@example.com</strong>. Please check your email inbox.
                         </p>
+
+                        <!-- High Visibility OTP Display Banner -->
+                        <div id="otpDisplayBanner" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 800; font-size: 1.15rem; padding: 0.65rem 1rem; border-radius: 14px; margin-bottom: 1.1rem; letter-spacing: 3px; font-family: monospace;">
+                            📩 OTP Code: 849201
+                        </div>
 
                         <div class="otp-inputs-row" style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.25rem;">
                             <input type="text" maxlength="1" class="otp-digit-input" data-index="0" inputmode="numeric">
@@ -760,9 +853,42 @@
                         <div style="margin-bottom: 0.6rem;">
                             <button type="button" id="autoFillOtpBtn" style="background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.2); color: #60a5fa; padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: background 0.2s;">⚡ Click to Auto-Fill Generated OTP Code</button>
                         </div>
+                    </div>
 
+                    <!-- Reset Password Step Container -->
+                    <div id="resetPasswordStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
+                        <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔑</div>
+                        <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Reset Account Password</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 0.85rem;">
+                            Enter your email to receive a Password Recovery OTP code.
+                        </p>
+                        
+                        <div class="form-group" id="resetEmailGroup" style="margin-bottom: 1rem; text-align: left;">
+                            <label for="resetEmailInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">Account Email Address</label>
+                            <input type="email" id="resetEmailInput" placeholder="name@example.com" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem;">
+                        </div>
+
+                        <div id="resetOtpFields" style="display:none;">
+                            <!-- High Visibility OTP Display Banner -->
+                            <div id="resetOtpDisplayBanner" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 800; font-size: 1.15rem; padding: 0.65rem 1rem; border-radius: 14px; margin-bottom: 1.1rem; letter-spacing: 3px; font-family: monospace;">
+                                📩 Recovery OTP Code: 849201
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
+                                <label for="resetOtpInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">Enter 6-Digit Recovery OTP</label>
+                                <input type="text" id="resetOtpInput" placeholder="849201" maxlength="6" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem; font-size:1.1rem; letter-spacing:4px; font-family:monospace; text-align:center;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
+                                <label for="newPasswordInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">New Password</label>
+                                <input type="password" id="newPasswordInput" placeholder="Enter new password" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem;">
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="sendResetOtpBtn" style="width: 100%; padding: 0.8rem; margin-bottom: 0.75rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem;">
+                            Send Password Recovery OTP 📩
+                        </button>
+                        
                         <div style="font-size: 0.8rem;">
-                            <a href="#" id="backToRegisterLink" style="color: rgba(255,255,255,0.6); text-decoration: underline; transition: color 0.2s;">← Edit email address or back to registration</a>
+                            <a href="#" id="backToLoginFromResetLink" style="color: rgba(255,255,255,0.6); text-decoration: underline; transition: color 0.2s;">← Back to Sign In</a>
                         </div>
                     </div>
 
@@ -773,6 +899,9 @@
                     <p id="toggleAuth" class="toggle-auth-text">
                         Don't have an account? <a href="#" id="toggleAuthLink">Create one now</a>
                     </p>
+                    <div id="forgotPasswordWrap" style="margin-top: 0.5rem; font-size: 0.8rem; text-align: center;">
+                        <a href="#" id="forgotPasswordLink" style="color: #a78bfa; text-decoration: underline;">🔑 Forgot Password / Recover Account?</a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -1381,14 +1510,50 @@
         </div>
     </div>
 
+    <!-- Instagram Story Viewer Modal -->
+    <div id="storyViewerModal" class="modal" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.92); z-index:9999;">
+        <div style="position:relative; width:100%; max-width:420px; height:80vh; background:#000; border-radius:24px; overflow:hidden; border:1px solid rgba(255,255,255,0.2); box-shadow:0 25px 60px rgba(0,0,0,0.9);">
+            <button class="modal-close" id="closeStoryModalBtn" style="top:15px; right:15px; z-index:10;">&times;</button>
+            <img id="storyViewerImg" src="" alt="Story Media" style="width:100%; height:100%; object-fit:cover;">
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:1.5rem; background:linear-gradient(to top, rgba(0,0,0,0.95), transparent);">
+                <h4 id="storyViewerName" style="color:#fff; margin:0 0 0.25rem; font-size:1.1rem; font-weight:800;">Username</h4>
+                <div id="storyViewerTrack" style="color:#a78bfa; font-size:0.85rem; font-weight:600;">🎵 Music Track</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp-Style Security Code & Safety Key Verification Modal -->
+    <div id="whatsappSafetyKeyModal" class="modal" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); z-index:99999;">
+        <div style="position:relative; width:100%; max-width:480px; background:#12121c; border-radius:24px; padding:2rem; border:1px solid rgba(16,185,129,0.3); box-shadow:0 25px 60px rgba(0,0,0,0.9); text-align:center;">
+            <button class="modal-close" id="closeSafetyKeyModalBtn" style="top:15px; right:15px; z-index:10;">&times;</button>
+            <div style="font-size:2.5rem; margin-bottom:0.5rem;">🔒</div>
+            <h3 style="color:#fff; margin-bottom:0.4rem; font-weight:800;">Verify Security Code</h3>
+            <p style="color:rgba(255,255,255,0.7); font-size:0.85rem; margin-bottom:1.5rem; line-height:1.4;">
+                To verify that messages and audio calls with <strong id="safetyKeyContactName" style="color:#10b981;">Contact</strong> are end-to-end encrypted, compare the 60-digit security code below with their device.
+            </p>
+
+            <!-- 60-Digit Security Code 12-Grid -->
+            <div id="safetyCodeGrid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.6rem; background:rgba(0,0,0,0.4); padding:1rem; border-radius:16px; border:1px solid rgba(255,255,255,0.08); margin-bottom:1.5rem; font-family:monospace; font-size:0.9rem; font-weight:700; color:#10b981; letter-spacing:1px;">
+                <span>83912</span><span>04817</span><span>99281</span><span>10293</span>
+                <span>84719</span><span>02847</span><span>91827</span><span>38402</span>
+                <span>59182</span><span>04821</span><span>73910</span><span>84729</span>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:1rem;">
+                <button type="button" class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('safetyCodeGrid').innerText); if (window.app) window.app.showNotification('Security code copied to clipboard 📋');" style="border-radius:14px; padding:0.5rem 1.25rem; font-size:0.85rem;">Copy Code 📋</button>
+                <button type="button" class="btn btn-primary" id="confirmSafetyKeyBtn" style="background:#10b981; border:none; border-radius:14px; padding:0.5rem 1.25rem; font-size:0.85rem; font-weight:700;">Verified & Secure ✅</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DingDong Notification Toast -->
+    <div id="dingdongToast">🔔 DingDong! Resuming playback...</div>
+
     <!-- Scripts -->
     <script>
         window.ENV = {
             API_BASE_URL: "http://10.46.71.106:5000/api/v1"
         };
-    </script>
-    <script src="js/beatSynth.js"></script>
-    <script src="js/audioFx.js"></script>
-    <script src="js/visualizer.js"></script>
+    </script>
 </body>
 </html>

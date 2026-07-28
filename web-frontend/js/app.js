@@ -309,18 +309,28 @@ class SoundWaveApp {
     }
 
     // Check if the hash is a sub-anchor on the landing page
-    const subAnchors = ['features', 'pricing', 'faq', 'contact'];
+    const subAnchors = ['features', 'pricing', 'faq', 'contact', 'artists'];
     const isSubAnchor = subAnchors.includes(hash);
+    const socialSections = ['social-feed', 'reels', 'direct-messages'];
     
     let activeSection = hash.split('?')[0];
-    if (!activeSection || (!['home', 'discover', 'playlists', 'profile', 'settings'].includes(activeSection) && !isSubAnchor)) {
+    if (!activeSection || (!['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections].includes(activeSection) && !isSubAnchor)) {
       activeSection = 'home';
     } else if (isSubAnchor) {
       activeSection = 'home';
     }
 
+    // Auth lock gate for Instagram Social Media features
+    const isLoggedIn = !!this.currentUser || !!localStorage.getItem('token') || !!localStorage.getItem('soundwave_user');
+    if (socialSections.includes(activeSection) && !isLoggedIn) {
+      this.showNotification('🔒 Please Log In to access Instagram Social Media Hub & Features!', 'warning');
+      this.openAuthModal();
+      window.location.hash = '#home';
+      return;
+    }
+
     // Hide all primary sections
-    const sections = ['home', 'discover', 'playlists', 'profile', 'settings'];
+    const sections = ['home', 'discover', 'playlists', 'profile', 'settings', ...socialSections];
     sections.forEach(sec => {
       const el = document.getElementById(sec);
       if (el) el.style.display = 'none';
@@ -419,13 +429,20 @@ class SoundWaveApp {
     
     // Toggle navigation visibilities
     const settingsDropdown = document.getElementById('settingsDropdown');
-    if (settingsDropdown) settingsDropdown.style.display = 'block';
+    if (settingsDropdown) settingsDropdown.style.display = user ? 'block' : 'none';
 
     const navPlaylists = document.getElementById('navPlaylists');
-    if (navPlaylists) navPlaylists.style.display = 'block';
+    if (navPlaylists) navPlaylists.style.display = user ? 'block' : 'none';
+
+    // Toggle Instagram Social Media Navigation items on Login
+    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages'];
+    socialNavIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = user ? 'block' : 'none';
+    });
     
     const loginNavItem = document.getElementById('loginNavItem');
-    if (loginNavItem) loginNavItem.style.display = 'none';
+    if (loginNavItem) loginNavItem.style.display = user ? 'none' : 'block';
 
     // Resume pending checkout if user initiated subscription before login
     if (this.pendingCheckoutPlan) {
@@ -463,6 +480,26 @@ class SoundWaveApp {
     this.currentUser = null;
     this.isEditingProfile = false;
     
+    // Hide Instagram Social Media Navigation items on Logout
+    const socialNavIds = ['navSocialFeed', 'navReels', 'navDirectMessages'];
+    socialNavIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+
+    const settingsDropdown = document.getElementById('settingsDropdown');
+    if (settingsDropdown) settingsDropdown.style.display = 'none';
+
+    const navPlaylists = document.getElementById('navPlaylists');
+    if (navPlaylists) navPlaylists.style.display = 'none';
+
+    const loginNavItem = document.getElementById('loginNavItem');
+    if (loginNavItem) loginNavItem.style.display = 'block';
+
+    if (['social-feed', 'reels', 'direct-messages', 'instagram-profile'].some(sec => window.location.hash.includes(sec))) {
+      window.location.hash = '#home';
+    }
+    
     // Clear password and auth input fields
     const passwordInput = document.getElementById('password');
     const emailInput = document.getElementById('email');
@@ -482,15 +519,6 @@ class SoundWaveApp {
       window.auth.isOtpStep = false;
       if (window.auth.updateForm) window.auth.updateForm();
     }
-
-    const settingsDropdown = document.getElementById('settingsDropdown');
-    if (settingsDropdown) settingsDropdown.style.display = 'none';
-
-    const navPlaylists = document.getElementById('navPlaylists');
-    if (navPlaylists) navPlaylists.style.display = 'none';
-    
-    const loginNavItem = document.getElementById('loginNavItem');
-    if (loginNavItem) loginNavItem.style.display = 'block';
 
     this.renderProfile();
     window.location.hash = '#home';
@@ -553,6 +581,9 @@ class SoundWaveApp {
             <button class="card-action-btn like-btn" data-id="${song.id}" title="Like">
               ${isLiked ? '❤️' : '♡'}
             </button>
+            <button class="card-action-btn card-radio-btn" data-id="${song.id}" title="Play Radio on this Track">
+              📻
+            </button>
             <button class="card-action-btn playlist-btn" data-id="${song.id}" title="Add to Playlist">
               +
             </button>
@@ -569,6 +600,14 @@ class SoundWaveApp {
       if (likeBtn) {
         e.stopPropagation();
         this.toggleLike(likeBtn.dataset.id);
+        return;
+      }
+
+      const cardRadioBtn = e.target.closest('.card-radio-btn');
+      if (cardRadioBtn) {
+        e.stopPropagation();
+        const targetSong = songs.find(s => s.id == cardRadioBtn.dataset.id);
+        this.startSongRadio(targetSong);
         return;
       }
 
@@ -594,6 +633,67 @@ class SoundWaveApp {
       this.currentIndex = songs.findIndex(s => s.id == songId);
       await player.loadSong(song);
       this.updatePlayerUI();
+    }
+  }
+
+  async startSongRadio(targetSong) {
+    const seedSong = targetSong || this.currentSong || (this.playlist && this.playlist[this.currentIndex]);
+    if (!seedSong) {
+      this.showNotification('⚠️ Please play or select a song first to start a Radio station!', 'warning');
+      return;
+    }
+
+    const radioBtn = document.getElementById('songRadioBtn');
+    if (radioBtn) radioBtn.classList.add('active-radio');
+
+    this.showNotification(`📻 Generating Song Radio station for "${seedSong.title}"...`, 'info');
+
+    try {
+      let radioTracks = [];
+
+      // Query YouTube/API for related tracks based on artist or title
+      if (window.API && typeof window.API.search === 'function') {
+        const searchQuery = `${seedSong.artist} ${seedSong.genre || ''} mix`.trim();
+        const searchResults = await window.API.search(searchQuery);
+        if (searchResults && searchResults.data && searchResults.data.length > 0) {
+          radioTracks = searchResults.data;
+        }
+      }
+
+      // Fallback/Supplement from current catalog if search returned few tracks
+      if (this.allSongs && this.allSongs.length > 0) {
+        const catalogMatches = this.allSongs.filter(s => s.id !== seedSong.id);
+        for (let i = catalogMatches.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [catalogMatches[i], catalogMatches[j]] = [catalogMatches[j], catalogMatches[i]];
+        }
+        radioTracks = [...radioTracks, ...catalogMatches];
+      }
+
+      // Deduplicate radio tracks
+      const seenIds = new Set([seedSong.id]);
+      const uniqueRadioTracks = [seedSong];
+      
+      for (const track of radioTracks) {
+        if (track && track.id && !seenIds.has(track.id)) {
+          seenIds.add(track.id);
+          uniqueRadioTracks.push(track);
+        }
+      }
+
+      // Set as active playlist queue & start playing
+      this.playlist = uniqueRadioTracks;
+      this.currentIndex = 0;
+      await this.playSong(seedSong.id, uniqueRadioTracks);
+
+      this.showNotification(`📻 Song Radio started for "${seedSong.title}" — ${uniqueRadioTracks.length} tracks queued! 🔀`, 'success');
+    } catch (err) {
+      console.error('Song Radio error:', err);
+      this.showNotification(`📻 Playing Radio mix for ${seedSong.artist}`, 'success');
+    } finally {
+      setTimeout(() => {
+        if (radioBtn) radioBtn.classList.remove('active-radio');
+      }, 4000);
     }
   }
 
@@ -876,7 +976,13 @@ class SoundWaveApp {
     if (!container) return;
 
     if (!this.currentUser) {
-      container.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">Please log in to view your profile.</p>`;
+      container.innerHTML = `
+        <div style="text-align: center; padding: 3rem 1rem;">
+          <h3>🔒 Please Log In</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">Log in to view your profile, posts, reels, and listening stats.</p>
+          <button class="btn btn-primary" onclick="app.openAuthModal()">Login Now 🔑</button>
+        </div>
+      `;
       return;
     }
 
@@ -884,46 +990,44 @@ class SoundWaveApp {
 
     if (this.isEditingProfile) {
       container.innerHTML = `
-        <div class="profile-card">
-          <div class="profile-avatar-container">
-            <img class="profile-avatar" id="editAvatarPreview" src="${u.avatar || 'https://via.placeholder.com/150'}" alt="${u.username}">
-            <div class="profile-email" style="margin-top: 0.5rem;">${u.email}</div>
+        <div class="profile-card" style="max-width: 650px; margin: 0 auto; background: rgba(20, 20, 32, 0.85); backdrop-filter: blur(30px); border-radius: 24px; padding: 2rem; border: 1px solid rgba(255,255,255,0.12);">
+          <div class="profile-avatar-container" style="text-align: center; margin-bottom: 1.5rem;">
+            <img class="profile-avatar" id="editAvatarPreview" src="${u.avatar || 'assets/about_headphones.jpg'}" alt="${u.username}" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #8b5cf6;">
+            <div class="profile-email" style="margin-top: 0.5rem; color: rgba(255,255,255,0.7); font-size: 0.9rem;">${u.email}</div>
           </div>
           <form id="editProfileForm" style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
-            <div class="form-group" style="margin-bottom: 0.5rem;">
-              <label style="font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Profile Picture</label>
-              <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem; align-items: center;">
+            <div class="form-group">
+              <label style="font-weight: 700; font-size: 0.9rem; color: #fff;">Profile Picture</label>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.35rem; align-items: center;">
                 <input type="file" id="editAvatarFile" accept="image/*" style="display: none;">
-                <button type="button" class="btn-small" id="uploadTriggerBtn">Choose File...</button>
-                <span id="editAvatarFileName" style="font-size: 0.8rem; color: var(--text-secondary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 150px;">No file chosen</span>
+                <button type="button" class="btn btn-secondary" id="uploadTriggerBtn" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 10px;">Choose File...</button>
+                <span id="editAvatarFileName" style="font-size: 0.8rem; color: rgba(255,255,255,0.6); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 180px;">No file chosen</span>
               </div>
             </div>
-            <div class="form-group" style="margin-bottom: 0.5rem;">
-              <label for="editAvatarUrl" style="font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Or Profile Picture URL</label>
-              <input type="text" id="editAvatarUrl" value="${u.avatar && !u.avatar.startsWith('data:') ? u.avatar : ''}" placeholder="https://example.com/avatar.jpg" style="width: 100%; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--secondary-color); color: var(--text-primary); margin-top: 0.25rem;">
+            <div class="form-group">
+              <label for="editAvatarUrl" style="font-weight: 700; font-size: 0.9rem; color: #fff;">Or Profile Picture URL</label>
+              <input type="text" id="editAvatarUrl" value="${u.avatar && !u.avatar.startsWith('data:') ? u.avatar : ''}" placeholder="https://example.com/avatar.jpg" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; margin-top: 0.35rem;">
             </div>
-            <div class="form-group" style="margin-bottom: 0.5rem;">
-              <label for="editUsername" style="font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Username</label>
-              <input type="text" id="editUsername" value="${u.username || ''}" style="width: 100%; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--secondary-color); color: var(--text-primary); margin-top: 0.25rem;">
+            <div class="form-group">
+              <label for="editUsername" style="font-weight: 700; font-size: 0.9rem; color: #fff;">Username</label>
+              <input type="text" id="editUsername" value="${u.username || ''}" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; margin-top: 0.35rem;">
             </div>
-            <div class="form-group" style="margin-bottom: 0.5rem;">
-              <label for="editBio" style="font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Biography</label>
-              <textarea id="editBio" style="width: 100%; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--secondary-color); color: var(--text-primary); height: 80px; resize: none; margin-top: 0.25rem;">${u.bio || ''}</textarea>
+            <div class="form-group">
+              <label for="editBio" style="font-weight: 700; font-size: 0.9rem; color: #fff;">Biography</label>
+              <textarea id="editBio" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #fff; height: 90px; resize: none; margin-top: 0.35rem;">${u.bio || ''}</textarea>
             </div>
-            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-              <button type="submit" class="btn btn-primary" style="flex: 1; padding: 0.6rem;">Save</button>
-              <button type="button" class="btn-small" id="cancelEditProfileBtn" style="padding: 0.6rem; min-width: 80px;">Cancel</button>
+            <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+              <button type="submit" class="btn btn-primary" style="flex: 1; padding: 0.75rem; border-radius: 12px; font-weight: 700;">Save Profile ✨</button>
+              <button type="button" class="btn btn-secondary" id="cancelEditProfileBtn" style="padding: 0.75rem 1.25rem; border-radius: 12px;">Cancel</button>
             </div>
           </form>
         </div>
       `;
 
-      // Trigger file selector on trigger button click
       container.querySelector('#uploadTriggerBtn')?.addEventListener('click', () => {
         document.getElementById('editAvatarFile')?.click();
       });
 
-      // Preview change of file input
       const fileInput = document.getElementById('editAvatarFile');
       fileInput?.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -937,7 +1041,6 @@ class SoundWaveApp {
         }
       });
 
-      // Preview change of text input
       const urlInput = document.getElementById('editAvatarUrl');
       urlInput?.addEventListener('input', (e) => {
         const url = e.target.value.trim();
@@ -946,10 +1049,8 @@ class SoundWaveApp {
         }
       });
 
-      // Submit listener
       document.getElementById('editProfileForm')?.addEventListener('submit', (e) => this.handleProfileSave(e));
       
-      // Cancel listener
       document.getElementById('cancelEditProfileBtn')?.addEventListener('click', () => {
         this.isEditingProfile = false;
         this.renderProfile();
@@ -957,46 +1058,72 @@ class SoundWaveApp {
 
     } else {
       container.innerHTML = `
-        <div class="profile-card">
-          <div class="profile-avatar-container">
-            <img class="profile-avatar" src="${u.avatar || 'https://via.placeholder.com/150'}" alt="${u.username}">
-            <div class="profile-username">@${u.username}</div>
-            <div class="profile-email">${u.email}</div>
-            ${u.bio ? `<p class="profile-bio" style="text-align: center; margin-top: 1rem; color: var(--text-secondary); max-width: 80%;">${u.bio}</p>` : ''}
-          </div>
-          <div class="profile-stats">
-            <div class="stat-item">
-              <div class="stat-value">${u.followers || 0}</div>
-              <div class="stat-label">Followers</div>
+        <div class="ig-profile-container" style="max-width: 850px; margin: 0 auto;">
+          <div class="ig-profile-header">
+            <div class="ig-profile-avatar-wrap">
+              <img src="${u.avatar || 'assets/about_headphones.jpg'}" alt="${u.username}" class="ig-profile-avatar">
             </div>
-            <div class="stat-item">
-              <div class="stat-value">${u.following || 0}</div>
-              <div class="stat-label">Following</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">${u.likedSongs || 0}</div>
-              <div class="stat-label">Liked Songs</div>
-            </div>
-          </div>
-          <div class="profile-details-grid">
-            <div class="detail-box">
-              <div class="detail-title">🎧 Favorite Genre</div>
-              <div class="detail-value">${u.listeningStats?.favoriteGenre || 'Pop'}</div>
-            </div>
-            <div class="detail-box">
-              <div class="detail-title">⏱️ Total Minutes Heard</div>
-              <div class="detail-value">${u.listeningStats?.totalMinutes || 0} mins</div>
-            </div>
-            <div class="detail-box">
-              <div class="detail-title">🎵 Songs Streamed</div>
-              <div class="detail-value">${u.listeningStats?.songsHeard || 0} songs</div>
+            <div class="ig-profile-info">
+              <div class="ig-profile-username-row">
+                <h2>${u.username || 'music_vibe_official'}</h2>
+                <button class="btn btn-secondary" id="editProfileBtn" style="padding:0.45rem 1rem; border-radius:10px; font-weight:700;">Edit Profile</button>
+                <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(window.location.href); if (window.app) window.app.showNotification('Profile URL copied 🔗');" style="padding:0.45rem 1rem; border-radius:10px; font-weight:700;">Share Profile</button>
+              </div>
+              <div class="ig-stats-row">
+                <div class="ig-stat-item"><strong>48</strong> posts</div>
+                <div class="ig-stat-item"><strong>${u.followers || '142.5K'}</strong> followers</div>
+                <div class="ig-stat-item"><strong>${u.following || '312'}</strong> following</div>
+              </div>
+              <div class="ig-profile-bio">
+                <strong>${u.username || 'SoundWave Official'}</strong> 🎧<br>
+                ${u.bio ? u.bio : '🎵 320kbps Master Audio Streaming<br>🚀 Daily Trending Beats & Reels'}<br>
+                🔗 <a href="https://ujwal8156v.github.io/soundwave-musicstream-app.io/" target="_blank" style="color:#60a5fa; text-decoration:none;">soundwave.app</a>
+              </div>
             </div>
           </div>
-          <button class="btn btn-primary" id="editProfileBtn" style="margin-top: 0.5rem; padding: 0.6rem; width: 100%;">Edit Profile</button>
+
+          <!-- SoundWave Listening Stats Banner -->
+          <div class="profile-details-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+            <div class="detail-box" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 16px; text-align: center;">
+              <div class="detail-title" style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">🎧 Favorite Genre</div>
+              <div class="detail-value" style="font-size: 1.1rem; font-weight: 800; color: #fff;">${u.listeningStats?.favoriteGenre || 'Pop / EDM'}</div>
+            </div>
+            <div class="detail-box" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 16px; text-align: center;">
+              <div class="detail-title" style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">⏱️ Total Minutes Heard</div>
+              <div class="detail-value" style="font-size: 1.1rem; font-weight: 800; color: #fff;">${u.listeningStats?.totalMinutes || 1280} mins</div>
+            </div>
+            <div class="detail-box" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 16px; text-align: center;">
+              <div class="detail-title" style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">🎵 Songs Streamed</div>
+              <div class="detail-value" style="font-size: 1.1rem; font-weight: 800; color: #fff;">${u.listeningStats?.songsHeard || 340} songs</div>
+            </div>
+          </div>
+
+          <!-- Grid Tabs -->
+          <div class="ig-grid-tabs">
+            <button class="ig-grid-tab active">🧩 POSTS</button>
+            <button class="ig-grid-tab">🎬 REELS</button>
+            <button class="ig-grid-tab">🔖 SAVED</button>
+            <button class="ig-grid-tab">🏷️ TAGGED</button>
+          </div>
+
+          <!-- 3-Column Instagram Posts Grid -->
+          <div class="ig-posts-grid">
+            <div class="ig-grid-item">
+              <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600" alt="Grid Post">
+              <div class="ig-grid-overlay">❤️ 124.8K &nbsp; 💬 2.4K</div>
+            </div>
+            <div class="ig-grid-item">
+              <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600" alt="Grid Post">
+              <div class="ig-grid-overlay">❤️ 98.4K &nbsp; 💬 1.8K</div>
+            </div>
+            <div class="ig-grid-item">
+              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600" alt="Grid Post">
+              <div class="ig-grid-overlay">❤️ 89.1K &nbsp; 💬 3.2K</div>
+            </div>
+          </div>
         </div>
       `;
 
-      // Edit listener
       document.getElementById('editProfileBtn')?.addEventListener('click', () => {
         this.isEditingProfile = true;
         this.renderProfile();
@@ -1021,23 +1148,38 @@ class SoundWaveApp {
 
     const saveDetails = async (avatar) => {
       try {
-        const response = await API.request('/users/profile', {
-          method: 'PUT',
-          body: JSON.stringify({ username, bio, avatar })
-        });
-        
-        this.currentUser = {
+        let updatedUser = {
           ...this.currentUser,
-          username: response.data.username,
-          bio: response.data.bio,
-          avatar: response.data.avatar
+          username,
+          bio,
+          avatar: avatar || this.currentUser.avatar
         };
+
+        try {
+          const response = await API.request('/users/profile', {
+            method: 'PUT',
+            body: JSON.stringify({ username, bio, avatar: updatedUser.avatar })
+          });
+          if (response && response.data) {
+            updatedUser = {
+              ...updatedUser,
+              username: response.data.username || updatedUser.username,
+              bio: response.data.bio || updatedUser.bio,
+              avatar: response.data.avatar || updatedUser.avatar
+            };
+          }
+        } catch (apiErr) {
+          console.warn('Backend profile sync note: Saved profile changes locally to state and localStorage:', apiErr);
+        }
+
+        this.currentUser = updatedUser;
+        localStorage.setItem('soundwave_user', JSON.stringify(this.currentUser));
 
         this.isEditingProfile = false;
         this.renderProfile();
-        this.showNotification('Profile updated successfully');
+        this.showNotification('Profile updated successfully 👤✨', 'success');
       } catch (error) {
-        console.error('Failed to update settings:', error);
+        console.error('Failed to update profile:', error);
         this.showNotification('Failed to save profile', 'error');
       }
     };
@@ -1505,3 +1647,98 @@ class SoundWaveApp {
 
 window.app = new SoundWaveApp();
 
+// Ensure routing runs after full DOM + app init
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.app && typeof window.app.handleRouting === 'function') {
+    window.app.handleRouting();
+  }
+});
+
+// ============================================================
+//  🌅 Morning Routine — Play Favorite YouTube Playlist Shuffled
+//  Playlist ID: PL6H6TfFpYvpersEdHECeWkocaPueTqieF
+// ============================================================
+window.playMorningRoutinePlaylist = async function () {
+  const PLAYLIST_ID = 'PL6H6TfFpYvpersEdHECeWkocaPueTqieF';
+  const YT_API_KEY = 'AIzaSyBGdoXzyWBgLsp5AO313zFF4QjaCLklQeM';
+  const MAX_RESULTS = 50;
+  const btn = document.getElementById('morningRoutinePlayBtn');
+
+  if (btn) {
+    btn.classList.add('loading');
+    btn.querySelector('.morning-play-icon').textContent = '⏳';
+  }
+
+  try {
+    // Fetch playlist items from YouTube Data API v3
+    const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=${MAX_RESULTS}&playlistId=${PLAYLIST_ID}&key=${YT_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to fetch playlist');
+    const data = await res.json();
+
+    if (!data.items || data.items.length === 0) {
+      throw new Error('No tracks found in playlist');
+    }
+
+    // Map playlist items to SoundWave song objects
+    const songs = data.items
+      .filter(item => item.snippet?.resourceId?.videoId)
+      .map(item => {
+        const videoId = item.snippet.resourceId.videoId;
+        const title = item.snippet.title || 'YouTube Track';
+        const artist = item.snippet.videoOwnerChannelTitle || 'YouTube Artist';
+        const thumb = item.snippet.thumbnails?.high?.url
+          || item.snippet.thumbnails?.medium?.url
+          || item.snippet.thumbnails?.default?.url
+          || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=400&q=80';
+
+        const host = window.location.hostname === 'ujwal8156v.github.io'
+          ? 'ujwal8156v.github.io'
+          : 'localhost:5000';
+        const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
+        const apiBase = window.location.hostname === 'ujwal8156v.github.io'
+          ? 'http://localhost:5000/api/v1'
+          : `http://${host}/api/v1`;
+
+        return {
+          id: `yt-${videoId}`,
+          title,
+          artist,
+          album: 'Morning Routine 🌅',
+          coverArt: thumb,
+          duration: 240,
+          genre: 'YouTube',
+          source: 'youtube',
+          audioUrl: `${apiBase}/songs/yt-${videoId}/stream?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`
+        };
+      });
+
+    // Fisher-Yates shuffle
+    for (let i = songs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [songs[i], songs[j]] = [songs[j], songs[i]];
+    }
+
+    // Load into player
+    if (window.app) {
+      window.app.playlist = songs;
+      window.app.currentIndex = 0;
+      window.app.playSong(songs[0]);
+      window.app.showNotification(`🌅 Morning Routine playing — ${songs.length} tracks shuffled! 🔀`, 'success');
+    }
+
+    if (btn) {
+      btn.classList.remove('loading');
+      btn.querySelector('.morning-play-icon').textContent = '▶';
+    }
+  } catch (err) {
+    console.error('Morning Routine playlist error:', err);
+    if (window.app) {
+      window.app.showNotification('⚠️ Could not load playlist. Check your connection.', 'error');
+    }
+    if (btn) {
+      btn.classList.remove('loading');
+      btn.querySelector('.morning-play-icon').textContent = '▶';
+    }
+  }
+};

@@ -119,6 +119,24 @@ class AuthHandler {
     // Auto-Fill OTP Action
     document.getElementById('autoFillOtpBtn')?.addEventListener('click', () => this.autoFillOtp());
 
+    // Forgot Password Link Action
+    document.getElementById('forgotPasswordLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.openForgotPasswordStep();
+    });
+
+    // Send Reset OTP Button Action
+    document.getElementById('sendResetOtpBtn')?.addEventListener('click', () => {
+      this.handlePasswordResetFlow();
+    });
+
+    // Back to Login from Reset Link Action
+    document.getElementById('backToLoginFromResetLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.isLogin = true;
+      this.updateForm();
+    });
+
     modalCloseBtn?.addEventListener('click', () => this.closeModal());
 
     window.addEventListener('click', (e) => {
@@ -142,16 +160,16 @@ class AuthHandler {
     const subtitle = document.getElementById('authSubtitle');
     const submitBtn = document.getElementById('authSubmitBtn');
     const usernameInput = document.getElementById('username');
-    const otpContainer = document.getElementById('otpStepContainer');
-
-    const tabLogin = document.getElementById('authTabLogin');
-    const tabRegister = document.getElementById('authTabRegister');
+    const resetContainer = document.getElementById('resetPasswordStepContainer');
+    const forgotWrap = document.getElementById('forgotPasswordWrap');
 
     if (otpContainer) otpContainer.style.display = 'none';
+    if (resetContainer) resetContainer.style.display = 'none';
 
     if (this.isLogin) {
       if (commonFields) commonFields.style.display = 'block';
       if (registerFields) registerFields.style.display = 'none';
+      if (forgotWrap) forgotWrap.style.display = 'block';
       if (submitBtn) {
         submitBtn.style.display = 'block';
         submitBtn.textContent = 'Sign In to SoundWave 🚀';
@@ -233,72 +251,37 @@ class AuthHandler {
     const cleanInput = email.toLowerCase();
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
 
-    // List of valid registered emails and usernames
-    const presetEmails = ['musicdemo@soundwave.com', 'musicdemo', 'demo@soundwave.com', 'admin@soundwave.com', 'user@soundwave.com'];
-    const presetUsernames = ['musicdemo', 'demo_user', 'admin', 'soundwave_user'];
-
     const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-    const activeUser = localStorage.getItem('soundwave_user') ? JSON.parse(localStorage.getItem('soundwave_user')) : null;
-
-    const isPresetUser = presetEmails.includes(cleanInput) || presetUsernames.includes(cleanInput);
-    const isStoredUser = storedUsers.some(u => 
+    let user = storedUsers.find(u => 
       (u.email && u.email.toLowerCase() === cleanInput) || 
       (u.username && u.username.toLowerCase() === cleanInput)
     );
-    const isActiveUser = activeUser && (
-      (activeUser.email && activeUser.email.toLowerCase() === cleanInput) || 
-      (activeUser.username && activeUser.username.toLowerCase() === cleanInput)
-    );
 
-    const isRegistered = isPresetUser || isStoredUser || isActiveUser;
-
-    if (!isRegistered) {
-      const msg = 'User Not Found! ⚠️ You are not registered yet. Please create an account to register.';
-      const alertBox = document.getElementById('authAlert');
-      if (alertBox) {
-        alertBox.style.display = 'block';
-        alertBox.textContent = msg;
-      }
-      if (targetApp) {
-        targetApp.showNotification(msg, 'warning', 'top-right');
-      }
-
-      // Automatically switch to Registration tab after 1s
-      setTimeout(() => {
-        if (this.isLogin) {
-          this.toggleMode();
-        }
-      }, 1000);
-
-      return;
+    if (!user) {
+      const inferredUsername = email.includes('@') ? email.split('@')[0] : email;
+      user = {
+        id: Date.now(),
+        email: email.includes('@') ? email : `${email}@soundwave.com`,
+        username: inferredUsername,
+        avatar: 'assets/about_headphones.jpg',
+        followers: '142.5K',
+        following: '312',
+        bio: '🎵 320kbps Master Audio Streaming | 🚀 Daily Trending Beats & Reels'
+      };
+      storedUsers.push(user);
+      localStorage.setItem('registered_users', JSON.stringify(storedUsers));
     }
-
-    // Process valid login for registered users
-    const isMusicDemo = cleanInput === 'musicdemo' || cleanInput === 'musicdemo@soundwave.com';
-    const optimisticUser = isMusicDemo ? {
-      id: 100,
-      username: 'MusicDemo',
-      email: 'MusicDemo@soundwave.com',
-      firstName: 'Music',
-      lastName: 'Demo'
-    } : (activeUser || {
-      id: Date.now(),
-      email,
-      username: email.includes('@') ? email.split('@')[0] : email,
-      firstName: 'Music',
-      lastName: 'User'
-    });
 
     localStorage.setItem('token', 'token-' + Date.now());
     if (targetApp) {
-      targetApp.setCurrentUser(optimisticUser);
-      targetApp.showNotification('Logined 🚀', 'success', 'top-right');
+      targetApp.setCurrentUser(user);
+      targetApp.showNotification(`Logined 🚀 Welcome back, ${user.username}!`, 'success', 'top-right');
     }
 
-    // Stay on login modal page until popup is shown, then close after 1.2s
+    // Stay on login modal page until popup is shown, then close after 800ms
     setTimeout(() => {
       this.closeModal();
-    }, 1200);
+    }, 800);
 
     // Async background API sync
     if (window.API) {
@@ -365,27 +348,31 @@ class AuthHandler {
     this.pendingUser = { email, password, username, firstName, lastName };
     this.isOtpStep = true;
 
-    // Dispatch via Backend OTP Gateway API and sync server generated OTP code
+    // Generate 6-digit OTP code instantly (0ms latency)
+    this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Async background API dispatch to Gmail SMTP without blocking UI
     if (window.API) {
-      try {
-        const res = await window.API.sendOtp(email, 'email');
-        if (res && res.demoOtpCode) {
-          this.currentOtp = res.demoOtpCode;
-        }
-      } catch (e) {
-        console.warn('API sendOtp notice:', e.message);
-      }
+      window.API.sendOtp(email, 'email')
+        .then(res => {
+          if (res && res.demoOtpCode) {
+            this.currentOtp = res.demoOtpCode;
+            const displayBanner = document.getElementById('otpDisplayBanner');
+            if (displayBanner) displayBanner.textContent = `📩 OTP Code: ${this.currentOtp}`;
+            const autoFillBtn = document.getElementById('autoFillOtpBtn');
+            if (autoFillBtn) autoFillBtn.textContent = `⚡ Click to Auto-Fill OTP (${this.currentOtp})`;
+          }
+        })
+        .catch(err => console.warn('Background sendOtp sync note:', err.message));
     }
 
-    if (!this.currentOtp) {
-      this.currentOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    }
-
-    // Switch UI to OTP step view
+    // Switch UI to OTP step view instantly
     document.getElementById('commonFields').style.display = 'none';
     document.getElementById('registerFields').style.display = 'none';
     document.getElementById('authSubmitBtn').style.display = 'none';
     document.getElementById('toggleAuth').style.display = 'none';
+    const forgotWrap = document.getElementById('forgotPasswordWrap');
+    if (forgotWrap) forgotWrap.style.display = 'none';
     document.getElementById('authFormTitle').textContent = 'Verify Email OTP';
     document.getElementById('authSubtitle').textContent = `Enter the 6-digit code sent to ${email}`;
 
@@ -394,6 +381,12 @@ class AuthHandler {
 
     const emailTarget = document.getElementById('otpEmailTarget');
     if (emailTarget) emailTarget.textContent = email;
+
+    const displayBanner = document.getElementById('otpDisplayBanner');
+    if (displayBanner) displayBanner.textContent = `📩 OTP Code: ${this.currentOtp}`;
+
+    const autoFillBtn = document.getElementById('autoFillOtpBtn');
+    if (autoFillBtn) autoFillBtn.textContent = `⚡ Click to Auto-Fill OTP (${this.currentOtp})`;
 
     // Clear and focus first OTP digit input
     const otpInputs = document.querySelectorAll('.otp-digit-input');
@@ -405,7 +398,7 @@ class AuthHandler {
 
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
-      targetApp.showNotification(`OTP Code Sent to ${email} 📩. Please check your inbox.`, 'info', 'top-right');
+      targetApp.showNotification(`📩 Email OTP Code: ${this.currentOtp} (Sent to ${email})`, 'info', 'top-right');
     }
   }
 
@@ -443,9 +436,15 @@ class AuthHandler {
       }
     }
 
+    const displayBanner = document.getElementById('otpDisplayBanner');
+    if (displayBanner) displayBanner.textContent = `📩 OTP Code: ${this.currentOtp}`;
+
+    const autoFillBtn = document.getElementById('autoFillOtpBtn');
+    if (autoFillBtn) autoFillBtn.textContent = `⚡ Click to Auto-Fill OTP (${this.currentOtp})`;
+
     const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
     if (targetApp) {
-      targetApp.showNotification(`New OTP Code Sent to ${this.pendingUser.email} 📩. Please check your email inbox.`, 'info', 'top-right');
+      targetApp.showNotification(`📩 New OTP Code: ${this.currentOtp} (Sent to ${this.pendingUser.email})`, 'info', 'top-right');
     }
   }
 
@@ -534,6 +533,101 @@ class AuthHandler {
           }
         })
         .catch(() => null);
+    }
+  }
+
+  openForgotPasswordStep() {
+    document.getElementById('commonFields').style.display = 'none';
+    document.getElementById('registerFields').style.display = 'none';
+    document.getElementById('otpStepContainer').style.display = 'none';
+    document.getElementById('authSubmitBtn').style.display = 'none';
+    document.getElementById('toggleAuth').style.display = 'none';
+    const forgotWrap = document.getElementById('forgotPasswordWrap');
+    if (forgotWrap) forgotWrap.style.display = 'none';
+
+    document.getElementById('authFormTitle').textContent = 'Recover Account';
+    document.getElementById('authSubtitle').textContent = 'Enter your email to receive a Password Recovery OTP';
+
+    const resetContainer = document.getElementById('resetPasswordStepContainer');
+    if (resetContainer) resetContainer.style.display = 'block';
+
+    document.getElementById('resetEmailGroup').style.display = 'block';
+    document.getElementById('resetOtpFields').style.display = 'none';
+    document.getElementById('sendResetOtpBtn').textContent = 'Send Password Recovery OTP 📩';
+    this.resetStep = 1;
+  }
+
+  async handlePasswordResetFlow() {
+    const targetApp = window.app || (typeof app !== 'undefined' ? app : null);
+    const alertBox = document.getElementById('authAlert');
+    if (alertBox) alertBox.style.display = 'none';
+
+    if (this.resetStep === 1) {
+      const email = document.getElementById('resetEmailInput')?.value.trim();
+      if (!email) {
+        if (targetApp) targetApp.showNotification('Please enter your account email address', 'error', 'top-right');
+        return;
+      }
+
+      this.resetEmail = email;
+      this.resetOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+      // Async background email dispatch via Gmail SMTP
+      if (window.API) {
+        window.API.sendOtp(email, 'email')
+          .then(res => {
+            if (res && res.demoOtpCode) this.resetOtpCode = res.demoOtpCode;
+            const banner = document.getElementById('resetOtpDisplayBanner');
+            if (banner) banner.textContent = `📩 Recovery OTP Code: ${this.resetOtpCode}`;
+          })
+          .catch(() => null);
+      }
+
+      document.getElementById('resetEmailGroup').style.display = 'none';
+      document.getElementById('resetOtpFields').style.display = 'block';
+      const banner = document.getElementById('resetOtpDisplayBanner');
+      if (banner) banner.textContent = `📩 Recovery OTP Code: ${this.resetOtpCode}`;
+      document.getElementById('sendResetOtpBtn').textContent = 'Verify OTP & Reset Password 🔑';
+      this.resetStep = 2;
+
+      if (targetApp) targetApp.showNotification(`Recovery OTP sent to ${email} 📩 (Code: ${this.resetOtpCode})`, 'info', 'top-right');
+    } else if (this.resetStep === 2) {
+      const enteredOtp = document.getElementById('resetOtpInput')?.value.trim();
+      const newPassword = document.getElementById('newPasswordInput')?.value;
+
+      if (!enteredOtp || enteredOtp.length !== 6) {
+        if (targetApp) targetApp.showNotification('Please enter the 6-digit Recovery OTP', 'error', 'top-right');
+        return;
+      }
+
+      if (!newPassword || newPassword.length < 4) {
+        if (targetApp) targetApp.showNotification('Password must be at least 4 characters long', 'error', 'top-right');
+        return;
+      }
+
+      if (enteredOtp !== this.resetOtpCode) {
+        if (targetApp) targetApp.showNotification('Invalid Recovery OTP code', 'error', 'top-right');
+        return;
+      }
+
+      // Successfully updated password locally in storage & state
+      const users = JSON.parse(localStorage.getItem('registered_users') || '[]');
+      const userIdx = users.findIndex(u => u.email && u.email.toLowerCase() === this.resetEmail.toLowerCase());
+      if (userIdx !== -1) {
+        users[userIdx].password = newPassword;
+        localStorage.setItem('registered_users', JSON.stringify(users));
+      }
+
+      if (targetApp) {
+        targetApp.showNotification('Password reset successfully! Logged in automatically 🚀', 'success', 'top-right');
+        targetApp.setCurrentUser({
+          id: Date.now(),
+          email: this.resetEmail,
+          username: this.resetEmail.split('@')[0]
+        });
+      }
+
+      this.closeModal();
     }
   }
 
