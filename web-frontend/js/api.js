@@ -10,6 +10,32 @@ const getApiBaseUrl = () => {
 
 const API_BASE_URL = getApiBaseUrl();
 
+// SafeStorage Adapter — In-Memory Fallback if LocalStorage is blocked by browser settings or extensions
+const memoryStore = new Map();
+window.SafeStorage = {
+  getItem(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch (e) {
+      return memoryStore.get(key) || null;
+    }
+  },
+  setItem(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (e) {
+      memoryStore.set(key, String(value));
+    }
+  },
+  removeItem(key) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch (e) {
+      memoryStore.delete(key);
+    }
+  }
+};
+
 class APIService {
   constructor() {
     this.baseURL = API_BASE_URL;
@@ -59,7 +85,7 @@ class APIService {
   }
 
   getHeaders() {
-    const token = localStorage.getItem('token');
+    const token = window.SafeStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token && { 'Authorization': `Bearer ${token}` })
@@ -147,7 +173,7 @@ class APIService {
         body: JSON.stringify(data)
       });
       if (response.token) {
-        localStorage.setItem('token', response.token);
+        window.SafeStorage.setItem('token', response.token);
       }
       return response;
     } catch (error) {
@@ -161,8 +187,8 @@ class APIService {
         lastName: data.lastName || '',
         createdAt: new Date().toISOString()
       };
-      localStorage.setItem('token', token);
-      localStorage.setItem('soundwave_user', JSON.stringify(user));
+      window.SafeStorage.setItem('token', token);
+      window.SafeStorage.setItem('soundwave_user', JSON.stringify(user));
       return { success: true, token, data: user, isFallback: true };
     }
   }
@@ -174,9 +200,9 @@ class APIService {
         body: JSON.stringify({ email, password })
       });
       if (response.token) {
-        localStorage.setItem('token', response.token);
+        window.SafeStorage.setItem('token', response.token);
         if (response.refreshToken) {
-          localStorage.setItem('refreshToken', response.refreshToken);
+          window.SafeStorage.setItem('refreshToken', response.refreshToken);
         }
       }
       return response;
@@ -189,8 +215,8 @@ class APIService {
         email: email,
         createdAt: new Date().toISOString()
       };
-      localStorage.setItem('token', token);
-      localStorage.setItem('soundwave_user', JSON.stringify(user));
+      window.SafeStorage.setItem('token', token);
+      window.SafeStorage.setItem('soundwave_user', JSON.stringify(user));
       return { success: true, token, data: user, isFallback: true };
     }
   }
@@ -199,7 +225,7 @@ class APIService {
     try {
       return await this.request('/users/profile');
     } catch (error) {
-      const savedUser = localStorage.getItem('soundwave_user');
+      const savedUser = window.SafeStorage.getItem('soundwave_user');
       if (savedUser) {
         return { success: true, data: JSON.parse(savedUser) };
       }
