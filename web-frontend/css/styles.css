@@ -4051,3 +4051,38 @@ canvas,
   50%      { transform: scale(1.18); filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.9)); }
 }
 
+/* ==========================================================================
+   🚀 SoundWave Ultra Performance & 60 FPS Smooth Rendering Engine
+   ========================================================================== */
+
+/* 1. Off-Screen Layout & Paint Optimization */
+.about-vibe-section,
+.features-vibe-section,
+.landing-features,
+.pricing-section,
+.faq-section,
+.contact-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 400px;
+}
+
+/* 2. Hardware Accelerated Smooth Controls & Cards */
+.song-card,
+.artist-card,
+.feature-card,
+.pricing-card,
+.player-bar,
+.btn,
+.nav-link {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* 3. Global Smooth Scroll & Font Legibility */
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
