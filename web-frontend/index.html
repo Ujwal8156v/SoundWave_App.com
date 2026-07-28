@@ -83,22 +83,6 @@
                     </div>
                 </div>
 
-                <!-- Music Catalog & Search Section -->
-                <div id="musicCatalog" class="music-catalog-section" style="padding: 2.5rem 0;">
-                    <div class="container">
-                        <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem; color: #fff;">🎶 Music Catalog</h2>
-                        <div class="search-bar">
-                            <input type="text" id="searchInput" placeholder="Search songs, artists...">
-                            <button id="searchBtn" class="btn-search">🔍</button>
-                        </div>
-
-                        <div id="searchSuggestions" class="suggestions-container" style="display:none;"></div>
-                        <div class="songs-grid" id="songsGrid">
-                            <!-- Songs will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- About Us Section -->
                 <div id="about" class="about-vibe-section">
                     <div class="container">
@@ -122,7 +106,7 @@
                                     <div class="bullet-item"><span class="bullet-check">✓</span> 3D Spatial Audio &amp; FX Studio</div>
                                 </div>
 
-                                <button class="btn btn-gradient-orange" id="aboutExploreBtn" onclick="document.getElementById('musicCatalog')?.scrollIntoView({behavior:'smooth'});">Explore Catalog 🎶</button>
+                                <button class="btn btn-gradient-orange" id="aboutExploreBtn" onclick="location.hash='#pricing';">Explore Plans 💎</button>
                             </div>
                         </div>
                     </div>

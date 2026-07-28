@@ -38,7 +38,7 @@ class SoundWaveApp {
     document.getElementById('loginBtn')?.addEventListener('click', () => this.openAuthModal());
     document.getElementById('communitySignUpBtn')?.addEventListener('click', () => this.openAuthModal());
     document.getElementById('exploreBtn')?.addEventListener('click', () => {
-      document.getElementById('musicCatalog')?.scrollIntoView({ behavior: 'smooth' });
+      window.location.hash = '#pricing';
     });
     document.getElementById('logoutLink')?.addEventListener('click', () => this.logout());
 
@@ -95,7 +95,7 @@ class SoundWaveApp {
     document.getElementById('createPlaylistBtn')?.addEventListener('click', () => this.createPlaylist());
 
     document.getElementById('exploreBtn')?.addEventListener('click', () => {
-      document.getElementById('musicCatalog')?.scrollIntoView({ behavior: 'smooth' });
+      window.location.hash = '#pricing';
     });
 
     // Minimized Player Bar Click (Expand Player Modal)
