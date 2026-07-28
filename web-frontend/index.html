@@ -32,18 +32,16 @@
                 </button>
                 <ul class="nav-menu">
                     <li><a href="#home" class="nav-link active">Home</a></li>
-                    <li id="navSocialFeed" style="display:none;"><a href="#social-feed" class="nav-link">📸 Feed</a></li>
-                    <li id="navReels" style="display:none;"><a href="#reels" class="nav-link">🎬 Reels</a></li>
-                    <li id="navDirectMessages" style="display:none;"><a href="#direct-messages" class="nav-link ig-nav-item">💬 Chat <span class="ig-badge-count">2</span></a></li>
+                    <li id="navPlaylists"><a href="#playlists" class="nav-link">Playlists</a></li>
                     <li><a href="#artists" class="nav-link">Artists</a></li>
-                    <li id="navPlaylists" style="display:none;"><a href="#playlists" class="nav-link">Playlists</a></li>
-                    <li id="loginNavItem"><button id="loginBtn" onclick="if(window.app){window.app.openAuthModal();}else{const m=document.getElementById('authModal');if(m)m.style.display='flex';}" class="btn btn-primary" style="padding:0.45rem 1.1rem; font-size:0.85rem; border-radius:20px; font-weight:700; margin-left:0.5rem; cursor:pointer;">Login 🔑</button></li>
-                    <li class="dropdown" id="settingsDropdown" style="display:none;">
+                    <li id="navSocialFeed"><a href="#social-feed" class="nav-link">📸 Feed</a></li>
+                    <li id="navReels"><a href="#reels" class="nav-link">🎬 Reels</a></li>
+                    <li id="navDirectMessages"><a href="#direct-messages" class="nav-link ig-nav-item">💬 Chat <span class="ig-badge-count">2</span></a></li>
+                    <li class="dropdown" id="settingsDropdown">
                         <a href="#" class="nav-link dropdown-toggle" id="settingsLink" title="Menu">☰</a>
                         <ul class="dropdown-menu">
                             <li><a href="#profile" class="dropdown-link">Profile</a></li>
                             <li><a href="#settings" class="dropdown-link">Settings</a></li>
-                            <li><a href="#" class="dropdown-link" id="logoutLink">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -246,7 +244,7 @@
                     <div class="community-vibe-content">
                         <h2>Join the Music Community</h2>
                         <p>Connect with fellow music fans and stay updated!</p>
-                        <button class="btn btn-community-signup" id="communitySignUpBtn" onclick="if(window.app){window.app.openAuthModal();}else{const m=document.getElementById('authModal');if(m)m.style.display='flex';}" style="cursor:pointer;">Sign Up Now</button>
+                        <button class="btn btn-community-signup" id="communitySignUpBtn" onclick="location.hash='#pricing';" style="cursor:pointer;">Explore Plans 💎</button>
                     </div>
                 </div>
 
@@ -746,154 +744,6 @@
                 </div>
             </div>
         </footer>
-    </div>
-
-    <!-- Modal for Login/Register -->
-    <div id="authModal" class="modal auth-modal">
-        <div class="modal-content auth-modal-content">
-            <button class="modal-close" id="closeAuthModalBtn">&times;</button>
-            
-            <div class="auth-header">
-                <div class="auth-brand-logo" style="background:none; width:auto; height:auto; margin-bottom:0.75rem;">
-                    <img src="assets/logo.png" alt="SoundWave Logo" style="height:65px; width:auto; object-fit:contain; filter:drop-shadow(0 0 15px rgba(139,92,246,0.5));">
-                </div>
-                <h2 id="authFormTitle">Welcome to SoundWave</h2>
-                <p id="authSubtitle">Log in to unlock 320kbps streams, playlists, and spatial audio</p>
-            </div>
-
-            <!-- Segmented Auth Mode Switcher -->
-            <div class="auth-mode-tabs">
-                <button type="button" class="auth-tab active" id="authTabLogin">🔑 Login</button>
-                <button type="button" class="auth-tab" id="authTabRegister">✍️ Register Account</button>
-            </div>
-
-            <div class="auth-form">
-                <form id="authForm">
-                    <div id="commonFields">
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <div class="input-with-icon">
-                                <span class="input-icon">✉️</span>
-                                <input type="email" id="email" placeholder="name@example.com" required autocomplete="email">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <div class="input-with-icon">
-                                <span class="input-icon">🔒</span>
-                                <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
-                                <button type="button" class="toggle-password-btn" id="togglePasswordBtn" title="Show/Hide Password">👁️</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="registerFields" style="display:none;">
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <div class="input-with-icon">
-                                <span class="input-icon">👤</span>
-                                <input type="text" id="username" placeholder="Choose a unique username" autocomplete="username">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="firstName">First Name</label>
-                                <input type="text" id="firstName" placeholder="First Name" autocomplete="given-name">
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input type="text" id="lastName" placeholder="Last Name" autocomplete="family-name">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="authAlert" class="auth-alert" style="display:none;"></div>
-
-                    <!-- OTP Verification Step Container -->
-                    <div id="otpStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
-                        <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
-                        <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Email OTP Verification</h3>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 0.85rem;">
-                            We sent a 6-digit OTP code to <strong id="otpEmailTarget" style="color: var(--primary-color);">user@example.com</strong>. Please check your email inbox.
-                        </p>
-
-                        <!-- High Visibility OTP Display Banner -->
-                        <div id="otpDisplayBanner" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 800; font-size: 1.15rem; padding: 0.65rem 1rem; border-radius: 14px; margin-bottom: 1.1rem; letter-spacing: 3px; font-family: monospace;">
-                            📩 OTP Code: 849201
-                        </div>
-
-                        <div class="otp-inputs-row" style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.25rem;">
-                            <input type="text" maxlength="1" class="otp-digit-input" data-index="0" inputmode="numeric">
-                            <input type="text" maxlength="1" class="otp-digit-input" data-index="1" inputmode="numeric">
-                            <input type="text" maxlength="1" class="otp-digit-input" data-index="2" inputmode="numeric">
-                            <input type="text" maxlength="1" class="otp-digit-input" data-index="3" inputmode="numeric">
-                            <input type="text" maxlength="1" class="otp-digit-input" data-index="4" inputmode="numeric">
-                            <input type="text" maxlength="1" class="otp-digit-input" data-index="5" inputmode="numeric">
-                        </div>
-
-                        <button type="button" class="btn btn-primary" id="verifyOtpBtn" style="width: 100%; padding: 0.8rem; margin-bottom: 0.75rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem;">
-                            Verify OTP & Complete Registration ✨
-                        </button>
-                        
-                        <div style="font-size: 0.82rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem;">
-                            Didn't receive code? <button type="button" id="resendOtpBtn" style="background: none; border: none; color: var(--primary-color); cursor: pointer; text-decoration: underline; font-weight: 600;">Resend OTP</button> <span id="otpTimerText"></span>
-                        </div>
-
-                        <div style="margin-bottom: 0.6rem;">
-                            <button type="button" id="autoFillOtpBtn" style="background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.2); color: #60a5fa; padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: background 0.2s;">⚡ Click to Auto-Fill Generated OTP Code</button>
-                        </div>
-                    </div>
-
-                    <!-- Reset Password Step Container -->
-                    <div id="resetPasswordStepContainer" style="display:none; text-align: center; margin-top: 0.5rem;">
-                        <div class="otp-icon-wrap" style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔑</div>
-                        <h3 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">Reset Account Password</h3>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 0.85rem;">
-                            Enter your email to receive a Password Recovery OTP code.
-                        </p>
-                        
-                        <div class="form-group" id="resetEmailGroup" style="margin-bottom: 1rem; text-align: left;">
-                            <label for="resetEmailInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">Account Email Address</label>
-                            <input type="email" id="resetEmailInput" placeholder="name@example.com" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem;">
-                        </div>
-
-                        <div id="resetOtpFields" style="display:none;">
-                            <!-- High Visibility OTP Display Banner -->
-                            <div id="resetOtpDisplayBanner" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; font-weight: 800; font-size: 1.15rem; padding: 0.65rem 1rem; border-radius: 14px; margin-bottom: 1.1rem; letter-spacing: 3px; font-family: monospace;">
-                                📩 Recovery OTP Code: 849201
-                            </div>
-                            <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
-                                <label for="resetOtpInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">Enter 6-Digit Recovery OTP</label>
-                                <input type="text" id="resetOtpInput" placeholder="849201" maxlength="6" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem; font-size:1.1rem; letter-spacing:4px; font-family:monospace; text-align:center;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
-                                <label for="newPasswordInput" style="font-size: 0.85rem; font-weight: 600; color: #fff;">New Password</label>
-                                <input type="password" id="newPasswordInput" placeholder="Enter new password" style="width:100%; padding:0.75rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; margin-top:0.35rem;">
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-primary" id="sendResetOtpBtn" style="width: 100%; padding: 0.8rem; margin-bottom: 0.75rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem;">
-                            Send Password Recovery OTP 📩
-                        </button>
-                        
-                        <div style="font-size: 0.8rem;">
-                            <a href="#" id="backToLoginFromResetLink" style="color: rgba(255,255,255,0.6); text-decoration: underline; transition: color 0.2s;">← Back to Sign In</a>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary auth-submit-btn" id="authSubmitBtn">
-                        Sign In to SoundWave 🚀
-                    </button>
-
-                    <p id="toggleAuth" class="toggle-auth-text">
-                        Don't have an account? <a href="#" id="toggleAuthLink">Create one now</a>
-                    </p>
-                    <div id="forgotPasswordWrap" style="margin-top: 0.5rem; font-size: 0.8rem; text-align: center;">
-                        <a href="#" id="forgotPasswordLink" style="color: #a78bfa; text-decoration: underline;">🔑 Forgot Password / Recover Account?</a>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 
     <!-- Student Identity Verification Modal -->

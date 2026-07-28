@@ -2,7 +2,7 @@
 
 class SoundWaveApp {
   constructor() {
-    this.currentUser = null;
+    this.currentUser = { id: 1, username: 'Music Lover 🎧', email: 'user@soundwave.io', plan: 'plus' };
     this.currentSong = null;
     this.isPlaying = false;
     this.playlist = [];
@@ -382,8 +382,7 @@ class SoundWaveApp {
   }
 
   openAuthModal() {
-    const modal = document.getElementById('authModal');
-    if (modal) modal.style.display = 'flex';
+    this.showNotification('🎉 You have full access to SoundWave Music Player!', 'info');
   }
 
   closeAuthModal() {
@@ -392,29 +391,10 @@ class SoundWaveApp {
   }
 
   async restoreSession() {
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('soundwave_user');
-
-    // 0ms Instant Local Cache Restoration on Page Refresh
-    if (savedUser) {
-      try {
-        const parsed = JSON.parse(savedUser);
-        this.setCurrentUser(parsed);
-      } catch (e) {}
+    if (!this.currentUser) {
+      this.currentUser = { id: 1, username: 'Music Lover 🎧', email: 'user@soundwave.io', plan: 'plus' };
     }
-
-    // Async background API sync
-    if (token && window.API) {
-      try {
-        const user = await API.getCurrentUser();
-        const userObj = user.data || user;
-        if (userObj) {
-          this.setCurrentUser(userObj);
-        }
-      } catch (error) {
-        console.log('Session API sync fallback to local cache:', error);
-      }
-    }
+    this.setCurrentUser(this.currentUser);
   }
 
   setCurrentUser(user) {
@@ -911,9 +891,7 @@ class SoundWaveApp {
 
   async toggleLike(songId) {
     if (!this.currentUser) {
-      this.openAuthModal();
-      this.showNotification('Please login to like songs', 'error');
-      return;
+      this.currentUser = { id: 1, username: 'Music Lover 🎧', email: 'user@soundwave.io', plan: 'plus' };
     }
     try {
       const result = await API.likeSong(songId);
@@ -942,9 +920,7 @@ class SoundWaveApp {
 
   async handleAddToPlaylist(songId) {
     if (!this.currentUser) {
-      this.openAuthModal();
-      this.showNotification('Please login to modify playlists', 'error');
-      return;
+      this.currentUser = { id: 1, username: 'Music Lover 🎧', email: 'user@soundwave.io', plan: 'plus' };
     }
     
     if (this.playlists.length === 0) {
@@ -1409,15 +1385,6 @@ class SoundWaveApp {
       if (paymentModal) paymentModal.style.display = 'none';
 
       window.location.hash = '#home';
-      return;
-    }
-
-    // Require user login before displaying payment modal for paid tiers
-    const isLoggedIn = !!this.currentUser || !!localStorage.getItem('token');
-    if (!isLoggedIn) {
-      this.pendingCheckoutPlan = plan;
-      this.showNotification('Please log in or create an account to choose your subscription plan', 'info');
-      this.openAuthModal();
       return;
     }
 
