@@ -139,7 +139,7 @@ ${e}`);if(!i)return;const n=parseInt(i.trim());if(isNaN(n)){alert("Invalid playl
               <div class="ig-profile-bio">
                 <strong>${e.username||"SoundWave Official"}</strong> 🎧<br>
                 ${e.bio?e.bio:"🎵 320kbps Master Audio Streaming<br>🚀 Daily Trending Beats & Reels"}<br>
-                🔗 <a href="https://ujwal8156v.github.io/SoundWave.com/" target="_blank" style="color:#60a5fa; text-decoration:none;">soundwave.com</a>
+                🔗 <a href="https://ujwal8156v.github.io/SoundWave_App.com/" target="_blank" style="color:#60a5fa; text-decoration:none;">SoundWave_App.com</a>
               </div>
             </div>
           </div>

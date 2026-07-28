@@ -1,21 +1,21 @@
-# 🎧 SoundWave.com - Master Audio Streaming Platform
+# 🎧 SoundWave_App.com - Master Audio Streaming Platform
 
-[![Live App](https://img.shields.io/badge/Live%20App-https%3A%2F%2Fujwal8156v.github.io%2FSoundWave.com%2F-8b5cf6?style=for-the-badge&logo=github)](https://ujwal8156v.github.io/SoundWave.com/)
+[![Live App](https://img.shields.io/badge/Live%20App-https%3A%2F%2Fujwal8156v.github.io%2FSoundWave__App.com%2F-8b5cf6?style=for-the-badge&logo=github)](https://ujwal8156v.github.io/SoundWave_App.com/)
 [![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
-[![Status](https://img.shields.io/badge/Build-Passing-00f0ff?style=for-the-badge)](https://ujwal8156v.github.io/SoundWave.com/)
+[![Status](https://img.shields.io/badge/Build-Passing-00f0ff?style=for-the-badge)](https://ujwal8156v.github.io/SoundWave_App.com/)
 
 ---
 
 ## 🌟 Overview
 
-**SoundWave.com** is a state-of-the-art music streaming platform with **320kbps Lossless Master Audio Playback**.
+**SoundWave_App.com** is a state-of-the-art music streaming platform with **320kbps Lossless Master Audio Playback**.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-SoundWave.com/
+SoundWave_App.com/
 ├── web-frontend/              # Vite Web Application & Design System
 ├── backend/
 │   ├── node-service/          # Express REST API (Port 5000) & OTP Gateway
@@ -30,7 +30,7 @@ SoundWave.com/
 
 ## 🌐 Live URLs
 
-- **Web App**: [https://ujwal8156v.github.io/SoundWave.com/](https://ujwal8156v.github.io/SoundWave.com/)
+- **Web App**: [https://ujwal8156v.github.io/SoundWave_App.com/](https://ujwal8156v.github.io/SoundWave_App.com/)
 
 ## Getting Started
 
@@ -38,8 +38,8 @@ SoundWave.com/
 
 ```bash
 # Clone repository
-git clone https://github.com/Ujwal8156v/SoundWave.com.git
-cd SoundWave.com
+git clone https://github.com/Ujwal8156v/SoundWave_App.com.git
+cd SoundWave_App.com
 
 # Install dependencies
 npm install
