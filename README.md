@@ -1,6 +1,6 @@
 # 🎧 SoundWave_App.com - Master Audio Streaming Platform
 
-[![Live App](https://img.shields.io/badge/Live%20App-https%3A%2F%2Fujwal8156v.github.io%2FSoundWave__App.com%2F-8b5cf6?style=for-the-badge&logo=github)](https://ujwal8156v.github.io/SoundWave_App.com/)
+[![Live App](https://img.shields.io/badge/Live%20App-https%3A%2F%2Fujwal8156v.github.io%2FSoundWave__App.com%2F-8b5cf6?style=for-the-badge&logo=github)]( https://ujwal8156v.github.io/SoundWave_App.com/)
 [![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
 [![Status](https://img.shields.io/badge/Build-Passing-00f0ff?style=for-the-badge)](https://ujwal8156v.github.io/SoundWave_App.com/)
 
