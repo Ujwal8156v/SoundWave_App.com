@@ -87,7 +87,6 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
   }
-}
 
 /* Responsive Payment Modal Layout for All Devices */
 @media (max-width: 768px) {
