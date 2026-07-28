@@ -5,26 +5,13 @@
   }
 
   .menu-toggle {
-    display: flex !important;
+    display: none !important;
   }
 
   .nav-menu {
-    display: none !important;
-    flex-direction: column !important;
-    position: absolute !important;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--accent-color);
-    border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem 2rem !important;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
-    gap: 1.25rem !important;
-    z-index: 99;
-  }
-
-  .nav-menu.active {
     display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
   }
 
   .nav-menu li {
