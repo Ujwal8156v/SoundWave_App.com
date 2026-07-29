@@ -4097,3 +4097,8 @@ html {
   display: inline-block;
 }
 
+.morning-routine-play-btn {
+  border-radius: 50% !important; /* force circle */
+  transition: 0.2s !important;   /* keep your intended transition */
+}
+
