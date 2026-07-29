@@ -4086,3 +4086,8 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+.morning-play-icon::before {
+  content: "▶"; /* Unicode play symbol */
+  display: inline-block;
+}
+
