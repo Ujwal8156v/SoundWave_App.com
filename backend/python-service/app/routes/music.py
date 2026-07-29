@@ -98,3 +98,9 @@ def analyze_track(payload: AnalyzeRequest):
             "artist": payload.artist,
             "genre": payload.genre or "Pop",
             "duration": payload.duration,
+            "tempo": tempo,
+            "energy": energy,
+            "mood": mood_by_genre.get(genre, "groovy"),
+            "danceability": round(min(0.98, energy + 0.1), 2),
+        },
+    }
