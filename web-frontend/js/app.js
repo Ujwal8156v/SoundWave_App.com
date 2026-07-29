@@ -44,14 +44,11 @@ class SoundWaveApp {
       e.preventDefault();
       this.trigger5SecLoginRedirect('Explore Plans');
     });
-    document.getElementById('morningRoutinePlayBtn')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      this.trigger5SecLoginRedirect('Morning Routine Playlist');
+    document.getElementById('morningRoutinePlayBtn')?.addEventListener('click', () => {
+      window.location.href = 'https://cheerful-kringle-7adbb0.netlify.app/';
     });
-    document.getElementById('morningRoutineCard')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.trigger5SecLoginRedirect('Morning Routine Playlist');
+    document.getElementById('morningRoutineCard')?.addEventListener('click', () => {
+      window.location.href = 'https://cheerful-kringle-7adbb0.netlify.app/';
     });
     document.getElementById('planPlusBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Plan Plus'));
     document.getElementById('planStudentBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Student Pass'));

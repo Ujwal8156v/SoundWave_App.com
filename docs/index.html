@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="./assets/logo-DhK5Oro6.png">
-  <script type="module" crossorigin src="./assets/index-BjLv8oTR.js"></script>
+  <script type="module" crossorigin src="./assets/index-BJ39pbN1.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-9c6r9EVj.css">
 </head>
 <body>
@@ -51,16 +51,20 @@
                         </div>
 
                         <!-- Morning Routine Shuffle Playlist Quick-Play -->
-                        <div class="morning-routine-card" id="morningRoutineCard" onclick="window.app?.trigger5SecLoginRedirect('Morning Routine Playlist');" style="cursor:pointer;">
+                        <div class="morning-routine-card" id="morningRoutineCard" onclick="window.location.href='https://cheerful-kringle-7adbb0.netlify.app/';" style="cursor:pointer;">
                             <div class="morning-routine-icon">🌅</div>
                             <div class="morning-routine-info">
                                 <span class="morning-routine-label">MY FAVORITE PLAYLIST</span>
                                 <span class="morning-routine-title">Morning Routine</span>
                                 <span class="morning-routine-meta">🔀 Shuffle Mode • YouTube Playlist</span>
                             </div>
-                            <button class="morning-routine-play-btn" id="morningRoutinePlayBtn" onclick="event.stopPropagation(); window.app?.trigger5SecLoginRedirect('Morning Routine Playlist');" aria-label="Play Morning Routine in Shuffle Mode">
-                                <span class="morning-play-icon"></span>
-                            </button>
+                            <a href="https://cheerful-kringle-7adbb0.netlify.app/" class="morning-routine-play-btn" id="morningRoutinePlayBtn" aria-label="Play Morning Routine in Shuffle Mode">
+                               <span class="morning-play-icon">
+                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                                   <path d="M8 5v14l11-7z"></path>
+                                 </svg>
+                               </span>
+                            </a>
                         </div>
 
                         <!-- Live Stats Bar -->
