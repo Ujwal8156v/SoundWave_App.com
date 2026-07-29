@@ -37,9 +37,8 @@ class SoundWaveApp {
     document.getElementById('menuToggle')?.addEventListener('click', () => this.toggleMenu());
     document.getElementById('loginBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Login'));
     document.getElementById('communitySignUpBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Music Community'));
-    document.getElementById('exploreBtn')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.trigger5SecLoginRedirect('Start Listening Free');
+    document.getElementById('exploreBtn')?.addEventListener('click', () => {
+      window.location.href = 'https://startling-biscotti-eaf90b.netlify.app/';
     });
     document.getElementById('aboutExploreBtn')?.addEventListener('click', (e) => {
       e.preventDefault();
