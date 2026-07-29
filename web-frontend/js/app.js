@@ -35,11 +35,28 @@ class SoundWaveApp {
     });
 
     document.getElementById('menuToggle')?.addEventListener('click', () => this.toggleMenu());
-    document.getElementById('loginBtn')?.addEventListener('click', () => this.openAuthModal());
-    document.getElementById('communitySignUpBtn')?.addEventListener('click', () => this.openAuthModal());
-    document.getElementById('exploreBtn')?.addEventListener('click', () => {
-      window.location.hash = '#pricing';
+    document.getElementById('loginBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Login'));
+    document.getElementById('communitySignUpBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Music Community'));
+    document.getElementById('exploreBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.trigger5SecLoginRedirect('Start Listening Free');
     });
+    document.getElementById('aboutExploreBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.trigger5SecLoginRedirect('Explore Plans');
+    });
+    document.getElementById('morningRoutinePlayBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger5SecLoginRedirect('Morning Routine Playlist');
+    });
+    document.getElementById('morningRoutineCard')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.trigger5SecLoginRedirect('Morning Routine Playlist');
+    });
+    document.getElementById('planPlusBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Plan Plus'));
+    document.getElementById('planStudentBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Student Pass'));
+    document.getElementById('planFamilyBtn')?.addEventListener('click', () => this.trigger5SecLoginRedirect('Family Premium'));
     document.getElementById('logoutLink')?.addEventListener('click', () => this.logout());
 
     // Discover Page Search Handler Setup
@@ -378,6 +395,25 @@ class SoundWaveApp {
   closeAuthModal() {
     const modal = document.getElementById('authModal');
     if (modal) modal.style.display = 'none';
+  }
+
+  trigger5SecLoginRedirect(buttonName = 'Feature') {
+    if (this.isRedirecting) return;
+    this.isRedirecting = true;
+    let secondsLeft = 5;
+
+    this.showNotification(`⏳ Opening SoundWave Login (${buttonName}) in ${secondsLeft}s...`, 'info');
+
+    const countdownInterval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft > 0) {
+        this.showNotification(`⏳ Redirecting to SoundWave Login in ${secondsLeft} second${secondsLeft > 1 ? 's' : ''}...`, 'info');
+      } else {
+        clearInterval(countdownInterval);
+        this.showNotification('🚀 Redirecting to SoundWave Login now...', 'success');
+        window.location.href = 'https://cheerful-kringle-7adbb0.netlify.app/';
+      }
+    }, 1000);
   }
 
   async restoreSession() {

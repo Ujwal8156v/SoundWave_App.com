@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sound Wave - Free Music Streaming</title>
     <link rel="icon" type="image/png" href="./assets/logo-DhK5Oro6.png">
-  <script type="module" crossorigin src="./assets/index-D6el__DG.js"></script>
+  <script type="module" crossorigin src="./assets/index-D9iOfvR4.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-DfrWw7T9.css">
 </head>
 <body>
@@ -46,19 +46,19 @@
                         <h1 class="hero-vibe-title">Experience the Sound of Music</h1>
                         <p class="hero-vibe-subtitle">Discover new artists, tracks, and live events with zero-latency streaming &amp; 3D spatial audio</p>
                         <div class="hero-btn-group">
-                            <button class="btn btn-hero-cta" id="exploreBtn">▶ Start Listening Free</button>
-                            <button class="btn btn-hero-secondary" onclick="location.hash='#pricing';">💎 Explore Plus</button>
+                            <button class="btn btn-hero-cta" id="exploreBtn" onclick="window.app?.trigger5SecLoginRedirect('Start Listening Free');">▶ Start Listening Free</button>
+                            <button class="btn btn-hero-secondary" onclick="window.app?.trigger5SecLoginRedirect('Explore Plus');">💎 Explore Plus</button>
                         </div>
 
                         <!-- Morning Routine Shuffle Playlist Quick-Play -->
-                        <div class="morning-routine-card" id="morningRoutineCard">
+                        <div class="morning-routine-card" id="morningRoutineCard" onclick="window.app?.trigger5SecLoginRedirect('Morning Routine Playlist');" style="cursor:pointer;">
                             <div class="morning-routine-icon">🌅</div>
                             <div class="morning-routine-info">
                                 <span class="morning-routine-label">MY FAVORITE PLAYLIST</span>
                                 <span class="morning-routine-title">Morning Routine</span>
                                 <span class="morning-routine-meta">🔀 Shuffle Mode • YouTube Playlist</span>
                             </div>
-                            <button class="morning-routine-play-btn" id="morningRoutinePlayBtn" onclick="window.playMorningRoutinePlaylist()" title="Play Morning Routine in Shuffle Mode">
+                            <button class="morning-routine-play-btn" id="morningRoutinePlayBtn" onclick="event.stopPropagation(); window.app?.trigger5SecLoginRedirect('Morning Routine Playlist');" title="Play Morning Routine in Shuffle Mode">
                                 <span class="morning-play-icon">▶</span>
                             </button>
                         </div>
@@ -106,7 +106,7 @@
                                     <div class="bullet-item"><span class="bullet-check">✓</span> 3D Spatial Audio &amp; FX Studio</div>
                                 </div>
 
-                                <button class="btn btn-gradient-orange" id="aboutExploreBtn" onclick="location.hash='#pricing';">Explore Plans 💎</button>
+                                <button class="btn btn-gradient-orange" id="aboutExploreBtn" onclick="window.app?.trigger5SecLoginRedirect('Explore Plans');">Explore Plans 💎</button>
                             </div>
                         </div>
                     </div>
