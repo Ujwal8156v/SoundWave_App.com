@@ -4102,3 +4102,8 @@ html {
   transition: 0.2s !important;   /* keep your intended transition */
 }
 
+.community-vibe-content .btn-community-signup {
+  border-radius: 10px !important;   /* keep your design */
+  transition: all .3s ease !important; /* restore intended transition */
+}
+
