@@ -4086,8 +4086,14 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-.morning-play-icon::before {
-  content: "▶"; /* Unicode play symbol */
+.morning-play-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.morning-play-icon:empty::before {
+  content: "▶"; /* Unicode play symbol fallback */
   display: inline-block;
 }
 
